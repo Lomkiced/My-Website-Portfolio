@@ -24,7 +24,7 @@ export const PROJECT_DATA: Project[] = [
         title: "eCash-Disbursement Monitoring System",
         description:
             "A comprehensive financial tracking and liquidity management system designed to streamline disbursement processes, monitor NCA utilization, and ensure real-time fund tracking for DOST 1 Cashier operations",
-        techStack: ["PostgreSQL with ORM(Prisma), Express, React, Node.js"],
+        techStack: ["PostgreSQL", "Prisma", "Express", "React", "Node.js"],
         liveUrl: "#",
         githubUrl: "#",
         gradient: "from-violet-600 to-indigo-600",

@@ -1,8 +1,11 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, lazy, Suspense } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { FiArrowDown, FiMail } from "react-icons/fi";
+import { useThemeStore } from "@/lib/store";
+
+const FloatingShapes = lazy(() => import("@/components/3d/floating-shapes"));
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -24,9 +27,28 @@ const itemVariants = {
     },
 };
 
+// ─── Color mapping for scrollytelling ─────────────────────────────────────────
+
+const gradientMap: Record<string, { from: string; to: string }> = {
+    "from-violet-600 to-indigo-600": {
+        from: "rgba(124, 58, 237, 0.12)",
+        to: "rgba(79, 70, 229, 0.12)",
+    },
+    "from-purple-600 to-pink-600": {
+        from: "rgba(147, 51, 234, 0.12)",
+        to: "rgba(219, 39, 119, 0.12)",
+    },
+    "from-indigo-600 to-cyan-600": {
+        from: "rgba(79, 70, 229, 0.12)",
+        to: "rgba(8, 145, 178, 0.12)",
+    },
+};
+
 export default function Hero() {
     const sectionRef = useRef<HTMLElement>(null);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const activeSectionColor = useThemeStore((s) => s.activeSectionColor);
+
     const { scrollYProgress } = useScroll({
         target: sectionRef,
         offset: ["start start", "end start"],
@@ -54,21 +76,29 @@ export default function Hero() {
         if (el) el.scrollIntoView({ behavior: "smooth" });
     };
 
+    // Derive scroll-reactive gradient overlay colors
+    const mapped = gradientMap[activeSectionColor];
+    const overlayFrom = mapped?.from ?? "transparent";
+    const overlayTo = mapped?.to ?? "transparent";
+
     return (
         <section
             ref={sectionRef}
             id="home"
             className="relative min-h-screen flex items-center justify-center overflow-hidden"
         >
-            {/* Animated gradient background */}
+            {/* ── Animated gradient background ─────────────────────────────────── */}
             <motion.div className="absolute inset-0 -z-10" style={{ y }}>
                 {/* Base gradient */}
                 <div className="absolute inset-0 bg-gradient-to-br from-violet-950/20 via-background to-indigo-950/20 dark:from-violet-950/40 dark:via-background dark:to-indigo-950/40" />
 
-                {/* Animated orbs */}
-                <div className="absolute top-1/4 -left-20 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl animate-pulse [animation-delay:1s]" />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-500/5 rounded-full blur-3xl animate-pulse [animation-delay:2s]" />
+                {/* Scrollytelling overlay — smoothly morphs as project cards come into view */}
+                <motion.div
+                    className="absolute inset-0 transition-all duration-1000 ease-in-out"
+                    style={{
+                        background: `linear-gradient(135deg, ${overlayFrom} 0%, transparent 50%, ${overlayTo} 100%)`,
+                    }}
+                />
 
                 {/* Grid pattern overlay */}
                 <div
@@ -83,7 +113,12 @@ export default function Hero() {
                 <div className="noise-overlay absolute inset-0" />
             </motion.div>
 
-            {/* Mouse follow glow */}
+            {/* ── 3D Floating Shapes (replaces CSS orbs) ───────────────────────── */}
+            <Suspense fallback={null}>
+                <FloatingShapes />
+            </Suspense>
+
+            {/* ── Mouse follow glow ────────────────────────────────────────────── */}
             <div
                 className="absolute pointer-events-none z-0 transition-opacity duration-300"
                 style={{
@@ -97,7 +132,7 @@ export default function Hero() {
                 }}
             />
 
-            {/* Content */}
+            {/* ── Content ──────────────────────────────────────────────────────── */}
             <motion.div
                 className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
                 style={{ opacity }}
@@ -173,7 +208,7 @@ export default function Hero() {
                 </motion.div>
             </motion.div>
 
-            {/* Scroll indicator */}
+            {/* ── Scroll indicator ─────────────────────────────────────────────── */}
             <motion.div
                 className="absolute bottom-8 left-1/2 -translate-x-1/2"
                 initial={{ opacity: 0, y: -10 }}

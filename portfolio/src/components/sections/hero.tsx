@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { FiArrowDown, FiMail } from "react-icons/fi";
 import { useThemeStore } from "@/lib/store";
 
-const FloatingShapes = lazy(() => import("@/components/3d/floating-shapes"));
+const TechMatrix = lazy(() => import("@/components/backgrounds/tech-matrix"));
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -113,9 +113,9 @@ export default function Hero() {
                 <div className="noise-overlay absolute inset-0" />
             </motion.div>
 
-            {/* ── 3D Floating Shapes (replaces CSS orbs) ───────────────────────── */}
+            {/* ── Advanced Tech Matrix Background ──────────────────────────────── */}
             <Suspense fallback={null}>
-                <FloatingShapes />
+                <TechMatrix />
             </Suspense>
 
             {/* ── Mouse follow glow ────────────────────────────────────────────── */}

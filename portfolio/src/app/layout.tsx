@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import AudioPlayer from "@/components/ui/audio-player";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -54,6 +55,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <AudioPlayer />
         </ThemeProvider>
       </body>
     </html>

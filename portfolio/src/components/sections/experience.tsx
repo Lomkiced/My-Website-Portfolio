@@ -2,49 +2,7 @@
 
 import { motion } from "framer-motion";
 import { FiBriefcase, FiAward, FiBookOpen } from "react-icons/fi";
-
-interface TimelineItem {
-    title: string;
-    organization: string;
-    period: string;
-    description: string;
-    type: "work" | "education" | "certification";
-}
-
-const timelineData: TimelineItem[] = [
-    {
-        title: "Full Stack Developer",
-        organization: "Freelance / Personal Projects",
-        period: "2024 – Present",
-        description:
-            "Building full-stack applications using Next.js, NestJS, and Prisma. Developing scalable architectures with modern frontend frameworks and backend services.",
-        type: "work",
-    },
-    {
-        title: "BS Information Technology",
-        organization: "University",
-        period: "2020 – 2024",
-        description:
-            "Completed a comprehensive program in Information Technology with focus on software development, database management, and systems design.",
-        type: "education",
-    },
-    {
-        title: "Web Development Intern",
-        organization: "Tech Company",
-        period: "2023",
-        description:
-            "Contributed to frontend and backend development of web applications. Gained hands-on experience with React, Node.js, and database management.",
-        type: "work",
-    },
-    {
-        title: "Certification Placeholder",
-        organization: "Certification Provider",
-        period: "2023",
-        description:
-            "Earned certification in a relevant technology or framework. Details to be updated.",
-        type: "certification",
-    },
-];
+import { EXPERIENCE_DATA } from "@/lib/data";
 
 const getIcon = (type: string) => {
     switch (type) {
@@ -95,7 +53,7 @@ export default function Experience() {
                     <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-violet-500/50 via-indigo-500/30 to-transparent md:-translate-x-px" />
 
                     <div className="space-y-8 md:space-y-12">
-                        {timelineData.map((item, index) => {
+                        {EXPERIENCE_DATA.map((item, index) => {
                             const Icon = getIcon(item.type);
                             const isLeft = index % 2 === 0;
 
@@ -132,10 +90,10 @@ export default function Experience() {
                                             <div className="flex items-center gap-2 mb-2">
                                                 <span
                                                     className={`px-2.5 py-0.5 text-xs font-medium rounded-full ${item.type === "work"
-                                                            ? "bg-blue-500/10 text-blue-500"
-                                                            : item.type === "education"
-                                                                ? "bg-green-500/10 text-green-500"
-                                                                : "bg-amber-500/10 text-amber-500"
+                                                        ? "bg-blue-500/10 text-blue-500"
+                                                        : item.type === "education"
+                                                            ? "bg-green-500/10 text-green-500"
+                                                            : "bg-amber-500/10 text-amber-500"
                                                         }`}
                                                 >
                                                     {item.type.charAt(0).toUpperCase() +

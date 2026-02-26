@@ -2,45 +2,7 @@
 
 import { motion } from "framer-motion";
 import { FiExternalLink, FiGithub } from "react-icons/fi";
-
-interface Project {
-    title: string;
-    description: string;
-    techStack: string[];
-    liveUrl: string;
-    githubUrl: string;
-    gradient: string;
-}
-
-const projects: Project[] = [
-    {
-        title: "Project Alpha",
-        description:
-            "A full-stack web application built with modern technologies. Features include real-time data processing, authentication, and a responsive dashboard.",
-        techStack: ["Next.js", "NestJS", "Prisma", "Tailwind CSS"],
-        liveUrl: "#",
-        githubUrl: "#",
-        gradient: "from-violet-600 to-indigo-600",
-    },
-    {
-        title: "Project Beta",
-        description:
-            "A mobile-first application with seamless cross-platform support. Includes offline capabilities and push notifications.",
-        techStack: ["React Native", "Expo", "Node.js", "Express"],
-        liveUrl: "#",
-        githubUrl: "#",
-        gradient: "from-purple-600 to-pink-600",
-    },
-    {
-        title: "Project Gamma",
-        description:
-            "An enterprise-grade management system with role-based access control, analytics dashboard, and automated workflows.",
-        techStack: ["React", "Laravel", "PHP", "Docker"],
-        liveUrl: "#",
-        githubUrl: "#",
-        gradient: "from-indigo-600 to-cyan-600",
-    },
-];
+import { PROJECT_DATA } from "@/lib/data";
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -95,7 +57,7 @@ export default function Projects() {
                     whileInView="visible"
                     viewport={{ once: true }}
                 >
-                    {projects.map((project) => (
+                    {PROJECT_DATA.map((project) => (
                         <motion.div
                             key={project.title}
                             variants={cardVariants}
@@ -116,7 +78,7 @@ export default function Projects() {
                                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 border border-white/10 rounded-3xl rotate-45" />
                                 </div>
                                 {/* Project title overlay */}
-                                <div className="absolute bottom-4 left-4">
+                                <div className="absolute bottom-4 left-4 right-4">
                                     <h3 className="text-2xl font-bold text-white font-display">
                                         {project.title}
                                     </h3>

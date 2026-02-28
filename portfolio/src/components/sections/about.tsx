@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { FiAward, FiCode, FiLayers, FiMapPin } from "react-icons/fi";
@@ -34,7 +34,10 @@ function SpotlightCard({ children, className = "" }: { children: ReactNode; clas
         setIsMounted(true);
     }, []);
 
+    const shouldReduceMotion = useReducedMotion();
+
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (shouldReduceMotion || window.matchMedia("(pointer: coarse)").matches) return;
         if (!divRef.current) return;
         const rect = divRef.current.getBoundingClientRect();
         mouseX.set(e.clientX - rect.left);
@@ -50,11 +53,11 @@ function SpotlightCard({ children, className = "" }: { children: ReactNode; clas
         <motion.div
             ref={divRef}
             onMouseMove={handleMouseMove}
-            className={`group relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/5 bg-white/5 dark:bg-black/5 backdrop-blur-xl shadow-xl transition-all hover:shadow-2xl ${className}`}
+            className={`group relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/5 bg-white/5 dark:bg-black/5 backdrop-blur-md md:backdrop-blur-xl shadow-xl transition-all hover:shadow-2xl will-change-transform ${className}`}
         >
-            {isMounted && (
+            {isMounted && !shouldReduceMotion && (
                 <motion.div
-                    className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-300 group-hover:opacity-100"
+                    className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-300 group-hover:opacity-100 will-change-opacity"
                     style={{ background }}
                 />
             )}
@@ -112,7 +115,10 @@ export default function About() {
     const glareX = useTransform(mouseXSpring, [-0.5, 0.5], ["100%", "0%"]);
     const glareY = useTransform(mouseYSpring, [-0.5, 0.5], ["100%", "0%"]);
 
+    const shouldReduceMotion = useReducedMotion();
+
     const handleMouseMoveCard = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (shouldReduceMotion || window.matchMedia("(pointer: coarse)").matches) return;
         if (!cardRef.current) return;
         const rect = cardRef.current.getBoundingClientRect();
         const width = rect.width;
@@ -144,7 +150,7 @@ export default function About() {
                     repeat: Infinity,
                     ease: "easeInOut",
                 }}
-                className="absolute top-0 right-0 w-96 h-96 bg-violet-500/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/4 pointer-events-none"
+                className="absolute top-0 right-0 w-96 h-96 bg-violet-500/20 rounded-full blur-3xl md:blur-[100px] -translate-y-1/2 translate-x-1/4 pointer-events-none will-change-transform"
             />
 
             <motion.div
@@ -159,7 +165,7 @@ export default function About() {
                     ease: "easeInOut",
                     delay: 1,
                 }}
-                className="absolute bottom-0 left-0 w-72 h-72 bg-indigo-500/10 rounded-full blur-[80px] translate-y-1/4 -translate-x-1/4 pointer-events-none"
+                className="absolute bottom-0 left-0 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl md:blur-[80px] translate-y-1/4 -translate-x-1/4 pointer-events-none will-change-transform"
             />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -193,11 +199,11 @@ export default function About() {
                             whileInView={{ opacity: 1, scale: 1, y: 0 }}
                             viewport={{ once: true, margin: "-10%" }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
-                            className="relative w-full max-w-sm mx-auto aspect-[4/5] rounded-[2rem] cursor-pointer group"
+                            className="relative w-full max-w-sm mx-auto aspect-[4/5] rounded-[2rem] cursor-pointer group will-change-transform"
                         >
                             {/* Premium Glassmorphism & Shadow */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-violet-600/20 via-purple-600/10 to-indigo-600/20 rounded-[2rem] blur-xl transition-opacity duration-300 group-hover:opacity-100 opacity-60" style={{ transform: "translateZ(-10px)" }} />
-                            <div className="absolute inset-0 rounded-[2rem] border border-white/20 dark:border-white/10 bg-white/5 dark:bg-black/5 backdrop-blur-3xl overflow-hidden shadow-2xl" style={{ transformStyle: "preserve-3d" }}>
+                            <div className="absolute inset-0 bg-gradient-to-br from-violet-600/20 via-purple-600/10 to-indigo-600/20 rounded-[2rem] blur-xl md:blur-2xl transition-opacity duration-300 group-hover:opacity-100 opacity-60" style={{ transform: "translateZ(-10px)" }} />
+                            <div className="absolute inset-0 rounded-[2rem] border border-white/20 dark:border-white/10 bg-white/5 dark:bg-black/5 backdrop-blur-md md:backdrop-blur-3xl overflow-hidden shadow-2xl" style={{ transformStyle: "preserve-3d" }}>
 
                                 {/* Glare Effect */}
                                 <motion.div
@@ -255,7 +261,7 @@ export default function About() {
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
                         >
-                            <SpotlightCard className="!rounded-2xl px-5 py-3.5 flex items-center gap-3 !bg-white/70 dark:!bg-black/50 backdrop-blur-2xl !border-white/40 dark:!border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.12)] pointer-events-auto">
+                            <SpotlightCard className="!rounded-2xl px-5 py-3.5 flex items-center gap-3 !bg-white/70 dark:!bg-black/50 backdrop-blur-md md:backdrop-blur-2xl !border-white/40 dark:!border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.12)] pointer-events-auto">
                                 <div className="p-2 rounded-full bg-violet-500/10 dark:bg-violet-500/20 text-violet-600 dark:text-violet-400">
                                     <FiMapPin className="w-4 h-4" />
                                 </div>

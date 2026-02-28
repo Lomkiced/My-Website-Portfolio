@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useMotionTemplate, useMotionValue, useSpring, Variants } from "framer-motion";
+import { motion, useMotionTemplate, useMotionValue, useSpring, Variants, useReducedMotion } from "framer-motion";
 import React, { useRef, useState } from "react";
 import {
     SiReact,
@@ -136,8 +136,10 @@ function SkillBadge({ skill }: { skill: Skill }) {
     // Initial randomized float config (calculated once per badge)
     const [floatDuration] = useState(() => 3 + Math.random() * 2);
     const [floatDelay] = useState(() => Math.random() * 2);
+    const shouldReduceMotion = useReducedMotion();
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (shouldReduceMotion || window.matchMedia("(pointer: coarse)").matches) return;
         if (!ref.current) return;
         const rect = ref.current.getBoundingClientRect();
 
@@ -181,13 +183,15 @@ function SkillBadge({ skill }: { skill: Skill }) {
                     onMouseMove={handleMouseMove}
                     onMouseLeave={handleMouseLeave}
                     style={{ x: springX, y: springY }}
-                    className="group relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl cursor-default overflow-hidden border border-white/10 dark:border-white/5 bg-white/20 dark:bg-white/[0.03] backdrop-blur-xl shadow-[0_4px_24px_-8px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.2)] dark:shadow-[0_4px_24px_-8px_rgba(0,0,0,0.5)] dark:hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.6)] transition-all duration-300"
+                    className="group relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl cursor-default overflow-hidden border border-white/10 dark:border-white/5 bg-white/20 dark:bg-white/[0.03] backdrop-blur-md md:backdrop-blur-xl shadow-[0_4px_24px_-8px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.2)] dark:shadow-[0_4px_24px_-8px_rgba(0,0,0,0.5)] dark:hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.6)] transition-all duration-300 will-change-transform"
                 >
                     {/* Dynamic Spotlight Glow */}
-                    <motion.div
-                        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100 z-0"
-                        style={{ background }}
-                    />
+                    {!shouldReduceMotion && (
+                        <motion.div
+                            className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100 z-0 will-change-opacity"
+                            style={{ background }}
+                        />
+                    )}
 
                     {/* Top gradient reflecting gloss */}
                     <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
@@ -211,9 +215,9 @@ export default function Skills() {
     return (
         <section id="skills" className="py-20 md:py-32 relative overflow-hidden">
             {/* Background accent */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[600px] bg-gradient-to-b from-transparent via-indigo-500/5 to-transparent blur-3xl -z-10 pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-violet-600/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2 pointer-events-none -z-10" />
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-600/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none -z-10" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[600px] bg-gradient-to-b from-transparent via-indigo-500/5 to-transparent blur-2xl md:blur-3xl -z-10 pointer-events-none will-change-transform" />
+            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-violet-600/10 rounded-full blur-3xl md:blur-[100px] translate-y-1/2 -translate-x-1/2 pointer-events-none -z-10 will-change-transform" />
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-600/10 rounded-full blur-3xl md:blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none -z-10 will-change-transform" />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Section header */}

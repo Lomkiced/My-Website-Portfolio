@@ -236,25 +236,45 @@ export default function TechMatrix() {
         let mouseX = -9999;
         let mouseY = -9999;
         let time = 0;
+        let logicalW = 0;
+        let logicalH = 0;
 
         // ── Initialization ───────────────────────────────────────────────────
 
         const init = () => {
             const parent = canvas.parentElement;
-            const w = parent?.clientWidth || window.innerWidth;
-            const h = parent?.clientHeight || window.innerHeight;
+            logicalW = parent?.clientWidth || window.innerWidth;
+            logicalH = parent?.clientHeight || window.innerHeight;
+
+            const isMobile = logicalW < 768;
+
+            // Dynamic Device Pixel Ratio scaling for sharper canvases
+            // On mobile, cap dpr to 1.5 to save performance while maintaining decent sharpness
+            const dpr = typeof window !== "undefined"
+                ? (isMobile ? Math.min(window.devicePixelRatio || 1, 1.5) : window.devicePixelRatio || 1)
+                : 1;
 
             // Set canvas resolution to match CSS size (avoid stretching)
-            canvas.width = w;
-            canvas.height = h;
+            canvas.style.width = `${logicalW}px`;
+            canvas.style.height = `${logicalH}px`;
+            canvas.width = logicalW * dpr;
+            canvas.height = logicalH * dpr;
+
+            // Normalize coordinate system to use CSS pixels
+            ctx.scale(dpr, dpr);
 
             // Clear canvas (transparent - allows hero background to show through)
-            ctx.clearRect(0, 0, w, h);
+            ctx.clearRect(0, 0, logicalW, logicalH);
+
+            // Mobile fallback / throttling
+            const particleCount = isMobile ? Math.floor(PARTICLE_COUNT * 0.25) : PARTICLE_COUNT;
+            const rainCount = isMobile ? Math.floor(RAIN_COLUMN_COUNT * 0.2) : RAIN_COLUMN_COUNT;
+            const textCount = isMobile ? Math.floor(FLOATING_TEXT_COUNT * 0.3) : FLOATING_TEXT_COUNT;
 
             // Create entities
-            particles = Array.from({ length: PARTICLE_COUNT }, () => createParticle(w, h));
-            rainColumns = Array.from({ length: RAIN_COLUMN_COUNT }, () => createRainColumn(w, h));
-            floatingTexts = Array.from({ length: FLOATING_TEXT_COUNT }, () => createFloatingText(w, h));
+            particles = Array.from({ length: particleCount }, () => createParticle(logicalW, logicalH));
+            rainColumns = Array.from({ length: rainCount }, () => createRainColumn(logicalW, logicalH));
+            floatingTexts = Array.from({ length: textCount }, () => createFloatingText(logicalW, logicalH));
         };
 
         // ── Mouse Handlers ───────────────────────────────────────────────────
@@ -285,8 +305,8 @@ export default function TechMatrix() {
         // ── Animation Loop ───────────────────────────────────────────────────
 
         const draw = () => {
-            const w = canvas.width;
-            const h = canvas.height;
+            const w = logicalW;
+            const h = logicalH;
             const p = paletteRef.current;
 
             time += 0.008;

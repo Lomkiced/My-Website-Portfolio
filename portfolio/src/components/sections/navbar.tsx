@@ -4,7 +4,11 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
 import { FiSun, FiMoon, FiMenu, FiX, FiDownload } from "react-icons/fi";
-import AudioPlayer from "@/components/ui/audio-player";
+import dynamic from "next/dynamic";
+
+const AudioPlayer = dynamic(() => import("@/components/ui/audio-player"), {
+    ssr: false,
+});
 
 const navLinks = [
     { name: "Home", href: "#home" },

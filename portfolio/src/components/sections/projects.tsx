@@ -7,6 +7,7 @@ import {
     useMotionValue,
     useSpring,
     useMotionTemplate,
+    useReducedMotion,
 } from "framer-motion";
 import { FiExternalLink, FiGithub } from "react-icons/fi";
 import { PROJECT_DATA } from "@/lib/data";
@@ -44,6 +45,7 @@ function MagneticButton({
     const [position, setPosition] = useState({ x: 0, y: 0 });
 
     const handleMouse = (e: MouseEvent<HTMLAnchorElement>) => {
+        if (window.matchMedia("(pointer: coarse)").matches) return;
         const { clientX, clientY } = e;
         const { height, width, left, top } = ref.current!.getBoundingClientRect();
         const middleX = clientX - (left + width / 2);
@@ -91,8 +93,10 @@ function ProjectCard({ project }: { project: (typeof PROJECT_DATA)[number] }) {
     // Parallax Tilt
     const rotateX = useSpring(0, { stiffness: 300, damping: 30 });
     const rotateY = useSpring(0, { stiffness: 300, damping: 30 });
+    const shouldReduceMotion = useReducedMotion();
 
     function handleMouseMove(event: MouseEvent<HTMLDivElement>) {
+        if (shouldReduceMotion || window.matchMedia("(pointer: coarse)").matches) return;
         const { currentTarget, clientX, clientY } = event;
         const { left, top, width, height } = currentTarget.getBoundingClientRect();
 
@@ -128,7 +132,7 @@ function ProjectCard({ project }: { project: (typeof PROJECT_DATA)[number] }) {
             }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            className="group relative rounded-3xl overflow-hidden bg-white/60 dark:bg-black/20 border border-neutral-200/50 dark:border-white/5 backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-lg hover:shadow-[0_8px_30px_rgba(139,92,246,0.12)] dark:hover:shadow-[0_0_40px_rgba(139,92,246,0.15)] transition-[box-shadow,border-color] duration-500 will-change-transform"
+            className="group relative rounded-3xl overflow-hidden bg-white/60 dark:bg-black/20 border border-neutral-200/50 dark:border-white/5 backdrop-blur-md md:backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-lg hover:shadow-[0_8px_30px_rgba(139,92,246,0.12)] dark:hover:shadow-[0_0_40px_rgba(139,92,246,0.15)] transition-[box-shadow,border-color] duration-500 will-change-transform"
         >
             {/* Spotlight overlay */}
             <motion.div
@@ -147,7 +151,7 @@ function ProjectCard({ project }: { project: (typeof PROJECT_DATA)[number] }) {
                 >
                     {/* Animated Orbs/Waves */}
                     <motion.div
-                        className="absolute -top-10 -left-10 w-48 h-48 bg-white/30 blur-3xl rounded-full"
+                        className="absolute -top-10 -left-10 w-48 h-48 bg-white/30 blur-2xl md:blur-3xl rounded-full will-change-transform"
                         animate={{
                             x: [0, 30, 0],
                             y: [0, -20, 0],
@@ -160,7 +164,7 @@ function ProjectCard({ project }: { project: (typeof PROJECT_DATA)[number] }) {
                         }}
                     />
                     <motion.div
-                        className="absolute -bottom-10 -right-10 w-64 h-64 bg-black/20 blur-3xl rounded-full"
+                        className="absolute -bottom-10 -right-10 w-64 h-64 bg-black/20 blur-2xl md:blur-3xl rounded-full will-change-transform"
                         animate={{
                             x: [0, -40, 0],
                             y: [0, 30, 0],
@@ -241,8 +245,8 @@ export default function Projects() {
     return (
         <section id="projects" className="py-24 md:py-32 relative overflow-hidden">
             {/* Ambient Background Glows */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-violet-400/20 dark:bg-violet-500/10 rounded-full blur-[120px] pointer-events-none translate-x-1/3 -translate-y-1/3" />
-            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-400/20 dark:bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none -translate-x-1/3 translate-y-1/4" />
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-violet-400/20 dark:bg-violet-500/10 rounded-full blur-3xl md:blur-[120px] pointer-events-none translate-x-1/3 -translate-y-1/3" />
+            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-400/20 dark:bg-indigo-500/10 rounded-full blur-3xl md:blur-[100px] pointer-events-none -translate-x-1/3 translate-y-1/4" />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Section header */}

@@ -6,7 +6,11 @@ import { FiArrowDown, FiMail } from "react-icons/fi";
 import { Music, MousePointerClick } from "lucide-react";
 import { useThemeStore } from "@/lib/store";
 
-const TechMatrix = lazy(() => import("@/components/backgrounds/tech-matrix"));
+import dynamic from "next/dynamic";
+
+const TechMatrix = dynamic(() => import("@/components/backgrounds/tech-matrix"), {
+    ssr: false,
+});
 
 const containerVariants = {
     hidden: { opacity: 0 },

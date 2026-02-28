@@ -21,7 +21,7 @@ export interface TimelineItem {
 
 export const PROJECT_DATA: Project[] = [
     {
-        title: "eCash - Disbursement Monitoring System",
+        title: "eCash - Disbursement Monitoring System | Department of Science and Technology Region 1",
         description:
             "Engineered a comprehensive Disbursement Monitoring System during my internship at the Department of Science and Technology (DOST) Region 1. Developed using a modern stack featuring React, TailwindCSS, Node.js, Express, and PostgreSQL, this system tracks and manages financial disbursements securely. Key features include real-time updates via WebSockets, automated background tasks, downloadable Excel reporting, and a fully containerized Docker deployment leveraging an Nginx web server.",
         techStack: ["PostgreSQL", "Prisma", "Express", "React", "Node.js"],
@@ -30,7 +30,7 @@ export const PROJECT_DATA: Project[] = [
         gradient: "from-violet-600 to-indigo-600",
     },
     {
-        title: "KIP - Record Management System",
+        title: "KIP - Record Management System | Department of Science and Technology Region 1",
         description:
             "KIP (Keeping Information Permanently)\n\nDesigned and developed a comprehensive Record Management System for the Department of Science and Technology (DOST) Ilocos Region. Built on the PERN stack (PostgreSQL, Express, React, Node.js), this system digitizes and secures the agency's document archiving process. It features role-based access control, secure file uploads, interactive data dashboards using Recharts, and is fully containerized using Docker for scalable deployment.",
         techStack: ["PostgreSQL", "Express", "React", "Node.js"],

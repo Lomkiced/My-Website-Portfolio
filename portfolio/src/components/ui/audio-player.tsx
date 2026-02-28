@@ -34,7 +34,7 @@ export default function AudioPlayer() {
             try {
                 await audio.play();
                 setIsPlaying(true);
-            } catch (_error) {
+            } catch {
                 // Autoplay policy prevented playing without interaction
                 document.addEventListener("click", playOnInteraction);
                 document.addEventListener("keydown", playOnInteraction);

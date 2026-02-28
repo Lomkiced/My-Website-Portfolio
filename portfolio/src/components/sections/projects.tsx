@@ -6,7 +6,6 @@ import {
     useInView,
     useMotionValue,
     useSpring,
-    useTransform,
     useMotionTemplate,
 } from "framer-motion";
 import { FiExternalLink, FiGithub } from "react-icons/fi";

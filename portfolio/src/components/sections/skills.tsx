@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useMotionTemplate, useMotionValue, useSpring, Variants } from "framer-motion";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import {
     SiReact,
     SiNextdotjs,
@@ -119,7 +119,6 @@ const badgeVariants: Variants = {
 
 function SkillBadge({ skill }: { skill: Skill }) {
     const ref = useRef<HTMLDivElement>(null);
-    const [isHovered, setIsHovered] = useState(false);
 
     // Magnetic effect core
     const x = useMotionValue(0);
@@ -157,13 +156,8 @@ function SkillBadge({ skill }: { skill: Skill }) {
     };
 
     const handleMouseLeave = () => {
-        setIsHovered(false);
         x.set(0);
         y.set(0);
-    };
-
-    const handleMouseEnter = () => {
-        setIsHovered(true);
     };
 
     const glowColor = colorMap[skill.color] || "rgba(150, 150, 150, 0.3)";
@@ -186,7 +180,6 @@ function SkillBadge({ skill }: { skill: Skill }) {
                     ref={ref}
                     onMouseMove={handleMouseMove}
                     onMouseLeave={handleMouseLeave}
-                    onMouseEnter={handleMouseEnter}
                     style={{ x: springX, y: springY }}
                     className="group relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl cursor-default overflow-hidden border border-white/10 dark:border-white/5 bg-white/20 dark:bg-white/[0.03] backdrop-blur-xl shadow-[0_4px_24px_-8px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.2)] dark:shadow-[0_4px_24px_-8px_rgba(0,0,0,0.5)] dark:hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.6)] transition-all duration-300"
                 >

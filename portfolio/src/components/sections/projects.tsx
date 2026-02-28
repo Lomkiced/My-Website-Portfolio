@@ -71,7 +71,7 @@ function ProjectCard({
 
             {/* Card body */}
             <div className="p-6 space-y-4">
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
                     {project.description}
                 </p>
 

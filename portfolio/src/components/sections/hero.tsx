@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef, useEffect, useState, lazy, Suspense } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { FiArrowDown, FiMail } from "react-icons/fi";
+import { Music, MousePointerClick } from "lucide-react";
 import { useThemeStore } from "@/lib/store";
 
 const TechMatrix = lazy(() => import("@/components/backgrounds/tech-matrix"));
@@ -48,6 +49,7 @@ export default function Hero() {
     const sectionRef = useRef<HTMLElement>(null);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const activeSectionColor = useThemeStore((s) => s.activeSectionColor);
+    const autoplayStatus = useThemeStore((s) => s.autoplayStatus);
 
     const { scrollYProgress } = useScroll({
         target: sectionRef,
@@ -143,13 +145,59 @@ export default function Hero() {
                     animate="visible"
                     className="space-y-6 md:space-y-8"
                 >
-                    {/* Greeting badge */}
-                    <motion.div variants={itemVariants} className="inline-block">
-                        <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-violet-500/20 bg-violet-500/5 text-violet-600 dark:text-violet-400 text-sm font-medium backdrop-blur-sm">
-                            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                            Available for opportunities
-                        </span>
-                    </motion.div>
+                    {/* Greeting badge with Autoplay Toast */}
+                    <div className="relative inline-flex flex-col items-center">
+                        <AnimatePresence>
+                            {autoplayStatus && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: 10, scale: 0.95, filter: "blur(4px)" }}
+                                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                                    className="absolute bottom-full mb-8 z-50 pointer-events-none w-max max-w-[90vw]"
+                                >
+                                    {autoplayStatus === "blocked" ? (
+                                        <div className="flex items-center justify-center gap-3 px-5 py-3.5 rounded-2xl bg-black/70 dark:bg-black/50 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] text-white relative overflow-hidden group">
+                                            <div className="absolute inset-0 bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 opacity-50" />
+                                            <div className="absolute inset-px rounded-2xl border border-white/5" />
+                                            <motion.div
+                                                animate={{ scale: [1, 1.2, 1] }}
+                                                transition={{ duration: 2, repeat: Infinity }}
+                                                className="relative z-10 text-violet-300 flex-shrink-0"
+                                            >
+                                                <MousePointerClick size={20} />
+                                            </motion.div>
+                                            <span className="text-sm font-medium relative z-10 tracking-wide text-center">
+                                                Click anywhere to play music
+                                            </span>
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center justify-center gap-3 px-5 py-3.5 rounded-2xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-neutral-200 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.1)] text-neutral-800 dark:text-white relative overflow-hidden">
+                                            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 opacity-50" />
+                                            <motion.div
+                                                initial={{ rotate: -45, scale: 0 }}
+                                                animate={{ rotate: 0, scale: 1 }}
+                                                transition={{ type: "spring", delay: 0.2 }}
+                                                className="relative z-10 text-emerald-600 dark:text-emerald-400 flex-shrink-0"
+                                            >
+                                                <Music size={20} />
+                                            </motion.div>
+                                            <span className="text-sm font-medium relative z-10 tracking-wide text-center">
+                                                Music playing. Mute anytime.
+                                            </span>
+                                        </div>
+                                    )}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        <motion.div variants={itemVariants} className="inline-block">
+                            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-violet-500/20 bg-violet-500/5 text-violet-600 dark:text-violet-400 text-sm font-medium backdrop-blur-sm">
+                                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                                Available for opportunities
+                            </span>
+                        </motion.div>
+                    </div>
 
                     {/* Name */}
                     <motion.h1

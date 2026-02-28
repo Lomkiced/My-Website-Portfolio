@@ -23,7 +23,7 @@ export const PROJECT_DATA: Project[] = [
     {
         title: "eCash - Disbursement Monitoring System | Department of Science and Technology Region 1",
         description:
-            "Engineered a comprehensive Disbursement Monitoring System during my internship at the Department of Science and Technology (DOST) Region 1. Developed using a modern stack featuring React, TailwindCSS, Node.js, Express, and PostgreSQL, this system tracks and manages financial disbursements securely. Key features include real-time updates via WebSockets, automated background tasks, downloadable Excel reporting, and a fully containerized Docker deployment leveraging an Nginx web server.",
+            "Collaborated on the design and development of a comprehensive Disbursement Monitoring System during my internship at the Department of Science and Technology (DOST) Region 1. Developed using a modern stack featuring React, TailwindCSS, Node.js, Express, and PostgreSQL, this system tracks and manages financial disbursements securely. Key features include real-time updates via WebSockets, automated background tasks, downloadable Excel reporting, and a fully containerized Docker deployment leveraging an Nginx web server.",
         techStack: ["PostgreSQL", "Prisma", "Express", "React", "Node.js"],
         liveUrl: "#",
         githubUrl: "#",

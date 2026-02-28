@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
+import Image from "next/image";
 import { FiSun, FiMoon, FiMenu, FiX, FiDownload } from "react-icons/fi";
 import dynamic from "next/dynamic";
 
@@ -92,11 +93,13 @@ export default function Navbar() {
                             className="flex items-center gap-2 group"
                             whileHover={{ scale: 1.02 }}
                         >
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-500/20 group-hover:shadow-violet-500/40 transition-shadow">
-                                <span className="text-sm font-bold text-white font-display">
-                                    MC
-                                </span>
-                            </div>
+                            <Image
+                                src="/DEALWITHIT.png"
+                                alt="Logo"
+                                width={44}
+                                height={44}
+                                className="w-11 h-11 object-contain drop-shadow-md group-hover:scale-105 transition-transform"
+                            />
                             <span className="hidden lg:block text-lg font-bold font-display text-foreground whitespace-nowrap">
                                 Mike<span className="text-gradient"> Cedrick</span>
                             </span>

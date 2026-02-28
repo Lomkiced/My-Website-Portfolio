@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
 import { FiSun, FiMoon, FiMenu, FiX, FiDownload } from "react-icons/fi";
+import AudioPlayer from "@/components/ui/audio-player";
 
 const navLinks = [
     { name: "Home", href: "#home" },
@@ -76,25 +77,31 @@ export default function Navbar() {
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16 md:h-20">
-                    {/* Logo */}
-                    <motion.a
-                        href="#home"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            handleNavClick("#home");
-                        }}
-                        className="flex items-center gap-2 group"
-                        whileHover={{ scale: 1.02 }}
-                    >
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-500/20 group-hover:shadow-violet-500/40 transition-shadow">
-                            <span className="text-sm font-bold text-white font-display">
-                                MC
+                    {/* Logo & Audio */}
+                    <div className="flex items-center gap-4">
+                        <motion.a
+                            href="#home"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                handleNavClick("#home");
+                            }}
+                            className="flex items-center gap-2 group"
+                            whileHover={{ scale: 1.02 }}
+                        >
+                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-500/20 group-hover:shadow-violet-500/40 transition-shadow">
+                                <span className="text-sm font-bold text-white font-display">
+                                    MC
+                                </span>
+                            </div>
+                            <span className="hidden lg:block text-lg font-bold font-display text-foreground whitespace-nowrap">
+                                Mike<span className="text-gradient"> Cedrick</span>
                             </span>
+                        </motion.a>
+
+                        <div className="hidden sm:block">
+                            <AudioPlayer />
                         </div>
-                        <span className="hidden sm:block text-lg font-bold font-display text-foreground">
-                            Mike<span className="text-gradient"> Cedrick</span>
-                        </span>
-                    </motion.a>
+                    </div>
 
                     {/* Desktop Nav Links */}
                     <div className="hidden md:flex items-center gap-1">

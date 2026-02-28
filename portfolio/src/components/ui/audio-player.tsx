@@ -10,7 +10,7 @@ export default function AudioPlayer() {
 
     useEffect(() => {
         // Initialize audio instance with the custom song
-        const audio = new Audio("/audio/The%20Stack%20Is%20Mine.mp3");
+        const audio = new Audio("/audio/Rewrite%20The%20Stars.mp3");
         audio.loop = true;
         audio.volume = 0.25; // Subtle background volume
         audioRef.current = audio;
@@ -34,7 +34,7 @@ export default function AudioPlayer() {
             try {
                 await audio.play();
                 setIsPlaying(true);
-            } catch (error) {
+            } catch (_error) {
                 // Autoplay policy prevented playing without interaction
                 document.addEventListener("click", playOnInteraction);
                 document.addEventListener("keydown", playOnInteraction);
@@ -63,10 +63,10 @@ export default function AudioPlayer() {
 
     return (
         <motion.div
-            className="fixed bottom-6 right-6 z-50 flex items-center gap-3 backdrop-blur-md bg-background/70 border border-violet-500/20 px-4 py-2 rounded-full shadow-lg shadow-violet-500/10"
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ delay: 1, duration: 0.5 }}
+            className="flex items-center gap-2 bg-accent/30 hover:bg-accent/50 border border-border/50 px-3 py-1.5 rounded-full transition-colors shadow-sm"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5, duration: 0.3 }}
         >
             <div className="flex items-end gap-[3px] h-5 w-5 overflow-hidden pb-[2px]">
                 {[1, 2, 3].map((bar) => (

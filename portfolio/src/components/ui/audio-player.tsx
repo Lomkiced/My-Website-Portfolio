@@ -86,7 +86,7 @@ export default function AudioPlayer() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95, filter: "blur(4px)" }}
                     transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                    className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[9999] pointer-events-none w-max max-w-[90vw]"
+                    className="fixed top-24 left-1/2 -translate-x-1/2 z-[9999] pointer-events-none w-max max-w-[90vw]"
                 >
                     {autoplayStatus === "blocked" ? (
                         <div className="flex items-center justify-center gap-3 px-5 py-3.5 rounded-2xl bg-black/70 dark:bg-black/50 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] text-white relative overflow-hidden group">

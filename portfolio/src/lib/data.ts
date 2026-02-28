@@ -38,6 +38,15 @@ export const PROJECT_DATA: Project[] = [
         githubUrl: "#",
         gradient: "from-purple-600 to-pink-600",
     },
+    {
+        title: "Institutional Library Management System | Polytechnic College of La Union",
+        description:
+            "Engineered a comprehensive, full-stack Library Management System for the Polytechnic College of La Union (PCLU). Built with Laravel and React, this system modernizes library operations by offering a dynamic digital catalog, automated circulation tracking, and real-time email notifications for overdue assets. Key features include an automated Google Books API integration for instant cataloging, built-in QR/barcode scanning for streamlined checkouts, a dedicated self-service kiosk mode, and containerized Docker deployment.",
+        techStack: ["Laravel", "React", "Docker", "Google Books API"],
+        liveUrl: "#",
+        githubUrl: "#",
+        gradient: "from-blue-600 to-cyan-600",
+    },
 ];
 
 // ─── Experience Data ──────────────────────────────────────────────────────────

@@ -10,7 +10,7 @@ export default function AudioPlayer() {
 
     useEffect(() => {
         // Initialize audio instance with the custom song
-        const audio = new Audio("/audio/Rewrite%20The%20Stars.mp3");
+        const audio = new Audio("/audio/Rewrite%20the%20Stars.mp3");
         audio.loop = true;
         audio.volume = 0.25; // Subtle background volume
         audioRef.current = audio;

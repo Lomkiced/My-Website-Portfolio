@@ -63,7 +63,7 @@ export default function AudioPlayer() {
             audio.src = ""; // Clear source for garbage collection
             removeListeners();
         };
-    }, []);
+    }, [setAutoplayStatus]);
 
     const togglePlay = () => {
         if (!audioRef.current) return;

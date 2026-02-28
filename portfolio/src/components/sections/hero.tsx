@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState, lazy, Suspense } from "react";
+import { useRef, useEffect, useState, Suspense } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { FiArrowDown, FiMail } from "react-icons/fi";
 import { Music, MousePointerClick } from "lucide-react";

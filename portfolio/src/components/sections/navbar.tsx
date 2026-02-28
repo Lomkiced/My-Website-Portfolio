@@ -98,9 +98,6 @@ export default function Navbar() {
                             </span>
                         </motion.a>
 
-                        <div className="hidden sm:block">
-                            <AudioPlayer />
-                        </div>
                     </div>
 
                     {/* Desktop Nav Links */}
@@ -154,10 +151,13 @@ export default function Navbar() {
                             </motion.button>
                         )}
 
+                        {/* Audio Player (Moved to right side for mobile visibility) */}
+                        <AudioPlayer />
+
                         {/* Resume button */}
                         <motion.a
                             href="#"
-                            className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-sm font-medium hover:shadow-lg hover:shadow-violet-500/25 transition-shadow"
+                            className="hidden lg:flex flex-none items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-sm font-medium hover:shadow-lg hover:shadow-violet-500/25 transition-shadow"
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                         >

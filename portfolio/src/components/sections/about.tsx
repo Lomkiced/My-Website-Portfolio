@@ -2,6 +2,7 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ReactNode, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { FiAward, FiCode, FiLayers, FiMapPin } from "react-icons/fi";
 
 const highlights = [
@@ -211,19 +212,35 @@ export default function About() {
                                 />
 
                                 {/* Photo placeholder / actual content */}
-                                <div className="absolute inset-[2px] rounded-[1.8rem] bg-gradient-to-br from-violet-100/50 to-indigo-100/50 dark:from-violet-950/40 dark:to-indigo-950/40 flex flex-col items-center justify-center shadow-inner pt-6" style={{ transform: "translateZ(30px)", transformStyle: "preserve-3d" }}>
-                                    <div className="text-center p-8">
-                                        <div className="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-violet-500 to-indigo-500 p-1 shadow-xl mb-6 transform transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-3">
-                                            <div className="w-full h-full rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center border border-white/20">
-                                                <span className="text-4xl font-bold bg-gradient-to-br from-violet-600 to-indigo-600 dark:from-violet-400 dark:to-indigo-400 bg-clip-text text-transparent font-display">
-                                                    MC
-                                                </span>
-                                            </div>
+                                <div className="absolute inset-[2px] rounded-[1.8rem] overflow-hidden shadow-inner group/image" style={{ transform: "translateZ(20px)", transformStyle: "preserve-3d" }}>
+                                    <motion.div
+                                        className="w-full h-full relative"
+                                        style={{
+                                            x: useTransform(mouseXSpring, [-0.5, 0.5], ["-5%", "5%"]),
+                                            y: useTransform(mouseYSpring, [-0.5, 0.5], ["-5%", "5%"]),
+                                            scale: 1.1, // Scale up slightly to hide edges during parallax
+                                        }}
+                                    >
+                                        <Image
+                                            src="/profile.jpg"
+                                            alt="Mike Cedrick"
+                                            fill
+                                            className="object-cover transition-transform duration-700 ease-out group-hover/image:scale-105"
+                                            priority
+                                            sizes="(max-width: 768px) 100vw, 400px"
+                                        />
+                                        {/* Premium gradient overlay to ensure text readability */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80" />
+                                    </motion.div>
+
+                                    {/* Floating Info Panel at the Bottom */}
+                                    <div className="absolute bottom-6 inset-x-6" style={{ transform: "translateZ(40px)" }}>
+                                        <div className="bg-white/10 dark:bg-black/30 backdrop-blur-md border border-white/20 dark:border-white/10 p-5 rounded-2xl shadow-2xl transform transition-transform duration-500 hover:scale-105">
+                                            <h3 className="text-xl md:text-2xl font-bold font-display text-white drop-shadow-md">Mike Cedrick</h3>
+                                            <p className="text-sm md:text-base text-white/80 font-medium tracking-wide mt-1">
+                                                Software Developer
+                                            </p>
                                         </div>
-                                        <h3 className="text-xl font-bold font-display text-foreground drop-shadow-sm">Mike Cedrick</h3>
-                                        <p className="text-sm text-foreground/70 font-medium tracking-wide mt-1">
-                                            Software Developer
-                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -320,6 +337,7 @@ export default function About() {
                             ))}
                             {/* Extra bento card to complete 2x2 grid nicely */}
                             <motion.div
+                                className="h-full"
                                 initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true, margin: "-10%" }}
@@ -329,17 +347,53 @@ export default function About() {
                                     ease: "easeOut",
                                 }}
                             >
-                                <SpotlightCard className="p-6 h-full flex flex-col justify-center bg-gradient-to-br from-violet-500/5 to-indigo-500/5 group/bento min-h-[140px] items-center text-center">
-                                    <div className="w-12 h-12 mb-3 rounded-full bg-violet-500/10 dark:bg-violet-500/20 flex items-center justify-center relative overflow-hidden">
-                                        <motion.div
-                                            animate={{ rotate: 360 }}
-                                            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                                            className="absolute inset-x-0 h-1/2 bg-gradient-to-r from-transparent via-violet-500/30 to-transparent top-1/4"
-                                        />
-                                        <span className="w-6 h-6 rounded-full bg-violet-500/20 dark:bg-violet-500/40 relative z-10 backdrop-blur-md" />
+                                <SpotlightCard className="p-6 h-full w-full flex flex-col items-center justify-center bg-gradient-to-br from-violet-500/5 to-indigo-500/5 group/bento relative overflow-hidden rounded-2xl">
+                                    <div className="flex-1 flex flex-col items-center justify-center w-full relative z-10">
+                                        {/* Advanced Loading Animation */}
+                                        <div className="w-14 h-14 mb-5 relative flex items-center justify-center shrink-0">
+                                            {/* Ambient Core Glow */}
+                                            <div className="absolute inset-0 bg-violet-500/20 rounded-full blur-md" />
+
+                                            {/* Outer Dashed Orbit */}
+                                            <motion.div
+                                                animate={{ rotate: 360 }}
+                                                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                                                className="absolute inset-0 rounded-full border border-dashed border-violet-500/40"
+                                            />
+
+                                            {/* Inner Continuous Energy Orbit */}
+                                            <motion.div
+                                                animate={{ rotate: -360 }}
+                                                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                                                className="absolute inset-1.5 rounded-full border border-transparent border-t-violet-400 border-b-indigo-400 opacity-80"
+                                            />
+
+                                            {/* Pulsing Quantum Core */}
+                                            <motion.div
+                                                animate={{ scale: [1, 1.3, 1], opacity: [0.6, 1, 0.6] }}
+                                                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                                                className="w-3 h-3 rounded-full bg-gradient-to-br from-violet-400 to-indigo-400 shadow-[0_0_12px_rgba(167,139,250,0.9)]"
+                                            />
+
+                                            {/* Orbiting Satellite Particle */}
+                                            <motion.div
+                                                animate={{ rotate: 360 }}
+                                                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                                                className="absolute inset-0 z-10 origin-center"
+                                            >
+                                                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,1)]" />
+                                            </motion.div>
+                                        </div>
+
+                                        {/* Text Content */}
+                                        <div className="text-center">
+                                            <h4 className="font-semibold text-foreground/90 font-display transition-colors group-hover/bento:text-foreground">Always Learning</h4>
+                                            <p className="text-xs text-foreground/50 mt-1 transition-colors group-hover/bento:text-foreground/70">Exploring new frontiers</p>
+                                        </div>
                                     </div>
-                                    <h4 className="font-semibold text-foreground/80 font-display">Always Learning</h4>
-                                    <p className="text-xs text-foreground/50 mt-1">Ready for the next big challenge</p>
+
+                                    {/* Advanced Hover Ambient Lighting */}
+                                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-violet-500/10 to-transparent opacity-0 group-hover/bento:opacity-100 transition-opacity duration-500" />
                                 </SpotlightCard>
                             </motion.div>
                         </div>

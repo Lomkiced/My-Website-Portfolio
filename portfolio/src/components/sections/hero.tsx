@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState, Suspense } from "react";
+import { useRef, Suspense } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { FiArrowDown, FiMail } from "react-icons/fi";
 import { Music, MousePointerClick } from "lucide-react";
@@ -51,7 +51,6 @@ const gradientMap: Record<string, { from: string; to: string }> = {
 
 export default function Hero() {
     const sectionRef = useRef<HTMLElement>(null);
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const activeSectionColor = useThemeStore((s) => s.activeSectionColor);
     const autoplayStatus = useThemeStore((s) => s.autoplayStatus);
 
@@ -62,20 +61,6 @@ export default function Hero() {
 
     const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
     const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-
-    useEffect(() => {
-        const handleMouseMove = (e: MouseEvent) => {
-            if (sectionRef.current) {
-                const rect = sectionRef.current.getBoundingClientRect();
-                setMousePosition({
-                    x: e.clientX - rect.left,
-                    y: e.clientY - rect.top,
-                });
-            }
-        };
-        window.addEventListener("mousemove", handleMouseMove);
-        return () => window.removeEventListener("mousemove", handleMouseMove);
-    }, []);
 
     const handleNavClick = (href: string) => {
         const el = document.querySelector(href);
@@ -91,7 +76,7 @@ export default function Hero() {
         <section
             ref={sectionRef}
             id="home"
-            className="relative min-h-screen flex items-center justify-center overflow-hidden"
+            className="relative min-h-screen flex items-center justify-center overflow-hidden pt-32 pb-32"
         >
             {/* ── Animated gradient background ─────────────────────────────────── */}
             <motion.div className="absolute inset-0 -z-10" style={{ y }}>
@@ -124,19 +109,7 @@ export default function Hero() {
                 <TechMatrix />
             </Suspense>
 
-            {/* ── Mouse follow glow ────────────────────────────────────────────── */}
-            <div
-                className="absolute pointer-events-none z-0 transition-opacity duration-300"
-                style={{
-                    left: mousePosition.x - 200,
-                    top: mousePosition.y - 200,
-                    width: 400,
-                    height: 400,
-                    background:
-                        "radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 70%)",
-                    borderRadius: "50%",
-                }}
-            />
+
 
             {/* ── Content ──────────────────────────────────────────────────────── */}
             <motion.div
@@ -203,14 +176,41 @@ export default function Hero() {
                         </motion.div>
                     </div>
 
-                    {/* Name */}
-                    <motion.h1
-                        variants={itemVariants}
-                        className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold font-display tracking-tight"
-                    >
-                        <span className="block text-foreground">Mike Cedrick</span>
-                        <span className="block text-gradient mt-2">Dañocup</span>
-                    </motion.h1>
+                    {/* Name - CSS Text Fill Animation Style */}
+                    <div className="flex flex-col items-center select-none pt-4">
+                        <motion.h1
+                            variants={itemVariants}
+                            className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black font-display tracking-tight flex flex-col items-center"
+                        >
+
+                            {/* Upper Name */}
+                            <div className="flex justify-center mb-2">
+                                <span
+                                    className="text-fill-hero text-foreground"
+                                    data-text="Mike Cedrick"
+                                >
+                                    Mike Cedrick
+                                </span>
+                            </div>
+
+                            {/* Lower Name - Gradient Applied to Bouncing Text Container */}
+                            <div className="relative mt-2 flex justify-center pb-2 px-10">
+                                {/* Exquisite Ambient Aura — CSS animated */}
+                                <div
+                                    className="absolute -inset-x-8 inset-y-0 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-indigo-600 blur-3xl z-0 animate-aura-pulse"
+                                />
+
+                                <div className="relative z-10 block drop-shadow-sm flex">
+                                    <span
+                                        className="text-fill-hero text-fill-purple"
+                                        data-text="Dañocup"
+                                    >
+                                        Dañocup
+                                    </span>
+                                </div>
+                            </div>
+                        </motion.h1>
+                    </div>
 
                     {/* Title */}
                     <motion.p
@@ -235,7 +235,7 @@ export default function Hero() {
                     {/* CTA Buttons */}
                     <motion.div
                         variants={itemVariants}
-                        className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
+                        className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 mb-16"
                     >
                         <motion.button
                             onClick={() => handleNavClick("#projects")}
@@ -262,13 +262,13 @@ export default function Hero() {
 
             {/* ── Scroll indicator ─────────────────────────────────────────────── */}
             <motion.div
-                className="absolute bottom-8 left-1/2 -translate-x-1/2"
+                className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 z-20"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.5, duration: 0.6 }}
             >
                 <motion.div
-                    className="w-6 h-10 rounded-full border-2 border-muted-foreground/30 flex items-start justify-center p-1.5"
+                    className="w-6 h-10 rounded-full border-2 border-muted-foreground/30 flex items-start justify-center p-1.5 backdrop-blur-sm bg-background/30"
                     animate={{ y: [0, 5, 0] }}
                     transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
                 >

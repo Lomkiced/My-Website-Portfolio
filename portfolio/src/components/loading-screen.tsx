@@ -27,6 +27,7 @@ export default function LoadingScreen() {
         const startTime = Date.now();
 
         let animationFrameId: number;
+        let lastDisplayed = -1;
 
         const updateProgress = () => {
             const elapsed = Date.now() - startTime;
@@ -35,7 +36,11 @@ export default function LoadingScreen() {
             // Cubic ease-out feeling for the number counter
             const easedProgress = Math.floor(100 - Math.pow(1 - p / 100, 3) * 100);
 
-            setProgress(easedProgress);
+            // Only trigger a re-render when the displayed integer changes
+            if (easedProgress !== lastDisplayed) {
+                lastDisplayed = easedProgress;
+                setProgress(easedProgress);
+            }
 
             if (elapsed < duration) {
                 animationFrameId = requestAnimationFrame(updateProgress);

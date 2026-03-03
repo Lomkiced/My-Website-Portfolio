@@ -77,7 +77,7 @@ function MagneticButton({
 // ─── Project Card ─────────────────────────────────────────────────────────
 function ProjectCard({ project }: { project: (typeof PROJECT_DATA)[number] }) {
     const cardRef = useRef<HTMLDivElement>(null);
-    const isInView = useInView(cardRef, { amount: 0.5 });
+    const isInView = useInView(cardRef, { amount: 0.5, once: false });
     const setColor = useThemeStore((s) => s.setActiveSectionColor);
 
     useEffect(() => {
@@ -147,35 +147,28 @@ function ProjectCard({ project }: { project: (typeof PROJECT_DATA)[number] }) {
             >
                 {/* Header Graphic */}
                 <div
-                    className={`relative h-56 bg-gradient-to-br ${project.gradient} overflow-hidden rounded-t-3xl`}
+                    className={`relative h-56 ${project.image ? 'bg-neutral-900' : `bg-gradient-to-br ${project.gradient}`} overflow-hidden rounded-t-3xl`}
                 >
-                    {/* Animated Orbs/Waves */}
-                    <motion.div
-                        className="absolute -top-10 -left-10 w-48 h-48 bg-white/30 blur-2xl md:blur-3xl rounded-full will-change-transform"
-                        animate={{
-                            x: [0, 30, 0],
-                            y: [0, -20, 0],
-                            scale: [1, 1.2, 1],
-                        }}
-                        transition={{
-                            duration: 5,
-                            repeat: Infinity,
-                            ease: "easeInOut",
-                        }}
-                    />
-                    <motion.div
-                        className="absolute -bottom-10 -right-10 w-64 h-64 bg-black/20 blur-2xl md:blur-3xl rounded-full will-change-transform"
-                        animate={{
-                            x: [0, -40, 0],
-                            y: [0, 30, 0],
-                            scale: [1, 1.5, 1],
-                        }}
-                        transition={{
-                            duration: 7,
-                            repeat: Infinity,
-                            ease: "easeInOut",
-                        }}
-                    />
+                    {/* Optional Background Image */}
+                    {project.image && (
+                        <div
+                            className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 group-hover:scale-105"
+                            style={{ backgroundImage: `url(${project.image})` }}
+                        />
+                    )}
+                    {/* Animated Orbs/Waves (Only show if no image exists) */}
+                    {!project.image && (
+                        <>
+                            <div
+                                className="absolute -top-10 -left-10 w-48 h-48 bg-white/30 blur-2xl md:blur-3xl rounded-full will-change-transform"
+                                style={{ animation: 'orb-drift-1 5s ease-in-out infinite' }}
+                            />
+                            <div
+                                className="absolute -bottom-10 -right-10 w-64 h-64 bg-black/20 blur-2xl md:blur-3xl rounded-full will-change-transform"
+                                style={{ animation: 'orb-drift-2 7s ease-in-out infinite' }}
+                            />
+                        </>
+                    )}
 
                     {/* Title Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent flex items-end p-6">

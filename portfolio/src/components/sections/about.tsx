@@ -138,34 +138,13 @@ export default function About() {
 
     return (
         <section id="about" className="py-20 md:py-32 relative overflow-hidden">
-            {/* 5. Continuous Floating Badges (Background Blur) */}
-            <motion.div
-                animate={{
-                    y: [0, -20, 0],
-                    scale: [1, 1.05, 1],
-                    opacity: [0.5, 0.8, 0.5],
-                }}
-                transition={{
-                    duration: 6,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                }}
-                className="absolute top-0 right-0 w-96 h-96 bg-violet-500/20 rounded-full blur-3xl md:blur-[100px] -translate-y-1/2 translate-x-1/4 pointer-events-none will-change-transform"
+            {/* 5. Continuous Floating Badges (Background Blur) — CSS animated for GPU compositing */}
+            <div
+                className="absolute top-0 right-0 w-96 h-96 bg-violet-500/20 rounded-full blur-3xl md:blur-[100px] -translate-y-1/2 translate-x-1/4 pointer-events-none will-change-transform animate-float-blob-up"
             />
 
-            <motion.div
-                animate={{
-                    y: [0, 20, 0],
-                    scale: [1, 1.1, 1],
-                    opacity: [0.3, 0.6, 0.3],
-                }}
-                transition={{
-                    duration: 8,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 1,
-                }}
-                className="absolute bottom-0 left-0 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl md:blur-[80px] translate-y-1/4 -translate-x-1/4 pointer-events-none will-change-transform"
+            <div
+                className="absolute bottom-0 left-0 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl md:blur-[80px] translate-y-1/4 -translate-x-1/4 pointer-events-none will-change-transform animate-float-blob-down"
             />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -252,11 +231,9 @@ export default function About() {
                             </div>
                         </motion.div>
 
-                        {/* 5. Continuous Floating Location badge */}
+                        {/* 5. Continuous Floating Location badge — CSS animated */}
                         <motion.div
-                            className="absolute -bottom-6 -right-4 lg:-right-8 z-30 pointer-events-none"
-                            animate={{ y: [0, -12, 0] }}
-                            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                            className="absolute -bottom-6 -right-4 lg:-right-8 z-30 pointer-events-none animate-float-badge"
                             initial={{ opacity: 0, scale: 0.8 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
@@ -360,35 +337,31 @@ export default function About() {
                                             {/* Ambient Core Glow */}
                                             <div className="absolute inset-0 bg-violet-500/20 rounded-full blur-md" />
 
-                                            {/* Outer Dashed Orbit */}
-                                            <motion.div
-                                                animate={{ rotate: 360 }}
-                                                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                                            {/* Outer Dashed Orbit — CSS animated */}
+                                            <div
                                                 className="absolute inset-0 rounded-full border border-dashed border-violet-500/40"
+                                                style={{ animation: 'orbit-slow 8s linear infinite' }}
                                             />
 
-                                            {/* Inner Continuous Energy Orbit */}
-                                            <motion.div
-                                                animate={{ rotate: -360 }}
-                                                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                                            {/* Inner Continuous Energy Orbit — CSS animated */}
+                                            <div
                                                 className="absolute inset-1.5 rounded-full border border-transparent border-t-violet-400 border-b-indigo-400 opacity-80"
+                                                style={{ animation: 'orbit-reverse 4s linear infinite' }}
                                             />
 
-                                            {/* Pulsing Quantum Core */}
-                                            <motion.div
-                                                animate={{ scale: [1, 1.3, 1], opacity: [0.6, 1, 0.6] }}
-                                                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                                            {/* Pulsing Quantum Core — CSS animated */}
+                                            <div
                                                 className="w-3 h-3 rounded-full bg-gradient-to-br from-violet-400 to-indigo-400 shadow-[0_0_12px_rgba(167,139,250,0.9)]"
+                                                style={{ animation: 'pulse-core 2s ease-in-out infinite' }}
                                             />
 
-                                            {/* Orbiting Satellite Particle */}
-                                            <motion.div
-                                                animate={{ rotate: 360 }}
-                                                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                                            {/* Orbiting Satellite Particle — CSS animated */}
+                                            <div
                                                 className="absolute inset-0 z-10 origin-center"
+                                                style={{ animation: 'orbit-slow 3s linear infinite' }}
                                             >
                                                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,1)]" />
-                                            </motion.div>
+                                            </div>
                                         </div>
 
                                         {/* Text Content */}

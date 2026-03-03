@@ -9,9 +9,10 @@ export default function ScrollToTop() {
 
     useEffect(() => {
         const toggleVisibility = () => {
-            setIsVisible(window.scrollY > 300);
+            const shouldShow = window.scrollY > 300;
+            setIsVisible((prev) => (prev !== shouldShow ? shouldShow : prev));
         };
-        window.addEventListener("scroll", toggleVisibility);
+        window.addEventListener("scroll", toggleVisibility, { passive: true });
         return () => window.removeEventListener("scroll", toggleVisibility);
     }, []);
 

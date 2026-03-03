@@ -7,6 +7,7 @@ export interface Project {
     liveUrl: string;
     githubUrl: string;
     gradient: string;
+    image?: string;
 }
 
 export interface TimelineItem {
@@ -25,17 +26,18 @@ export const PROJECT_DATA: Project[] = [
         description:
             "Collaborated on the design and development of a comprehensive Disbursement Monitoring System during my internship at the Department of Science and Technology (DOST) Region 1. Developed using a modern stack featuring React, TailwindCSS, Node.js, Express, and PostgreSQL, this system tracks and manages financial disbursements securely. Key features include real-time updates via WebSockets, automated background tasks, downloadable Excel reporting, and a fully containerized Docker deployment leveraging an Nginx web server.",
         techStack: ["PostgreSQL", "Prisma", "Express", "React", "Node.js"],
-        liveUrl: "#",
-        githubUrl: "#",
+        liveUrl: "https://ecash.dost1.ph",
+        githubUrl: "https://github.com/Lomkiced",
         gradient: "from-violet-600 to-indigo-600",
+        image: "/eCash.png",
     },
     {
         title: "KIP - Record Management System | Department of Science and Technology Region 1",
         description:
             "KIP (Keeping Information Permanently)\n\nDesigned and developed a comprehensive Record Management System for the Department of Science and Technology (DOST) Ilocos Region. Built on the PERN stack (PostgreSQL, Express, React, Node.js), this system digitizes and secures the agency's document archiving process. It features role-based access control, secure file uploads, interactive data dashboards using Recharts, and is fully containerized using Docker for scalable deployment.",
         techStack: ["PostgreSQL", "Express", "React", "Node.js"],
-        liveUrl: "#",
-        githubUrl: "#",
+        liveUrl: "https://kip.dost1.ph",
+        githubUrl: "https://github.com/Lomkiced",
         gradient: "from-purple-600 to-pink-600",
     },
     {
@@ -44,7 +46,7 @@ export const PROJECT_DATA: Project[] = [
             "Engineered a comprehensive, full-stack Library Management System for the Polytechnic College of La Union (PCLU). Built with Laravel and React, this system modernizes library operations by offering a dynamic digital catalog, automated circulation tracking, and real-time email notifications for overdue assets. Key features include an automated Google Books API integration for instant cataloging, built-in QR/barcode scanning for streamlined checkouts, a dedicated self-service kiosk mode, and containerized Docker deployment.",
         techStack: ["Laravel", "React", "Docker", "Google Books API"],
         liveUrl: "#",
-        githubUrl: "#",
+        githubUrl: "https://github.com/Lomkiced",
         gradient: "from-blue-600 to-cyan-600",
     },
 ];

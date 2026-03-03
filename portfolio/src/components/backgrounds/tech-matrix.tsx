@@ -21,6 +21,8 @@ interface Particle {
     phase: number;
     /** Per-particle opacity multiplier */
     alpha: number;
+    /** Spatial grid cell index (updated each frame) */
+    cellKey: string;
 }
 
 /** A sparse code-rain column */
@@ -47,8 +49,6 @@ interface FloatingText {
 
 /** Theme-dependent color palette used inside the animation loop */
 interface ColorPalette {
-    /** Semi-transparent background fill for trailing effect */
-    trailFill: string;
     /** Array of node/line colors to pick from */
     nodeColors: string[];
     /** Glow color for the cursor radial gradient */
@@ -63,15 +63,18 @@ interface ColorPalette {
     lineColor: (alpha: number) => string;
 }
 
-// ─── Constants ─────────────────────────────────────────────────────────────────
+// ─── Constants (OPTIMIZED) ─────────────────────────────────────────────────────
 
-const PARTICLE_COUNT = 80;
-const RAIN_COLUMN_COUNT = 18;
-const FLOATING_TEXT_COUNT = 12;
-const CONNECTION_DISTANCE = 180;
+const PARTICLE_COUNT = 50; // Reduced from 80
+const RAIN_COLUMN_COUNT = 12; // Reduced from 18
+const FLOATING_TEXT_COUNT = 8; // Reduced from 12
+const CONNECTION_DISTANCE = 150; // Reduced from 180
+const CONNECTION_DISTANCE_SQ = CONNECTION_DISTANCE * CONNECTION_DISTANCE;
 const MOUSE_REPULSION_RADIUS = 200;
+const MOUSE_REPULSION_RADIUS_SQ = MOUSE_REPULSION_RADIUS * MOUSE_REPULSION_RADIUS;
 const MOUSE_GLOW_RADIUS = 300;
 const RAIN_FONT_SIZE = 14;
+const SPATIAL_CELL_SIZE = CONNECTION_DISTANCE; // Grid cell = connection range
 
 /** Katakana + tech symbols for code rain */
 const RAIN_CHARS =
@@ -106,7 +109,6 @@ const CODE_KEYWORDS = [
 // ─── Palette Definitions ───────────────────────────────────────────────────────
 
 const DARK_PALETTE: ColorPalette = {
-    trailFill: "rgba(3, 7, 18, 0.12)",
     nodeColors: [
         "rgba(139, 92, 246, 0.8)", // violet-500
         "rgba(99, 102, 241, 0.7)", // indigo-500
@@ -121,7 +123,6 @@ const DARK_PALETTE: ColorPalette = {
 };
 
 const LIGHT_PALETTE: ColorPalette = {
-    trailFill: "rgba(248, 250, 252, 0.14)",
     nodeColors: [
         "rgba(79, 70, 229, 0.55)",  // indigo-600
         "rgba(99, 102, 241, 0.45)", // indigo-500
@@ -155,6 +156,45 @@ function pick<T>(arr: T[]): T {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
+// ─── Spatial Grid for O(n) Connection Lookups ──────────────────────────────────
+
+class SpatialGrid {
+    private cells: Map<string, number[]> = new Map();
+
+    clear() {
+        this.cells.clear();
+    }
+
+    /** Insert a particle index into the grid */
+    insert(idx: number, x: number, y: number) {
+        const key = `${Math.floor(x / SPATIAL_CELL_SIZE)},${Math.floor(y / SPATIAL_CELL_SIZE)}`;
+        let cell = this.cells.get(key);
+        if (!cell) {
+            cell = [];
+            this.cells.set(key, cell);
+        }
+        cell.push(idx);
+        return key;
+    }
+
+    /** Get all particle indices in neighboring cells (3x3 around the given cell) */
+    getNeighborIndices(cellKey: string): number[] {
+        const [cx, cy] = cellKey.split(",").map(Number);
+        const result: number[] = [];
+        for (let dx = -1; dx <= 1; dx++) {
+            for (let dy = -1; dy <= 1; dy++) {
+                const cell = this.cells.get(`${cx + dx},${cy + dy}`);
+                if (cell) {
+                    for (let i = 0; i < cell.length; i++) {
+                        result.push(cell[i]);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+}
+
 // ─── Factory Functions ─────────────────────────────────────────────────────────
 
 function createParticle(w: number, h: number): Particle {
@@ -173,6 +213,7 @@ function createParticle(w: number, h: number): Particle {
         tier,
         phase: rand(0, Math.PI * 2),
         alpha: rand(cfg.alphaRange[0], cfg.alphaRange[1]),
+        cellKey: "",
     };
 }
 
@@ -238,6 +279,8 @@ export default function TechMatrix() {
         let time = 0;
         let logicalW = 0;
         let logicalH = 0;
+        let frameCount = 0;
+        const spatialGrid = new SpatialGrid();
 
         // ── Initialization ───────────────────────────────────────────────────
 
@@ -248,30 +291,26 @@ export default function TechMatrix() {
 
             const isMobile = logicalW < 768;
 
-            // Dynamic Device Pixel Ratio scaling for sharper canvases
-            // On mobile, cap dpr to 1.5 to save performance while maintaining decent sharpness
+            // Cap DPR on mobile to save performance
             const dpr = typeof window !== "undefined"
-                ? (isMobile ? Math.min(window.devicePixelRatio || 1, 1.5) : window.devicePixelRatio || 1)
+                ? (isMobile ? Math.min(window.devicePixelRatio || 1, 1.5) : Math.min(window.devicePixelRatio || 1, 2))
                 : 1;
 
-            // Set canvas resolution to match CSS size (avoid stretching)
             canvas.style.width = `${logicalW}px`;
             canvas.style.height = `${logicalH}px`;
             canvas.width = logicalW * dpr;
             canvas.height = logicalH * dpr;
 
-            // Normalize coordinate system to use CSS pixels
+            ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset any previous scale
             ctx.scale(dpr, dpr);
 
-            // Clear canvas (transparent - allows hero background to show through)
             ctx.clearRect(0, 0, logicalW, logicalH);
 
-            // Mobile fallback / throttling
+            // Mobile: aggressively reduce entity counts
             const particleCount = isMobile ? Math.floor(PARTICLE_COUNT * 0.25) : PARTICLE_COUNT;
             const rainCount = isMobile ? Math.floor(RAIN_COLUMN_COUNT * 0.2) : RAIN_COLUMN_COUNT;
             const textCount = isMobile ? Math.floor(FLOATING_TEXT_COUNT * 0.3) : FLOATING_TEXT_COUNT;
 
-            // Create entities
             particles = Array.from({ length: particleCount }, () => createParticle(logicalW, logicalH));
             rainColumns = Array.from({ length: rainCount }, () => createRainColumn(logicalW, logicalH));
             floatingTexts = Array.from({ length: textCount }, () => createFloatingText(logicalW, logicalH));
@@ -292,29 +331,39 @@ export default function TechMatrix() {
         window.addEventListener("mousemove", onMouseMove, { passive: true });
         window.addEventListener("mouseleave", onMouseLeave);
 
-        // ── Resize Observer ──────────────────────────────────────────────────
+        // ── Resize Observer (debounced) ──────────────────────────────────────
 
+        let resizeTimeout: ReturnType<typeof setTimeout>;
         const resizeObserver = new ResizeObserver(() => {
-            init();
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => init(), 200);
         });
 
         if (canvas.parentElement) {
             resizeObserver.observe(canvas.parentElement);
         }
 
-        // ── Animation Loop ───────────────────────────────────────────────────
+        // ── Animation Loop (with frame throttling) ───────────────────────────
 
         const draw = () => {
+            frameCount++;
+
+            // Skip every other frame → effective ~30fps (unnoticeable for ambient bg)
+            if (frameCount % 2 !== 0) {
+                animationFrameId = requestAnimationFrame(draw);
+                return;
+            }
+
             const w = logicalW;
             const h = logicalH;
             const p = paletteRef.current;
 
-            time += 0.008;
+            time += 0.016; // ~2x increment since we're at half framerate
 
-            // ─ Clear canvas each frame (transparent overlay) ─────────────────
+            // ─ Clear canvas ─────────────────────────────────────────────────
             ctx.clearRect(0, 0, w, h);
 
-            // ─ Layer 4: Floating text fragments (drawn first, behind everything) ─
+            // ─ Layer 4: Floating text fragments ─────────────────────────────
             ctx.save();
             for (let i = 0; i < floatingTexts.length; i++) {
                 const ft = floatingTexts[i];
@@ -322,7 +371,6 @@ export default function TechMatrix() {
                 ft.x += ft.vx;
                 ft.y += ft.vy;
 
-                // Wrap around edges
                 if (ft.x < -100) ft.x = w + 50;
                 if (ft.x > w + 100) ft.x = -50;
                 if (ft.y < -50) ft.y = h + 30;
@@ -343,32 +391,23 @@ export default function TechMatrix() {
             for (let i = 0; i < rainColumns.length; i++) {
                 const col = rainColumns[i];
 
-                // Draw each character in the stream
                 for (let j = 0; j < col.chars.length; j++) {
                     const charY = col.y - j * RAIN_FONT_SIZE;
                     if (charY < -RAIN_FONT_SIZE || charY > h + RAIN_FONT_SIZE) continue;
 
                     if (j === 0) {
-                        // Head character: bright glow
+                        // Head character: bright (no shadowBlur — GPU expensive)
                         ctx.fillStyle = p.rainHead;
-                        ctx.shadowBlur = 8;
-                        ctx.shadowColor = p.nodeColors[0];
                         ctx.globalAlpha = col.headAlpha;
                     } else {
-                        // Trailing characters: fade proportionally
                         const fadeRatio = 1 - j / col.length;
                         ctx.fillStyle = p.rainTail;
-                        ctx.shadowBlur = 0;
                         ctx.globalAlpha = fadeRatio * 0.6;
                     }
 
                     ctx.fillText(col.chars[j], col.x, charY);
                 }
 
-                // Reset shadow
-                ctx.shadowBlur = 0;
-
-                // Advance downward
                 col.y += col.speed;
 
                 // Randomize characters occasionally
@@ -377,7 +416,6 @@ export default function TechMatrix() {
                     col.chars[idx] = pick(RAIN_CHARS);
                 }
 
-                // Reset column when fully past bottom
                 if (col.y - col.length * RAIN_FONT_SIZE > h) {
                     col.x = rand(0, w);
                     col.y = rand(-h * 0.3, -RAIN_FONT_SIZE);
@@ -387,61 +425,72 @@ export default function TechMatrix() {
             }
             ctx.restore();
 
-            // ─ Layer 1: Particle constellation (primary effect) ──────────────
+            // ─ Layer 1: Particle constellation ──────────────────────────────
 
-            // Update particle positions
+            // Update positions and build spatial grid
+            spatialGrid.clear();
+
             for (let i = 0; i < particles.length; i++) {
                 const pt = particles[i];
                 const cfg = TIER_CONFIG[pt.tier];
 
-                // Sine-wave drift for organic, flowing motion
                 pt.x += pt.vx + Math.sin(time * 1.5 + pt.phase) * 0.25 * cfg.speedMul;
                 pt.y += pt.vy + Math.cos(time * 1.2 + pt.phase) * 0.2 * cfg.speedMul;
 
-                // ── Mouse repulsion physics ──────────────────────────────────
+                // Mouse repulsion
                 const dx = pt.x - mouseX;
                 const dy = pt.y - mouseY;
                 const distSq = dx * dx + dy * dy;
-                const repulsionRadiusSq = MOUSE_REPULSION_RADIUS * MOUSE_REPULSION_RADIUS;
 
-                if (distSq < repulsionRadiusSq && distSq > 0) {
+                if (distSq < MOUSE_REPULSION_RADIUS_SQ && distSq > 0) {
                     const dist = Math.sqrt(distSq);
                     const force = (1 - dist / MOUSE_REPULSION_RADIUS) * 3.5;
                     const normX = dx / dist;
                     const normY = dy / dist;
-
                     pt.vx += normX * force * 0.15;
                     pt.vy += normY * force * 0.15;
                 }
 
-                // Velocity damping (friction)
                 pt.vx *= 0.985;
                 pt.vy *= 0.985;
 
-                // Wrap around edges with padding
                 const pad = 20;
                 if (pt.x < -pad) pt.x = w + pad;
                 if (pt.x > w + pad) pt.x = -pad;
                 if (pt.y < -pad) pt.y = h + pad;
                 if (pt.y > h + pad) pt.y = -pad;
 
-                // Pulsate radius subtly
                 pt.radius = pt.baseRadius + Math.sin(time * 3 + pt.phase) * 0.4;
+
+                // Insert into spatial grid
+                pt.cellKey = spatialGrid.insert(i, pt.x, pt.y);
             }
 
-            // Draw connecting lines between nearby particles
+            // Draw connections using spatial grid (O(n) instead of O(n²))
             ctx.save();
             ctx.lineWidth = 0.6;
 
+            const drawnPairs = new Set<string>();
+
             for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const a = particles[i];
+                const a = particles[i];
+                const neighbors = spatialGrid.getNeighborIndices(a.cellKey);
+
+                for (let n = 0; n < neighbors.length; n++) {
+                    const j = neighbors[n];
+                    if (j <= i) continue; // Skip self and already-processed pairs
+
+                    // Dedup check
+                    const pairKey = i < j ? `${i},${j}` : `${j},${i}`;
+                    if (drawnPairs.has(pairKey)) continue;
+                    drawnPairs.add(pairKey);
+
                     const b = particles[j];
                     const dx = a.x - b.x;
                     const dy = a.y - b.y;
                     const distSq = dx * dx + dy * dy;
 
-                    if (distSq < CONNECTION_DISTANCE * CONNECTION_DISTANCE) {
+                    if (distSq < CONNECTION_DISTANCE_SQ) {
                         const dist = Math.sqrt(distSq);
                         const alpha = 1 - dist / CONNECTION_DISTANCE;
                         ctx.strokeStyle = p.lineColor(alpha);
@@ -460,21 +509,21 @@ export default function TechMatrix() {
                 const pt = particles[i];
                 const colorIdx = i % p.nodeColors.length;
 
-                // Proximity glow: brighten particles near the cursor
+                // Proximity glow
                 let glowBoost = 0;
                 const dxM = pt.x - mouseX;
                 const dyM = pt.y - mouseY;
-                const distM = Math.sqrt(dxM * dxM + dyM * dyM);
-                if (distM < MOUSE_GLOW_RADIUS) {
-                    glowBoost = (1 - distM / MOUSE_GLOW_RADIUS) * 0.5;
+                const distMSq = dxM * dxM + dyM * dyM;
+                if (distMSq < MOUSE_GLOW_RADIUS * MOUSE_GLOW_RADIUS) {
+                    glowBoost = (1 - Math.sqrt(distMSq) / MOUSE_GLOW_RADIUS) * 0.5;
                 }
 
                 ctx.globalAlpha = Math.min(pt.alpha + glowBoost, 1.0);
                 ctx.fillStyle = p.nodeColors[colorIdx];
 
-                // Add glow for near-tier particles
-                if (pt.tier === "near" || glowBoost > 0.15) {
-                    ctx.shadowBlur = 6 + glowBoost * 12;
+                // Minimal glow — only for near-tier with strong proximity
+                if (pt.tier === "near" && glowBoost > 0.2) {
+                    ctx.shadowBlur = 4;
                     ctx.shadowColor = p.nodeColors[colorIdx];
                 } else {
                     ctx.shadowBlur = 0;
@@ -487,7 +536,7 @@ export default function TechMatrix() {
             ctx.shadowBlur = 0;
             ctx.restore();
 
-            // ─ Layer 3: Cursor glow radial gradient ──────────────────────────
+            // ─ Layer 3: Cursor glow ──────────────────────────────────────────
             if (mouseX > -9000 && mouseY > -9000) {
                 ctx.save();
                 const gradient = ctx.createRadialGradient(
@@ -513,6 +562,7 @@ export default function TechMatrix() {
         // ── Cleanup ──────────────────────────────────────────────────────────
         return () => {
             cancelAnimationFrame(animationFrameId);
+            clearTimeout(resizeTimeout);
             resizeObserver.disconnect();
             window.removeEventListener("mousemove", onMouseMove);
             window.removeEventListener("mouseleave", onMouseLeave);
@@ -531,7 +581,7 @@ export default function TechMatrix() {
             style={{ zIndex: 0 }}
             aria-hidden="true"
         >
-            {/* Top fade mask: blends canvas into the UI */}
+            {/* Top fade mask */}
             <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background to-transparent z-10" />
 
             {/* The canvas fills the entire viewport */}

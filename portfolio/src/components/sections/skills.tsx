@@ -167,15 +167,9 @@ function SkillBadge({ skill }: { skill: Skill }) {
 
     return (
         <motion.div variants={badgeVariants} className="relative will-change-transform">
-            <motion.div
-                animate={{
-                    y: [0, -6, 0],
-                }}
-                transition={{
-                    duration: floatDuration,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: floatDelay,
+            <div
+                style={{
+                    animation: `float-gentle ${floatDuration}s ease-in-out ${floatDelay}s infinite`,
                 }}
             >
                 <motion.div
@@ -206,7 +200,7 @@ function SkillBadge({ skill }: { skill: Skill }) {
                     {/* Ultra-thin inner border for premium glass feel */}
                     <div className="absolute inset-0 rounded-xl border border-white/[0.15] dark:border-white/[0.05] pointer-events-none mix-blend-overlay" />
                 </motion.div>
-            </motion.div>
+            </div>
         </motion.div>
     );
 }

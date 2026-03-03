@@ -63,9 +63,11 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   html {
     scroll-behavior: smooth;
   }
@@ -75,12 +77,15 @@
   .text-balance {
     text-wrap: balance;
   }
+
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500;
   }
+
   .glass {
     @apply bg-background/80 backdrop-blur-xl border border-border/50;
   }
+
   .glass-card {
     @apply bg-card/50 backdrop-blur-lg border border-border/30 rounded-xl;
   }
@@ -90,13 +95,16 @@
 ::-webkit-scrollbar {
   width: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: hsl(var(--muted-foreground) / 0.3);
   border-radius: 3px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.5);
 }
@@ -110,4 +118,248 @@
   opacity: 0.03;
   pointer-events: none;
   z-index: 1;
+}
+
+/* Advanced Text Fill Animation */
+.text-fill-hero {
+  position: relative;
+  color: transparent;
+  /* Light mode outline */
+  -webkit-text-stroke: 1.5px hsl(var(--foreground) / 0.4);
+  display: inline-block;
+  line-height: normal;
+  padding-right: 0.1em;
+}
+
+.dark .text-fill-hero {
+  /* Dark mode outline */
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.2);
+}
+
+.text-fill-hero::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  /* Light mode fill */
+  color: hsl(var(--foreground));
+  -webkit-text-stroke: 0px transparent;
+  border-right: 4px solid hsl(var(--foreground));
+  overflow: hidden;
+  animation: fill-text-animate 6s linear infinite;
+  white-space: nowrap;
+  filter: drop-shadow(0 0 10px hsl(var(--foreground) / 0.3));
+}
+
+.dark .text-fill-hero::before {
+  /* Dark mode fill */
+  color: #fff;
+  border-right-color: #fff;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+}
+
+.text-fill-purple {
+  -webkit-text-stroke: 1.5px rgba(168, 85, 247, 0.8);
+}
+
+.dark .text-fill-purple {
+  -webkit-text-stroke: 1.5px rgba(168, 85, 247, 0.3);
+}
+
+.text-fill-purple::before {
+  color: #a855f7;
+  border-right: 4px solid #a855f7;
+  filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.4));
+}
+
+.dark .text-fill-purple::before {
+  color: #a855f7;
+  border-right-color: #a855f7;
+  filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.4));
+}
+
+@keyframes fill-text-animate {
+
+  0%,
+  10%,
+  100% {
+    width: 0;
+  }
+
+  70%,
+  90% {
+    width: 100%;
+  }
+}
+
+/* ─── Performance: CSS Compositor Animations ─────────────────────────────────
+   These replace JS-driven Framer Motion infinite loops.
+   CSS animations run on the GPU compositor without triggering React re-renders.
+*/
+
+/* Generic float — used by skill badges, background blurs, etc. */
+@keyframes float-gentle {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Floating background blur blobs */
+@keyframes float-blob-up {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: translateY(-20px) scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+@keyframes float-blob-down {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.3;
+  }
+
+  50% {
+    transform: translateY(20px) scale(1.1);
+    opacity: 0.6;
+  }
+}
+
+/* Orbiting elements (for the "Always Learning" card) */
+@keyframes orbit-slow {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbit-reverse {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes pulse-core {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+}
+
+/* Project card animated orbs */
+@keyframes orb-drift-1 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(30px, -20px) scale(1.2);
+  }
+}
+
+@keyframes orb-drift-2 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(-40px, 30px) scale(1.5);
+  }
+}
+
+/* Hero ambient aura pulse */
+@keyframes aura-pulse {
+
+  0%,
+  100% {
+    opacity: 0.15;
+    transform: scale(0.95);
+  }
+
+  50% {
+    opacity: 0.4;
+    transform: scale(1.05);
+  }
+}
+
+/* Location badge float */
+@keyframes float-badge {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+/* Utility classes */
+.animate-float-gentle {
+  animation: float-gentle 3s ease-in-out infinite;
+}
+
+.animate-float-blob-up {
+  animation: float-blob-up 6s ease-in-out infinite;
+}
+
+.animate-float-blob-down {
+  animation: float-blob-down 8s ease-in-out infinite 1s;
+}
+
+.animate-aura-pulse {
+  animation: aura-pulse 6s ease-in-out infinite;
+}
+
+.animate-float-badge {
+  animation: float-badge 4s ease-in-out infinite;
+}
+
+/* ─── Performance: Mobile backdrop-blur reduction ────────────────────────────
+   backdrop-blur is one of the most GPU-expensive CSS properties.
+   On mobile/low-power devices, we reduce or remove it.
+*/
+@media (max-width: 768px) {
+
+  .backdrop-blur-xl,
+  .backdrop-blur-2xl,
+  .backdrop-blur-3xl {
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+  }
 }

@@ -93,7 +93,7 @@
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -101,12 +101,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.3);
-  border-radius: 3px;
+  background: hsl(var(--muted-foreground) / 0.2);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.5);
+  background: hsl(var(--muted-foreground) / 0.4);
 }
 
 /* ─── Hero Scramble Text Animation ────────────────────────────────────────────
@@ -237,7 +237,7 @@
   position: relative;
   color: transparent;
   /* Light mode outline */
-  -webkit-text-stroke: 1.5px hsl(var(--foreground) / 0.4);
+  -webkit-text-stroke: 1.5px hsl(var(--foreground) / 0.6);
   display: inline-block;
   line-height: normal;
   padding-right: 0.1em;
@@ -245,7 +245,7 @@
 
 .dark .text-fill-hero {
   /* Dark mode outline */
-  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.2);
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.3);
 }
 
 .text-fill-hero::before {
@@ -262,7 +262,7 @@
   overflow: hidden;
   animation: fill-text-animate 6s linear infinite;
   white-space: nowrap;
-  filter: drop-shadow(0 0 10px hsl(var(--foreground) / 0.3));
+  filter: drop-shadow(0 0 12px hsl(var(--foreground) / 0.4));
 }
 
 .dark .text-fill-hero::before {
@@ -464,14 +464,17 @@
 
 /* ─── Performance: Mobile backdrop-blur reduction ────────────────────────────
    backdrop-blur is one of the most GPU-expensive CSS properties.
-   On mobile/low-power devices, we reduce or remove it.
+   On mobile/low-power devices, we reduce it. We also limit max blur globally.
 */
-@media (max-width: 768px) {
+.blur-3xl {
+  filter: blur(40px);
+}
 
+@media (max-width: 768px) {
   .backdrop-blur-xl,
   .backdrop-blur-2xl,
   .backdrop-blur-3xl {
-    backdrop-filter: blur(4px) !important;
-    -webkit-backdrop-filter: blur(4px) !important;
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
   }
 }

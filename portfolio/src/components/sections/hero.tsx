@@ -7,6 +7,7 @@ import { Music, MousePointerClick } from "lucide-react";
 import { useThemeStore } from "@/lib/store";
 
 import dynamic from "next/dynamic";
+import { MagneticButton } from "@/components/ui/magnetic-button";
 
 const TechMatrix = dynamic(() => import("@/components/backgrounds/tech-matrix"), {
     ssr: false,
@@ -175,8 +176,8 @@ function ScrambleText() {
 
     return (
         <div className="scramble-text-container">
-            {/* Ambient aura */}
-            <div className="absolute -inset-x-8 -inset-y-4 bg-gradient-to-r from-violet-600/25 via-fuchsia-500/15 to-indigo-600/25 blur-3xl z-0 animate-aura-pulse pointer-events-none" />
+            {/* Ambient aura - optimized with radial gradient instead of heavy blur */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-violet-600/20 via-fuchsia-500/5 to-transparent z-0 animate-aura-pulse pointer-events-none scale-150" />
 
             <div className="relative z-10 flex flex-col items-center gap-0 sm:gap-1">
                 {LINES.map((line, idx) => (
@@ -369,25 +370,21 @@ export default function Hero() {
                         variants={itemVariants}
                         className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 mb-16"
                     >
-                        <motion.button
+                        <MagneticButton
                             onClick={() => handleNavClick("#projects")}
                             className="group flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-semibold shadow-xl shadow-violet-500/20 hover:shadow-violet-500/40 transition-all"
-                            whileHover={{ scale: 1.02, y: -2 }}
-                            whileTap={{ scale: 0.98 }}
                         >
                             View My Work
                             <FiArrowDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
-                        </motion.button>
+                        </MagneticButton>
 
-                        <motion.button
+                        <MagneticButton
                             onClick={() => handleNavClick("#contact")}
                             className="group flex items-center gap-2 px-8 py-4 rounded-2xl border-2 border-border hover:border-violet-500/50 text-foreground font-semibold hover:bg-accent/50 transition-all"
-                            whileHover={{ scale: 1.02, y: -2 }}
-                            whileTap={{ scale: 0.98 }}
                         >
                             <FiMail className="w-4 h-4" />
                             Contact Me
-                        </motion.button>
+                        </MagneticButton>
                     </motion.div>
                 </motion.div>
             </motion.div>

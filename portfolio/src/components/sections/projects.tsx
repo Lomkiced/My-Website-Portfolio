@@ -13,6 +13,7 @@ import { FiExternalLink, FiGithub } from "react-icons/fi";
 import { PROJECT_DATA } from "@/lib/data";
 import { useThemeStore } from "@/lib/store";
 import SectionTitle from "@/components/animations/section-title";
+import { MagneticButton } from "@/components/ui/magnetic-button";
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -32,48 +33,7 @@ const cardVariants = {
     },
 };
 
-// ─── Magnetic Button Wrapper ──────────────────────────────────────────────
-function MagneticButton({
-    children,
-    className,
-    href,
-}: {
-    children: React.ReactNode;
-    className?: string;
-    href: string;
-}) {
-    const ref = useRef<HTMLAnchorElement>(null);
-    const [position, setPosition] = useState({ x: 0, y: 0 });
 
-    const handleMouse = (e: MouseEvent<HTMLAnchorElement>) => {
-        if (window.matchMedia("(pointer: coarse)").matches) return;
-        const { clientX, clientY } = e;
-        const { height, width, left, top } = ref.current!.getBoundingClientRect();
-        const middleX = clientX - (left + width / 2);
-        const middleY = clientY - (top + height / 2);
-        setPosition({ x: middleX * 0.2, y: middleY * 0.2 });
-    };
-
-    const reset = () => {
-        setPosition({ x: 0, y: 0 });
-    };
-
-    const { x, y } = position;
-
-    return (
-        <motion.a
-            ref={ref}
-            href={href}
-            onMouseMove={handleMouse}
-            onMouseLeave={reset}
-            animate={{ x, y }}
-            transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
-            className={className}
-        >
-            {children}
-        </motion.a>
-    );
-}
 
 // ─── Project Card ─────────────────────────────────────────────────────────
 function ProjectCard({ project }: { project: (typeof PROJECT_DATA)[number] }) {

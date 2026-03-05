@@ -131,13 +131,10 @@ function SkillBadge({ skill }: { skill: Skill }) {
     const mouseY = useMotionValue(0);
 
     // Spring configuration smoothing the movement
-    const springConfig = { damping: 20, stiffness: 300, mass: 0.5 };
+    const springConfig = { damping: 25, stiffness: 200, mass: 0.2 };
     const springX = useSpring(x, springConfig);
     const springY = useSpring(y, springConfig);
 
-    // Initial randomized float config (calculated once per badge)
-    const [floatDuration] = useState(() => 3 + Math.random() * 2);
-    const [floatDelay] = useState(() => Math.random() * 2);
     const shouldReduceMotion = useReducedMotion();
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -168,41 +165,34 @@ function SkillBadge({ skill }: { skill: Skill }) {
     const background = useMotionTemplate`radial-gradient(120px circle at ${mouseX}px ${mouseY}px, ${glowColor}, transparent 80%)`;
 
     return (
-        <motion.div variants={badgeVariants} className="relative will-change-transform">
-            <div
-                style={{
-                    animation: `float-gentle ${floatDuration}s ease-in-out ${floatDelay}s infinite`,
-                }}
-            >
+        <motion.div
+            variants={badgeVariants}
+            className="group relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl cursor-default border border-white/10 dark:border-white/5 bg-white/20 dark:bg-white/[0.03] backdrop-blur-md shadow-[0_4px_24px_-8px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.2)] dark:shadow-[0_4px_24px_-8px_rgba(0,0,0,0.5)] dark:hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.6)] transition-all duration-300 will-change-transform"
+            ref={ref}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{ x: springX, y: springY }}
+        >
+            {/* Dynamic Spotlight Glow */}
+            {!shouldReduceMotion && (
                 <motion.div
-                    ref={ref}
-                    onMouseMove={handleMouseMove}
-                    onMouseLeave={handleMouseLeave}
-                    style={{ x: springX, y: springY }}
-                    className="group relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl cursor-default overflow-hidden border border-white/10 dark:border-white/5 bg-white/20 dark:bg-white/[0.03] backdrop-blur-md md:backdrop-blur-xl shadow-[0_4px_24px_-8px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.2)] dark:shadow-[0_4px_24px_-8px_rgba(0,0,0,0.5)] dark:hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.6)] transition-all duration-300 will-change-transform"
-                >
-                    {/* Dynamic Spotlight Glow */}
-                    {!shouldReduceMotion && (
-                        <motion.div
-                            className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100 z-0 will-change-opacity"
-                            style={{ background }}
-                        />
-                    )}
+                    className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100 z-0 will-change-opacity overflow-hidden rounded-xl"
+                    style={{ background }}
+                />
+            )}
 
-                    {/* Top gradient reflecting gloss */}
-                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+            {/* Top gradient reflecting gloss */}
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
-                    <skill.icon
-                        className={`w-5 h-5 ${skill.color} transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6 relative z-10`}
-                    />
-                    <span className="text-sm font-medium text-foreground relative z-10 drop-shadow-sm">
-                        {skill.name}
-                    </span>
+            <skill.icon
+                className={`w-5 h-5 ${skill.color} transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6 relative z-10`}
+            />
+            <span className="text-sm font-medium text-foreground relative z-10 drop-shadow-sm pointer-events-none">
+                {skill.name}
+            </span>
 
-                    {/* Ultra-thin inner border for premium glass feel */}
-                    <div className="absolute inset-0 rounded-xl border border-white/[0.15] dark:border-white/[0.05] pointer-events-none mix-blend-overlay" />
-                </motion.div>
-            </div>
+            {/* Ultra-thin inner border for premium glass feel */}
+            <div className="absolute inset-0 rounded-xl border border-white/[0.15] dark:border-white/[0.05] pointer-events-none mix-blend-overlay" />
         </motion.div>
     );
 }

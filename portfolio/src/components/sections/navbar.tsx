@@ -11,6 +11,8 @@ const AudioPlayer = dynamic(() => import("@/components/ui/audio-player"), {
     ssr: false,
 });
 
+import { MagneticButton } from "@/components/ui/magnetic-button";
+
 const navLinks = [
     { name: "Home", href: "#home" },
     { name: "About", href: "#about" },
@@ -76,44 +78,7 @@ export default function Navbar() {
         if (el) el.scrollIntoView({ behavior: "smooth" });
     };
 
-    interface MagneticButtonProps {
-        children: React.ReactNode;
-        className?: string;
-        onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-    }
 
-    // Magnetic Button logic
-    const MagneticButton = ({ children, className = "", onClick }: MagneticButtonProps) => {
-        const ref = useRef<HTMLButtonElement>(null);
-        const [position, setPosition] = useState({ x: 0, y: 0 });
-
-        const handleMouse = (e: React.MouseEvent) => {
-            if (!ref.current) return;
-            const { clientX, clientY } = e;
-            const { height, width, left, top } = ref.current.getBoundingClientRect();
-            const middleX = clientX - (left + width / 2);
-            const middleY = clientY - (top + height / 2);
-            setPosition({ x: middleX * 0.15, y: middleY * 0.15 });
-        };
-
-        const reset = () => {
-            setPosition({ x: 0, y: 0 });
-        };
-
-        return (
-            <motion.button
-                ref={ref}
-                onMouseMove={handleMouse}
-                onMouseLeave={reset}
-                animate={{ x: position.x, y: position.y }}
-                transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
-                onClick={onClick}
-                className={className}
-            >
-                {children}
-            </motion.button>
-        );
-    };
 
     return (
         <>

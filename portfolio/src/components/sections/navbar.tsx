@@ -4,7 +4,7 @@ import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion"
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { FiDownload, FiMenu, FiMoon, FiSun, FiX } from "react-icons/fi";
 
 const AudioPlayer = dynamic(() => import("@/components/ui/audio-player"), {

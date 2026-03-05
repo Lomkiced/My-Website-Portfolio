@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useMotionTemplate, useMotionValue, useReducedMotion, useSpring, Variants } from "framer-motion";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import {
     SiDocker,
     SiExpo,

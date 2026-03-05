@@ -51,6 +51,7 @@ export function MagneticButton({
         animate: { x: position.x, y: position.y },
         transition: { type: "spring" as const, stiffness: 150, damping: 15, mass: 0.1 },
         className,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onClick: onClick as any, // Cast to any to handle both button/anchor events
     };
 

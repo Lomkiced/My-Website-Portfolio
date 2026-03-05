@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { FiArrowDown, FiMail } from "react-icons/fi";
 import { Music, MousePointerClick } from "lucide-react";
@@ -49,6 +49,177 @@ const gradientMap: Record<string, { from: string; to: string }> = {
     },
 };
 
+// ─── Scramble Text Configuration ──────────────────────────────────────────────
+
+interface LineConfig {
+    text: string;
+    resolvedClass: string;
+    /** Size class override */
+    sizeClass?: string;
+    /** Delay in ms before this line starts resolving */
+    startDelay: number;
+}
+
+const LINES: LineConfig[] = [
+    {
+        text: "Hello, I'm",
+        resolvedClass: "scramble-resolved-accent",
+        sizeClass: "scramble-char-sm",
+        startDelay: 0,
+    },
+    {
+        text: "Mike Cedrick",
+        resolvedClass: "scramble-resolved",
+        startDelay: 200,
+    },
+    {
+        text: "Dañocup",
+        resolvedClass: "scramble-resolved-purple",
+        startDelay: 500,
+    },
+];
+
+const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*<>{}[]=/|~";
+const SCRAMBLE_SPEED = 40;      // ms between random character ticks
+const RESOLVE_INTERVAL = 55;    // ms between resolving each character
+const INITIAL_SCRAMBLE = 12;    // ticks of pure scramble before resolving starts
+const LOOP_PAUSE = 5000;        // ms the fully resolved text stays before re-scrambling
+
+function randomGlyph(): string {
+    return GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+}
+
+// ─── Single line scramble hook ────────────────────────────────────────────────
+
+function useScrambleLine(text: string, startDelay: number, trigger: number) {
+    // Initialize with the real text so SSR and client match (no hydration mismatch)
+    const [display, setDisplay] = useState<string[]>(() => text.split(""));
+    const [resolvedCount, setResolvedCount] = useState(text.length);
+    const [mounted, setMounted] = useState(false);
+    const chars = text.split("");
+
+    // Mark mounted so we only scramble client-side
+    useEffect(() => { setMounted(true); }, []);
+
+    useEffect(() => {
+        if (!mounted) return;
+        let resolved = 0;
+        setResolvedCount(0);
+        setDisplay(chars.map((ch) => (ch === " " ? " " : randomGlyph())));
+
+        // Delayed start
+        const delayTimer = setTimeout(() => {
+            // Random ticker
+            const scrambleInterval = setInterval(() => {
+                setDisplay((prev) =>
+                    prev.map((_, i) => {
+                        if (i < resolved || chars[i] === " ") return chars[i];
+                        return randomGlyph();
+                    })
+                );
+            }, SCRAMBLE_SPEED);
+
+            // Resolve timer — starts after initial scramble ticks
+            const resolveDelay = setTimeout(() => {
+                const resolveInterval = setInterval(() => {
+                    resolved += 1;
+                    setResolvedCount(resolved);
+                    setDisplay((prev) => {
+                        const next = [...prev];
+                        for (let i = 0; i < resolved && i < chars.length; i++) {
+                            next[i] = chars[i];
+                        }
+                        return next;
+                    });
+                    if (resolved >= chars.length) {
+                        clearInterval(resolveInterval);
+                        clearInterval(scrambleInterval);
+                    }
+                }, RESOLVE_INTERVAL);
+
+                return () => clearInterval(resolveInterval);
+            }, INITIAL_SCRAMBLE * SCRAMBLE_SPEED);
+
+            return () => {
+                clearInterval(scrambleInterval);
+                clearTimeout(resolveDelay);
+            };
+        }, startDelay);
+
+        return () => clearTimeout(delayTimer);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [trigger, mounted]);
+
+    return { display, resolvedCount };
+}
+
+// ─── ScrambleText — all lines visible simultaneously ──────────────────────────
+
+function ScrambleText() {
+    const [cycle, setCycle] = useState(0);
+
+    // Compute total time for longest line to finish
+    const longestLine = LINES.reduce((max, line) =>
+        Math.max(max, line.startDelay + INITIAL_SCRAMBLE * SCRAMBLE_SPEED + line.text.length * RESOLVE_INTERVAL), 0
+    );
+
+    // Re-trigger scramble loop
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setCycle((prev) => prev + 1);
+        }, longestLine + LOOP_PAUSE);
+        return () => clearTimeout(timer);
+    }, [cycle, longestLine]);
+
+    return (
+        <div className="scramble-text-container">
+            {/* Ambient aura */}
+            <div className="absolute -inset-x-8 -inset-y-4 bg-gradient-to-r from-violet-600/25 via-fuchsia-500/15 to-indigo-600/25 blur-3xl z-0 animate-aura-pulse pointer-events-none" />
+
+            <div className="relative z-10 flex flex-col items-center gap-0 sm:gap-1">
+                {LINES.map((line, idx) => (
+                    <ScrambleLine key={idx} config={line} trigger={cycle} />
+                ))}
+            </div>
+        </div>
+    );
+}
+
+function ScrambleLine({ config, trigger }: { config: LineConfig; trigger: number }) {
+    const { display, resolvedCount } = useScrambleLine(config.text, config.startDelay, trigger);
+
+    return (
+        <div className="flex items-center justify-center flex-wrap">
+            {display.map((char, i) => {
+                const isResolved = i < resolvedCount;
+                const isSpace = char === " ";
+                return (
+                    <span
+                        key={i}
+                        className={`scramble-char ${config.sizeClass ?? ""} ${isResolved ? config.resolvedClass : "scramble-glyph"} ${isSpace ? "scramble-space" : ""}`}
+                    >
+                        {isSpace ? "\u00A0" : char}
+                    </span>
+                );
+            })}
+            {/* Cursor on last line only */}
+            {config === LINES[LINES.length - 1] && (
+                <motion.span
+                    className={`scramble-cursor ${config.sizeClass ?? ""}`}
+                    animate={{ opacity: [0, 1, 1, 0] }}
+                    transition={{
+                        duration: 0.8,
+                        repeat: Infinity,
+                        times: [0, 0.1, 0.5, 0.6],
+                    }}
+                />
+            )}
+        </div>
+    );
+}
+
+// ─── Hero ─────────────────────────────────────────────────────────────────────
+
 export default function Hero() {
     const sectionRef = useRef<HTMLElement>(null);
     const activeSectionColor = useThemeStore((s) => s.activeSectionColor);
@@ -67,7 +238,6 @@ export default function Hero() {
         if (el) el.scrollIntoView({ behavior: "smooth" });
     };
 
-    // Derive scroll-reactive gradient overlay colors
     const mapped = gradientMap[activeSectionColor];
     const overlayFrom = mapped?.from ?? "transparent";
     const overlayTo = mapped?.to ?? "transparent";
@@ -80,18 +250,13 @@ export default function Hero() {
         >
             {/* ── Animated gradient background ─────────────────────────────────── */}
             <motion.div className="absolute inset-0 -z-10" style={{ y }}>
-                {/* Base gradient */}
                 <div className="absolute inset-0 bg-gradient-to-br from-violet-950/20 via-background to-indigo-950/20 dark:from-violet-950/40 dark:via-background dark:to-indigo-950/40" />
-
-                {/* Scrollytelling overlay — smoothly morphs as project cards come into view */}
                 <motion.div
                     className="absolute inset-0 transition-all duration-1000 ease-in-out"
                     style={{
                         background: `linear-gradient(135deg, ${overlayFrom} 0%, transparent 50%, ${overlayTo} 100%)`,
                     }}
                 />
-
-                {/* Grid pattern overlay */}
                 <div
                     className="absolute inset-0 opacity-[0.02] dark:opacity-[0.04]"
                     style={{
@@ -99,17 +264,13 @@ export default function Hero() {
                         backgroundSize: "60px 60px",
                     }}
                 />
-
-                {/* Noise overlay */}
                 <div className="noise-overlay absolute inset-0" />
             </motion.div>
 
-            {/* ── Advanced Tech Matrix Background ──────────────────────────────── */}
+            {/* ── Tech Matrix Background ───────────────────────────────────────── */}
             <Suspense fallback={null}>
                 <TechMatrix />
             </Suspense>
-
-
 
             {/* ── Content ──────────────────────────────────────────────────────── */}
             <motion.div
@@ -176,129 +337,9 @@ export default function Hero() {
                         </motion.div>
                     </div>
 
-                    {/* Name — SVG Path-Drawing Animation */}
-                    <motion.div variants={itemVariants} className="flex flex-col items-center select-none pt-4">
-
-                        {/* Shared SVG Gradient Definitions */}
-                        <svg height="0" width="0" viewBox="0 0 64 64" className="absolute">
-                            <defs>
-                                {/* Dark-mode: white → light slate | Light-mode: overridden by CSS */}
-                                <linearGradient gradientUnits="userSpaceOnUse" y2="2" x2="0" y1="62" x1="0" id="hero-grad-name">
-                                    <stop stopColor="var(--hero-name-stop1, #FFFFFF)" />
-                                    <stop stopColor="var(--hero-name-stop2, #CBD5E1)" offset="1" />
-                                </linearGradient>
-                                {/* Purple gradient with rotating transform */}
-                                <linearGradient gradientUnits="userSpaceOnUse" y2="2" x2="0" y1="62" x1="0" id="hero-grad-purple">
-                                    <stop stopColor="#A855F7" />
-                                    <stop stopColor="#7C3AED" offset="1" />
-                                    <animateTransform
-                                        repeatCount="indefinite"
-                                        keySplines=".42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1"
-                                        keyTimes="0; 0.125; 0.25; 0.375; 0.5; 0.625; 0.75; 0.875; 1"
-                                        dur="8s"
-                                        values="0 32 32;-270 32 32;-270 32 32;-540 32 32;-540 32 32;-810 32 32;-810 32 32;-1080 32 32;-1080 32 32"
-                                        type="rotate"
-                                        attributeName="gradientTransform"
-                                    />
-                                </linearGradient>
-                            </defs>
-                        </svg>
-
-                        {/* ── "MIKE" row — theme-aware stroke ── */}
-                        <div className="flex items-center justify-center">
-                            {/* M */}
-                            <svg viewBox="0 0 76 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
-                                <path d="M 6,58 L 6,6 L 38,38 L 70,6 L 70,58" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" />
-                            </svg>
-                            {/* I */}
-                            <svg viewBox="0 0 24 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
-                                <path d="M 12,6 L 12,58" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.12s, 0.12s' }} />
-                            </svg>
-                            {/* K */}
-                            <svg viewBox="0 0 58 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
-                                <path d="M 10,6 L 10,58" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.24s, 0.24s' }} />
-                                <path d="M 52,6 L 10,34 L 52,58" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.30s, 0.30s' }} />
-                            </svg>
-                            {/* E */}
-                            <svg viewBox="0 0 50 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
-                                <path d="M 44,6 L 8,6 L 8,58 L 44,58" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.36s, 0.36s' }} />
-                                <path d="M 8,32 L 36,32" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.42s, 0.42s' }} />
-                            </svg>
-                        </div>
-
-                        {/* ── "CEDRICK" row — purple stroke ── */}
-                        <div className="flex items-center justify-center mt-1 sm:mt-2">
-                            {/* C */}
-                            <svg viewBox="0 0 52 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
-                                <path d="M 48,6 L 8,6 L 8,58 L 48,58" stroke="url(#hero-grad-purple)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.50s, 0.50s' }} />
-                            </svg>
-                            {/* E */}
-                            <svg viewBox="0 0 50 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
-                                <path d="M 44,6 L 8,6 L 8,58 L 44,58" stroke="url(#hero-grad-purple)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.62s, 0.62s' }} />
-                                <path d="M 8,32 L 36,32" stroke="url(#hero-grad-purple)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.68s, 0.68s' }} />
-                            </svg>
-                            {/* D */}
-                            <svg viewBox="0 0 56 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
-                                <path d="M 8,6 L 8,58 L 34,58 C 52,58 52,6 34,6 Z" stroke="url(#hero-grad-purple)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.74s, 0.74s' }} />
-                            </svg>
-                            {/* R */}
-                            <svg viewBox="0 0 56 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
-                                <path d="M 8,58 L 8,6 L 36,6 C 50,6 50,30 36,30 L 8,30 L 48,58" stroke="url(#hero-grad-purple)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.86s, 0.86s' }} />
-                            </svg>
-                            {/* I */}
-                            <svg viewBox="0 0 24 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
-                                <path d="M 12,6 L 12,58" stroke="url(#hero-grad-purple)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.98s, 0.98s' }} />
-                            </svg>
-                            {/* C */}
-                            <svg viewBox="0 0 52 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
-                                <path d="M 48,6 L 8,6 L 8,58 L 48,58" stroke="url(#hero-grad-purple)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '1.10s, 1.10s' }} />
-                            </svg>
-                            {/* K */}
-                            <svg viewBox="0 0 58 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
-                                <path d="M 10,6 L 10,58" stroke="url(#hero-grad-purple)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '1.22s, 1.22s' }} />
-                                <path d="M 52,6 L 10,34 L 52,58" stroke="url(#hero-grad-purple)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '1.28s, 1.28s' }} />
-                            </svg>
-                        </div>
-
-                        {/* ── "Dañocup" — SVG path-drawing, white/dark theme-aware ── */}
-                        <div className="relative mt-1 sm:mt-2 flex justify-center pb-2 px-10">
-                            {/* Ambient aura */}
-                            <div
-                                className="absolute -inset-x-8 inset-y-0 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-indigo-600 blur-3xl z-0 animate-aura-pulse"
-                            />
-                            <div className="relative z-10 flex items-center justify-center">
-                                {/* D */}
-                                <svg viewBox="0 0 56 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
-                                    <path d="M 8,6 L 8,58 L 34,58 C 52,58 52,6 34,6 Z" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '1.40s, 1.40s' }} />
-                                </svg>
-                                {/* A */}
-                                <svg viewBox="0 0 64 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
-                                    <path d="M 6,58 L 32,6 L 58,58" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '1.52s, 1.52s' }} />
-                                    <path d="M 18,38 L 46,38" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '1.58s, 1.58s' }} />
-                                </svg>
-                                {/* Ñ — tilde rendered above via overflow:visible */}
-                                <svg viewBox="0 0 64 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
-                                    <path d="M 8,58 L 8,6 L 56,58 L 56,6" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '1.64s, 1.64s' }} />
-                                    <path d="M 20,-2 Q 27,-9 32,-2 Q 37,5 44,-2" stroke="url(#hero-grad-name)" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" fill="none" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '1.70s, 1.70s' }} />
-                                </svg>
-                                {/* O */}
-                                <svg viewBox="0 0 64 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
-                                    <path d="M 32,6 C 6,6 6,58 32,58 C 58,58 58,6 32,6 Z" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '1.76s, 1.76s' }} />
-                                </svg>
-                                {/* C */}
-                                <svg viewBox="0 0 52 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
-                                    <path d="M 48,6 L 8,6 L 8,58 L 48,58" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '1.88s, 1.88s' }} />
-                                </svg>
-                                {/* U */}
-                                <svg viewBox="0 0 64 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
-                                    <path d="M 8,6 V 42 Q 8,58 32,58 Q 56,58 56,42 V 6" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '2.00s, 2.00s' }} />
-                                </svg>
-                                {/* P */}
-                                <svg viewBox="0 0 52 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
-                                    <path d="M 8,58 L 8,6 L 36,6 C 50,6 50,30 36,30 L 8,30" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '2.12s, 2.12s' }} />
-                                </svg>
-                            </div>
-                        </div>
+                    {/* ── Scramble Text — all lines visible at once ── */}
+                    <motion.div variants={itemVariants}>
+                        <ScrambleText />
                     </motion.div>
 
                     {/* Title */}

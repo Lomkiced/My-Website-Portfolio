@@ -19,6 +19,8 @@ import {
     SiVercel,
 } from "react-icons/si";
 import { TbBrandReactNative } from "react-icons/tb";
+import SectionTitle from "@/components/animations/section-title";
+import { ScrollReveal } from "@/components/animations/scroll-reveal";
 
 interface Skill {
     name: string;
@@ -215,33 +217,21 @@ export default function Skills() {
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Section header */}
-                <motion.div
-                    className="text-center mb-20"
-                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
-                >
-                    <span className="inline-block py-1 px-3 rounded-full bg-violet-500/10 border border-violet-500/20 text-sm font-semibold text-violet-600 dark:text-violet-400 uppercase tracking-widest mb-4">
-                        Skills
-                    </span>
-                    <h2 className="text-4xl md:text-6xl font-bold font-display tracking-tight text-foreground">
-                        My Tech Stack
-                    </h2>
-                    <p className="text-muted-foreground mt-6 text-lg max-w-2xl mx-auto leading-relaxed">
-                        Technologies and tools I use to bring ideas to life
-                    </p>
-                </motion.div>
+                <SectionTitle
+                    label="Skills"
+                    title="My Tech Stack"
+                    subtitle="Technologies and tools I use to bring ideas to life"
+                    className="mb-20"
+                />
 
                 {/* Skill categories */}
                 <div className="space-y-16">
                     {skillCategories.map((category, catIndex) => (
-                        <motion.div
+                        <ScrollReveal
                             key={category.title}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-100px" }}
-                            transition={{ delay: catIndex * 0.1, duration: 0.6, ease: "easeOut" }}
+                            variant="fadeUp"
+                            delay={catIndex * 0.08}
+                            viewportMargin="-100px"
                         >
                             <div className="flex items-center gap-4 mb-8">
                                 <h3 className="text-2xl font-semibold font-display tracking-wide text-foreground">
@@ -255,13 +245,13 @@ export default function Skills() {
                                 variants={containerVariants}
                                 initial="hidden"
                                 whileInView="visible"
-                                viewport={{ once: true, margin: "-50px" }}
+                                viewport={{ once: false, margin: "-50px" }}
                             >
                                 {category.skills.map((skill) => (
                                     <SkillBadge key={skill.name} skill={skill} />
                                 ))}
                             </motion.div>
-                        </motion.div>
+                        </ScrollReveal>
                     ))}
                 </div>
             </div>

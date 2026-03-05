@@ -109,51 +109,116 @@
   background: hsl(var(--muted-foreground) / 0.5);
 }
 
-/* ─── Hero SVG Letter-Drawing Animation ───────────────────────────────────────
-   Same dashArray/dashOffset technique as the loading screen,
-   with theme-aware gradient stops via CSS custom properties.
+/* ─── Hero Scramble Text Animation ────────────────────────────────────────────
+   Pseudo-randomized keyboard pressing effect.
+   JS handles the scramble logic; these styles handle layout + aesthetics.
 */
 
-/* Light mode: dark strokes for visibility against light backgrounds */
-:root {
-  --hero-name-stop1: #1e1b4b;
-  --hero-name-stop2: #312e81;
+.scramble-text-container {
+  position: relative;
+  width: 100%;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Dark mode: white strokes for visibility against dark backgrounds */
-.dark {
-  --hero-name-stop1: #FFFFFF;
-  --hero-name-stop2: #CBD5E1;
-}
-
-.hero-letter-dash {
-  animation: heroDashArray 2s ease-in-out infinite,
-    heroDashOffset 2s linear infinite;
-  will-change: stroke-dasharray, stroke-dashoffset;
-}
-
-@keyframes heroDashArray {
-  0% {
-    stroke-dasharray: 0 1 359 0;
-  }
-
-  50% {
-    stroke-dasharray: 0 359 1 0;
-  }
-
-  100% {
-    stroke-dasharray: 359 1 0 0;
+@media (min-width: 640px) {
+  .scramble-text-container {
+    min-height: 72px;
   }
 }
 
-@keyframes heroDashOffset {
-  0% {
-    stroke-dashoffset: 365;
+@media (min-width: 768px) {
+  .scramble-text-container {
+    min-height: 100px;
   }
+}
 
-  100% {
-    stroke-dashoffset: 5;
+@media (min-width: 1024px) {
+  .scramble-text-container {
+    min-height: 128px;
   }
+}
+
+/* Individual character cell */
+.scramble-char {
+  font-size: clamp(2rem, 6vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  transition: color 0.15s ease, text-shadow 0.3s ease;
+}
+
+/* Smaller variant for greeting line */
+.scramble-char-sm {
+  font-size: clamp(1.2rem, 3vw, 2.5rem);
+  font-weight: 700;
+}
+
+/* Random glyph state — monospace + muted color + slight jitter */
+.scramble-glyph {
+  font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", ui-monospace, monospace;
+  color: hsl(var(--muted-foreground) / 0.45);
+  text-shadow: 0 0 8px hsl(var(--muted-foreground) / 0.1);
+}
+
+.dark .scramble-glyph {
+  color: rgba(168, 85, 247, 0.35);
+  text-shadow: 0 0 12px rgba(168, 85, 247, 0.15);
+}
+
+/* Resolved character — snaps to display font + foreground */
+.scramble-resolved {
+  font-family: var(--font-display, var(--font-sans, system-ui));
+  color: hsl(var(--foreground));
+  text-shadow: none;
+}
+
+.dark .scramble-resolved {
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
+}
+
+/* Resolved purple variant for "Dañocup" */
+.scramble-resolved-purple {
+  font-family: var(--font-display, var(--font-sans, system-ui));
+  background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 50%, #6366f1 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Resolved accent variant for "Welcome!" */
+.scramble-resolved-accent {
+  font-family: var(--font-display, var(--font-sans, system-ui));
+  color: #8b5cf6;
+}
+
+.dark .scramble-resolved-accent {
+  color: #a78bfa;
+  text-shadow: 0 0 16px rgba(168, 85, 247, 0.3);
+}
+
+/* Space char */
+.scramble-space {
+  width: 0.3em;
+}
+
+/* Blinking cursor */
+.scramble-cursor {
+  display: inline-block;
+  width: 3px;
+  height: 0.85em;
+  margin-left: 4px;
+  vertical-align: middle;
+  border-radius: 2px;
+  background: hsl(var(--foreground));
+  font-size: clamp(2rem, 6vw, 5.5rem);
+}
+
+.dark .scramble-cursor {
+  background: #e2e8f0;
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.5), 0 0 4px rgba(255, 255, 255, 0.25);
 }
 
 /* Noise texture overlay */

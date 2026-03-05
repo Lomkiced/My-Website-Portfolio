@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { sendEmail } from "@/actions/send-email";
+import SectionTitle from "@/components/animations/section-title";
 
 const socialLinks = [
     {
@@ -87,24 +88,12 @@ export default function Contact() {
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Section header */}
-                <motion.div
-                    className="text-center mb-16"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                >
-                    <span className="text-sm font-semibold text-violet-500 dark:text-violet-400 uppercase tracking-widest">
-                        Contact
-                    </span>
-                    <h2 className="text-3xl md:text-5xl font-bold font-display mt-3">
-                        Get In Touch
-                    </h2>
-                    <p className="text-muted-foreground mt-4 max-w-lg mx-auto">
-                        Have a project in mind or want to collaborate? Feel free to reach out
-                        — I&apos;d love to hear from you!
-                    </p>
-                </motion.div>
+                <SectionTitle
+                    label="Contact"
+                    title="Get In Touch"
+                    subtitle="Have a project in mind or want to collaborate? Feel free to reach out — I'd love to hear from you!"
+                    className="mb-16"
+                />
 
                 <div className="grid md:grid-cols-2 gap-12 lg:gap-20">
                     {/* Contact Form */}
@@ -112,7 +101,7 @@ export default function Contact() {
                         variants={containerVariants}
                         initial="hidden"
                         whileInView="visible"
-                        viewport={{ once: true }}
+                        viewport={{ once: false }}
                     >
                         {/* Toast notification */}
                         {toast && (
@@ -121,8 +110,8 @@ export default function Contact() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -10 }}
                                 className={`mb-6 flex items-center gap-3 p-4 rounded-xl border text-sm font-medium ${toast.type === "success"
-                                        ? "bg-green-500/10 border-green-500/20 text-green-600 dark:text-green-400"
-                                        : "bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400"
+                                    ? "bg-green-500/10 border-green-500/20 text-green-600 dark:text-green-400"
+                                    : "bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400"
                                     }`}
                             >
                                 {toast.type === "success" ? (
@@ -219,7 +208,7 @@ export default function Contact() {
                         variants={containerVariants}
                         initial="hidden"
                         whileInView="visible"
-                        viewport={{ once: true }}
+                        viewport={{ once: false }}
                     >
                         <motion.div variants={itemVariants}>
                             <h3 className="text-xl font-bold font-display mb-2">

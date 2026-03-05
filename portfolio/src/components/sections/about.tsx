@@ -4,6 +4,8 @@ import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } fro
 import { ReactNode, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { FiAward, FiCode, FiLayers, FiMapPin } from "react-icons/fi";
+import SectionTitle from "@/components/animations/section-title";
+import { ScrollReveal } from "@/components/animations/scroll-reveal";
 
 const highlights = [
     {
@@ -88,7 +90,7 @@ function StaggeredText({ text, className }: { text: string; className?: string }
             variants={textContainer}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-10%" }}
+            viewport={{ once: false, margin: "-10%" }}
         >
             {words.map((word, index) => (
                 <div key={index} className="overflow-hidden pb-2 mr-2 md:mr-3 last:mr-0 inline-flex">
@@ -149,22 +151,12 @@ export default function About() {
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Section header */}
-                <motion.div
-                    className="text-center mb-16"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                >
-                    <span className="text-sm font-semibold text-violet-500 dark:text-violet-400 uppercase tracking-widest flex items-center justify-center gap-3">
-                        <span className="w-8 h-px bg-violet-500/50"></span>
-                        About Me
-                        <span className="w-8 h-px bg-violet-500/50"></span>
-                    </span>
-                    <h2 className="text-3xl md:text-5xl font-bold font-display mt-4">
-                        Get to Know Me
-                    </h2>
-                </motion.div>
+                <SectionTitle
+                    label="About Me"
+                    title="Get to Know Me"
+                    decorativeLines
+                    className="mb-16"
+                />
 
                 <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
                     {/* Left — Profile Image (3D Parallax) */}
@@ -176,7 +168,7 @@ export default function About() {
                             onMouseLeave={handleMouseLeaveCard}
                             initial={{ opacity: 0, scale: 0.9, y: 40 }}
                             whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-10%" }}
+                            viewport={{ once: false, margin: "-10%" }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
                             className="relative w-full max-w-sm mx-auto aspect-[4/5] rounded-[2rem] cursor-pointer group will-change-transform"
                         >
@@ -236,7 +228,7 @@ export default function About() {
                             className="absolute -bottom-6 -right-4 lg:-right-8 z-30 pointer-events-none animate-float-badge"
                             initial={{ opacity: 0, scale: 0.8 }}
                             whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
+                            viewport={{ once: false }}
                         >
                             <SpotlightCard className="!rounded-2xl px-5 py-3.5 flex items-center gap-3 !bg-white/70 dark:!bg-black/50 backdrop-blur-md md:backdrop-blur-2xl !border-white/40 dark:!border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.12)] pointer-events-auto">
                                 <div className="p-2 rounded-full bg-violet-500/10 dark:bg-violet-500/20 text-violet-600 dark:text-violet-400">
@@ -258,7 +250,7 @@ export default function About() {
                                 <motion.span
                                     initial={{ opacity: 0, scale: 0.9, y: 10 }}
                                     whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                                    viewport={{ once: true }}
+                                    viewport={{ once: false }}
                                     transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
                                     className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600 dark:from-violet-400 dark:to-indigo-400 inline-block overflow-visible"
                                 >
@@ -266,42 +258,33 @@ export default function About() {
                                 </motion.span>
                             </h3>
 
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.6, delay: 0.4 }}
-                                className="space-y-4 text-base md:text-lg text-foreground/70 leading-relaxed font-light"
-                            >
-                                <p>
-                                    As a Full Stack Developer and BSIT graduate, I am passionate
-                                    about building high-performance, type-safe web and mobile
-                                    applications that offer fluid user experiences. I leverage a
-                                    modern stack including Next.js, NestJS, and Prisma to develop
-                                    scalable architectures.
-                                </p>
-                                <p>
-                                    Using Tailwind CSS and Framer Motion, I ensure polished,
-                                    interactive interfaces. My goal is to bridge complex backend
-                                    systems with intuitive frontend design to deliver seamless
-                                    digital products from conception to deployment.
-                                </p>
-                            </motion.div>
+                            <ScrollReveal variant="blurIn" delay={0.3}>
+                                <div className="space-y-4 text-base md:text-lg text-foreground/70 leading-relaxed font-light">
+                                    <p>
+                                        As a Full Stack Developer and BSIT graduate, I am passionate
+                                        about building high-performance, type-safe web and mobile
+                                        applications that offer fluid user experiences. I leverage a
+                                        modern stack including Next.js, NestJS, and Prisma to develop
+                                        scalable architectures.
+                                    </p>
+                                    <p>
+                                        Using Tailwind CSS and Framer Motion, I ensure polished,
+                                        interactive interfaces. My goal is to bridge complex backend
+                                        systems with intuitive frontend design to deliver seamless
+                                        digital products from conception to deployment.
+                                    </p>
+                                </div>
+                            </ScrollReveal>
                         </div>
 
                         {/* 3. Interactive Bento Highlights */}
                         <div className="grid sm:grid-cols-2 gap-4 pt-4">
                             {highlights.map((highlight, index) => (
-                                <motion.div
+                                <ScrollReveal
                                     key={highlight.title}
-                                    initial={{ opacity: 0, y: 30 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true, margin: "-10%" }}
-                                    transition={{
-                                        duration: 0.6,
-                                        delay: 0.5 + index * 0.1,
-                                        ease: "easeOut",
-                                    }}
+                                    variant="slideScale"
+                                    delay={0.15 + index * 0.1}
+                                    viewportMargin="-10%"
                                 >
                                     <SpotlightCard className="p-6 h-full flex flex-col justify-center group/bento">
                                         <div className="flex items-center gap-4 mb-3">
@@ -316,19 +299,14 @@ export default function About() {
                                             {highlight.description}
                                         </p>
                                     </SpotlightCard>
-                                </motion.div>
+                                </ScrollReveal>
                             ))}
                             {/* Extra bento card to complete 2x2 grid nicely */}
-                            <motion.div
+                            <ScrollReveal
+                                variant="slideScale"
+                                delay={0.15 + highlights.length * 0.1}
+                                viewportMargin="-10%"
                                 className="h-full"
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true, margin: "-10%" }}
-                                transition={{
-                                    duration: 0.6,
-                                    delay: 0.5 + highlights.length * 0.1,
-                                    ease: "easeOut",
-                                }}
                             >
                                 <SpotlightCard className="p-6 h-full w-full flex flex-col items-center justify-center bg-gradient-to-br from-violet-500/5 to-indigo-500/5 group/bento relative overflow-hidden rounded-2xl">
                                     <div className="flex-1 flex flex-col items-center justify-center w-full relative z-10">
@@ -374,7 +352,7 @@ export default function About() {
                                     {/* Advanced Hover Ambient Lighting */}
                                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-violet-500/10 to-transparent opacity-0 group-hover/bento:opacity-100 transition-opacity duration-500" />
                                 </SpotlightCard>
-                            </motion.div>
+                            </ScrollReveal>
                         </div>
                     </div>
                 </div>

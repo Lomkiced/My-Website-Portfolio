@@ -12,6 +12,7 @@ import {
 import { FiExternalLink, FiGithub } from "react-icons/fi";
 import { PROJECT_DATA } from "@/lib/data";
 import { useThemeStore } from "@/lib/store";
+import SectionTitle from "@/components/animations/section-title";
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -243,26 +244,13 @@ export default function Projects() {
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Section header */}
-                <motion.div
-                    className="flex flex-col items-center text-center mb-20"
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
-                >
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 mb-4 shadow-sm">
-                        <span className="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
-                        <span className="text-xs font-semibold text-violet-600 dark:text-violet-400 uppercase tracking-widest">
-                            Portfolio
-                        </span>
-                    </div>
-                    <h2 className="text-4xl md:text-6xl font-bold font-display text-neutral-900 dark:text-white mt-3">
-                        Featured Work
-                    </h2>
-                    <p className="text-neutral-600 dark:text-neutral-400 mt-6 max-w-xl text-lg">
-                        A curated collection of projects combining intuitive design with robust engineering.
-                    </p>
-                </motion.div>
+                <SectionTitle
+                    label="Portfolio"
+                    title="Featured Work"
+                    subtitle="A curated collection of projects combining intuitive design with robust engineering."
+                    labelStyle="badge"
+                    className="mb-20"
+                />
 
                 {/* Project Cards Grid */}
                 <motion.div
@@ -270,7 +258,7 @@ export default function Projects() {
                     variants={containerVariants}
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true, margin: "-50px" }}
+                    viewport={{ once: false, margin: "-50px" }}
                 >
                     {PROJECT_DATA.map((project) => (
                         <ProjectCard key={project.title} project={project} />

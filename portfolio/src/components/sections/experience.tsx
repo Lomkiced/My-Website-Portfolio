@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { FiBriefcase, FiAward, FiBookOpen } from "react-icons/fi";
 import { EXPERIENCE_DATA } from "@/lib/data";
+import SectionTitle from "@/components/animations/section-title";
 
 const getIcon = (type: string) => {
     switch (type) {
@@ -28,24 +29,12 @@ export default function Experience() {
 
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Section header */}
-                <motion.div
-                    className="text-center mb-16"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                >
-                    <span className="text-sm font-semibold text-violet-500 dark:text-violet-400 uppercase tracking-widest">
-                        Experience
-                    </span>
-                    <h2 className="text-3xl md:text-5xl font-bold font-display mt-3">
-                        My Journey
-                    </h2>
-                    <p className="text-muted-foreground mt-4 max-w-lg mx-auto">
-                        A timeline of my professional experience, education, and
-                        certifications
-                    </p>
-                </motion.div>
+                <SectionTitle
+                    label="Experience"
+                    title="My Journey"
+                    subtitle="A timeline of my professional experience, education, and certifications"
+                    className="mb-16"
+                />
 
                 {/* Timeline */}
                 <div className="relative">
@@ -70,7 +59,7 @@ export default function Experience() {
                                         opacity: 1,
                                         x: 0,
                                     }}
-                                    viewport={{ once: true }}
+                                    viewport={{ once: false }}
                                     transition={{ duration: 0.6, ease: "easeOut" }}
                                 >
                                     {/* Timeline dot */}

@@ -5,6 +5,8 @@ interface ThemeState {
     setActiveSectionColor: (color: string) => void;
     autoplayStatus: "playing" | "blocked" | null;
     setAutoplayStatus: (status: "playing" | "blocked" | null) => void;
+    isAppLoaded: boolean;
+    setIsAppLoaded: (loaded: boolean) => void;
 }
 
 export const useThemeStore = create<ThemeState>((set) => ({
@@ -12,4 +14,6 @@ export const useThemeStore = create<ThemeState>((set) => ({
     setActiveSectionColor: (color) => set({ activeSectionColor: color }),
     autoplayStatus: null,
     setAutoplayStatus: (status) => set({ autoplayStatus: status }),
+    isAppLoaded: false,
+    setIsAppLoaded: (loaded: boolean) => set({ isAppLoaded: loaded }),
 }));

@@ -91,7 +91,7 @@ function randomGlyph(): string {
 
 // ─── Single line scramble hook ────────────────────────────────────────────────
 
-function useScrambleLine(text: string, startDelay: number, trigger: number) {
+function useScrambleLine(text: string, startDelay: number, trigger: number, isAppLoaded: boolean) {
     // Initialize with the real text so SSR and client match (no hydration mismatch)
     const [display, setDisplay] = useState<string[]>(() => text.split(""));
     const [resolvedCount, setResolvedCount] = useState(text.length);
@@ -102,7 +102,7 @@ function useScrambleLine(text: string, startDelay: number, trigger: number) {
     useEffect(() => { setMounted(true); }, []);
 
     useEffect(() => {
-        if (!mounted) return;
+        if (!mounted || !isAppLoaded) return;
         let resolved = 0;
         setResolvedCount(0);
         setDisplay(chars.map((ch) => (ch === " " ? " " : randomGlyph())));
@@ -148,7 +148,7 @@ function useScrambleLine(text: string, startDelay: number, trigger: number) {
 
         return () => clearTimeout(delayTimer);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [trigger, mounted]);
+    }, [trigger, mounted, isAppLoaded]);
 
     return { display, resolvedCount };
 }
@@ -157,6 +157,7 @@ function useScrambleLine(text: string, startDelay: number, trigger: number) {
 
 function ScrambleText() {
     const [cycle, setCycle] = useState(0);
+    const isAppLoaded = useThemeStore((s) => s.isAppLoaded);
 
     // Compute total time for longest line to finish
     const longestLine = LINES.reduce((max, line) =>
@@ -165,11 +166,12 @@ function ScrambleText() {
 
     // Re-trigger scramble loop
     useEffect(() => {
+        if (!isAppLoaded) return;
         const timer = setTimeout(() => {
             setCycle((prev) => prev + 1);
         }, longestLine + LOOP_PAUSE);
         return () => clearTimeout(timer);
-    }, [cycle, longestLine]);
+    }, [cycle, longestLine, isAppLoaded]);
 
     return (
         <div className="scramble-text-container">
@@ -178,15 +180,15 @@ function ScrambleText() {
 
             <div className="relative z-10 flex flex-col items-center gap-0 sm:gap-1">
                 {LINES.map((line, idx) => (
-                    <ScrambleLine key={idx} config={line} trigger={cycle} />
+                    <ScrambleLine key={idx} config={line} trigger={cycle} isAppLoaded={isAppLoaded} />
                 ))}
             </div>
         </div>
     );
 }
 
-function ScrambleLine({ config, trigger }: { config: LineConfig; trigger: number }) {
-    const { display, resolvedCount } = useScrambleLine(config.text, config.startDelay, trigger);
+function ScrambleLine({ config, trigger, isAppLoaded }: { config: LineConfig; trigger: number; isAppLoaded: boolean }) {
+    const { display, resolvedCount } = useScrambleLine(config.text, config.startDelay, trigger, isAppLoaded);
 
     return (
         <div className="flex items-center justify-center flex-wrap">

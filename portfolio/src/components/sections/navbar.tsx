@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import { useTheme } from "next-themes";
-import Image from "next/image";
-import { FiSun, FiMoon, FiMenu, FiX, FiDownload } from "react-icons/fi";
 import dynamic from "next/dynamic";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import { FiDownload, FiMenu, FiMoon, FiSun, FiX } from "react-icons/fi";
 
 const AudioPlayer = dynamic(() => import("@/components/ui/audio-player"), {
     ssr: false,
@@ -20,42 +20,18 @@ const navLinks = [
     { name: "Contact", href: "#contact" },
 ];
 
-const navVariants = {
-    hidden: { y: -100, opacity: 0 },
-    visible: {
-        y: 0,
-        opacity: 1,
-        transition: { duration: 0.6, ease: "easeOut" as const },
-    },
-};
-
-const linkVariants = {
-    hidden: { opacity: 0, y: -10 },
-    visible: (i: number) => ({
-        opacity: 1,
-        y: 0,
-        transition: { delay: 0.3 + i * 0.1, duration: 0.4, ease: "easeOut" as const },
-    }),
-};
-
-const mobileMenuVariants = {
-    closed: {
-        opacity: 0,
-        height: 0,
-        transition: { duration: 0.3, ease: "easeInOut" as const },
-    },
-    open: {
-        opacity: 1,
-        height: "auto",
-        transition: { duration: 0.3, ease: "easeInOut" as const },
-    },
-};
-
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
+    const [activeSection, setActiveSection] = useState("Home");
+    const [hoveredSection, setHoveredSection] = useState<string | null>(null);
+
+    // Track scroll for pill morphing
+    const { scrollY } = useScroll();
+    const navTop = useTransform(scrollY, [0, 100], ["0px", "20px"]);
+    const navRadius = useTransform(scrollY, [0, 100], ["0px", "100px"]);
 
     useEffect(() => {
         setMounted(true);
@@ -67,152 +43,286 @@ export default function Navbar() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
+    // Intersection Observer for active section tracking
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.id;
+                        const matchingLink = navLinks.find(
+                            (link) => link.href === `#${id}`
+                        );
+                        if (matchingLink) {
+                            setActiveSection(matchingLink.name);
+                        }
+                    }
+                });
+            },
+            { rootMargin: "-30% 0px -70% 0px" } // Trigger when element is slightly above center
+        );
+
+        navLinks.forEach((link) => {
+            const el = document.querySelector(link.href);
+            if (el) observer.observe(el);
+        });
+
+        return () => observer.disconnect();
+    }, []);
+
     const handleNavClick = (href: string) => {
         setMobileOpen(false);
         const el = document.querySelector(href);
         if (el) el.scrollIntoView({ behavior: "smooth" });
     };
 
+    interface MagneticButtonProps {
+        children: React.ReactNode;
+        className?: string;
+        onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+    }
+
+    // Magnetic Button logic
+    const MagneticButton = ({ children, className = "", onClick }: MagneticButtonProps) => {
+        const ref = useRef<HTMLButtonElement>(null);
+        const [position, setPosition] = useState({ x: 0, y: 0 });
+
+        const handleMouse = (e: React.MouseEvent) => {
+            if (!ref.current) return;
+            const { clientX, clientY } = e;
+            const { height, width, left, top } = ref.current.getBoundingClientRect();
+            const middleX = clientX - (left + width / 2);
+            const middleY = clientY - (top + height / 2);
+            setPosition({ x: middleX * 0.15, y: middleY * 0.15 });
+        };
+
+        const reset = () => {
+            setPosition({ x: 0, y: 0 });
+        };
+
+        return (
+            <motion.button
+                ref={ref}
+                onMouseMove={handleMouse}
+                onMouseLeave={reset}
+                animate={{ x: position.x, y: position.y }}
+                transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+                onClick={onClick}
+                className={className}
+            >
+                {children}
+            </motion.button>
+        );
+    };
+
     return (
-        <motion.nav
-            variants={navVariants}
-            initial="hidden"
-            animate="visible"
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-                ? "glass shadow-lg shadow-black/5"
-                : "bg-transparent"
-                }`}
-        >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16 md:h-20">
-                    {/* Logo & Audio */}
-                    <div className="flex items-center gap-4">
-                        <motion.a
-                            href="#home"
+        <>
+            {/* Desktop Dynamic Pill */}
+            <motion.div
+                initial={{ y: -100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="fixed left-0 right-0 z-50 flex justify-center hidden md:flex pointer-events-none"
+                style={{ top: navTop, paddingLeft: "16px", paddingRight: "16px" }}
+            >
+                <motion.nav
+                    style={{
+                        borderRadius: navRadius,
+                    }}
+                    className={`pointer-events-auto transition-all duration-500 overflow-hidden ${scrolled
+                        ? "w-[95%] max-w-[1000px] glass bg-background/70 shadow-[0_8px_32px_rgba(0,0,0,0.08)] border-border/40"
+                        : "w-full max-w-7xl bg-transparent border-transparent"
+                        }`}
+                >
+                    <div className="flex items-center justify-between px-6 h-[72px]">
+                        {/* Logo */}
+                        <motion.button
                             onClick={(e) => {
                                 e.preventDefault();
                                 handleNavClick("#home");
                             }}
-                            className="flex items-center gap-2 group"
-                            whileHover={{ scale: 1.02 }}
+                            className="flex items-center gap-2 group flex-shrink-0"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                         >
-                            <Image
-                                src="/DEALWITHIT.png"
-                                alt="Logo"
-                                width={44}
-                                height={44}
-                                className="w-11 h-11 object-contain drop-shadow-md group-hover:scale-105 transition-transform"
-                            />
-                            <span className="hidden lg:block text-lg font-bold font-display text-foreground whitespace-nowrap">
-                                Mike<span className="text-gradient"> Cedrick</span>
+                            <div className="bg-foreground rounded-full flex items-center justify-center transition-transform group-hover:rotate-12 w-11 h-11 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)]">
+                                <Image
+                                    src="/DEALWITHIT.png"
+                                    alt="Logo"
+                                    width={32}
+                                    height={32}
+                                    className="w-8 h-8 object-contain drop-shadow-md"
+                                />
+                            </div>
+                            <span className="hidden lg:block text-lg font-bold font-display text-foreground whitespace-nowrap overflow-hidden">
+                                My<span className="text-gradient"> Portfolio</span>
                             </span>
-                        </motion.a>
-
-                    </div>
-
-                    {/* Desktop Nav Links */}
-                    <div className="hidden md:flex items-center gap-1">
-                        {navLinks.map((link, i) => (
-                            <motion.a
-                                key={link.name}
-                                href={link.href}
-                                custom={i}
-                                variants={linkVariants}
-                                initial="hidden"
-                                animate="visible"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    handleNavClick(link.href);
-                                }}
-                                className="relative px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-accent/50"
-                                whileHover={{ y: -1 }}
-                            >
-                                {link.name}
-                            </motion.a>
-                        ))}
-                    </div>
-
-                    {/* Right side actions */}
-                    <div className="flex items-center gap-2">
-                        {/* Theme toggle */}
-                        {mounted && (
-                            <motion.button
-                                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                                className="relative p-2.5 rounded-xl hover:bg-accent/50 transition-colors text-muted-foreground hover:text-foreground"
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                aria-label="Toggle theme"
-                            >
-                                <AnimatePresence mode="wait">
-                                    <motion.div
-                                        key={theme}
-                                        initial={{ rotate: -90, opacity: 0 }}
-                                        animate={{ rotate: 0, opacity: 1 }}
-                                        exit={{ rotate: 90, opacity: 0 }}
-                                        transition={{ duration: 0.2 }}
-                                    >
-                                        {theme === "dark" ? (
-                                            <FiSun className="w-5 h-5" />
-                                        ) : (
-                                            <FiMoon className="w-5 h-5" />
-                                        )}
-                                    </motion.div>
-                                </AnimatePresence>
-                            </motion.button>
-                        )}
-
-                        {/* Audio Player (Moved to right side for mobile visibility) */}
-                        <AudioPlayer />
-
-                        {/* Resume button */}
-                        <motion.a
-                            href="#"
-                            className="hidden lg:flex flex-none items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-sm font-medium hover:shadow-lg hover:shadow-violet-500/25 transition-shadow"
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                        >
-                            <FiDownload className="w-4 h-4" />
-                            Resume
-                        </motion.a>
-
-                        {/* Mobile menu button */}
-                        <motion.button
-                            onClick={() => setMobileOpen(!mobileOpen)}
-                            className="md:hidden p-2.5 rounded-xl hover:bg-accent/50 transition-colors text-muted-foreground"
-                            whileTap={{ scale: 0.9 }}
-                            aria-label="Toggle mobile menu"
-                        >
-                            <AnimatePresence mode="wait">
-                                <motion.div
-                                    key={mobileOpen ? "close" : "open"}
-                                    initial={{ rotate: -90, opacity: 0 }}
-                                    animate={{ rotate: 0, opacity: 1 }}
-                                    exit={{ rotate: 90, opacity: 0 }}
-                                    transition={{ duration: 0.2 }}
-                                >
-                                    {mobileOpen ? (
-                                        <FiX className="w-5 h-5" />
-                                    ) : (
-                                        <FiMenu className="w-5 h-5" />
-                                    )}
-                                </motion.div>
-                            </AnimatePresence>
                         </motion.button>
+
+                        {/* Navigation Links */}
+                        <div className="flex items-center gap-1 relative" onMouseLeave={() => setHoveredSection(null)}>
+                            {navLinks.map((link) => {
+                                const isActive = activeSection === link.name;
+                                const isHovered = hoveredSection === link.name;
+
+                                return (
+                                    <div
+                                        key={link.name}
+                                        className="relative"
+                                        onMouseEnter={() => setHoveredSection(link.name)}
+                                    >
+                                        <MagneticButton
+                                            onClick={(e: React.MouseEvent) => {
+                                                e.preventDefault();
+                                                handleNavClick(link.href);
+                                            }}
+                                            className={`relative z-10 px-4 py-2 text-sm font-semibold transition-colors duration-300 ${isActive || isHovered
+                                                ? "text-foreground"
+                                                : "text-muted-foreground hover:text-foreground"
+                                                }`}
+                                        >
+                                            {link.name}
+                                        </MagneticButton>
+
+                                        {/* Hover Indicator */}
+                                        {isHovered && (
+                                            <motion.div
+                                                layoutId="nav-hover"
+                                                className="absolute inset-0 bg-accent/40 rounded-full -z-10"
+                                                transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                                            />
+                                        )}
+
+                                        {/* Active Indicator (Dot) */}
+                                        {isActive && (
+                                            <motion.div
+                                                layoutId="nav-active"
+                                                className="absolute -bottom-2 left-1/2 w-1 h-1 bg-violet-500 rounded-full"
+                                                transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                                                style={{ x: "-50%" }}
+                                            />
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex items-center gap-3 flex-shrink-0">
+                            {mounted && (
+                                <motion.button
+                                    onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                                    className="relative flex items-center justify-center w-10 h-10 rounded-full bg-accent/30 hover:bg-accent/60 transition-colors text-muted-foreground hover:text-foreground border border-border/20"
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    aria-label="Toggle theme"
+                                >
+                                    <AnimatePresence mode="wait">
+                                        <motion.div
+                                            key={theme}
+                                            initial={{ rotate: -90, opacity: 0, scale: 0.5 }}
+                                            animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                                            exit={{ rotate: 90, opacity: 0, scale: 0.5 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
+                                            {theme === "dark" ? (
+                                                <FiSun className="w-4 h-4" />
+                                            ) : (
+                                                <FiMoon className="w-4 h-4" />
+                                            )}
+                                        </motion.div>
+                                    </AnimatePresence>
+                                </motion.button>
+                            )}
+
+                            <div className="hidden lg:block h-6 w-px bg-border/50 mx-1" />
+
+                            <AudioPlayer />
+
+                            <MagneticButton
+                                onClick={() => { }}
+                                className="hidden lg:flex items-center gap-2 px-5 py-2.5 rounded-full bg-foreground text-background text-sm font-semibold hover:opacity-90 transition-opacity shadow-[0_0_20px_rgba(255,255,255,0.1)] dark:shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+                            >
+                                <FiDownload className="w-4 h-4" />
+                                <span>Resume</span>
+                            </MagneticButton>
+                        </div>
                     </div>
+                </motion.nav>
+            </motion.div>
+
+            {/* Mobile Header */}
+            <motion.nav
+                initial={{ y: -100 }}
+                animate={{ y: 0 }}
+                className={`fixed top-0 left-0 right-0 z-[60] flex md:hidden items-center justify-between px-6 h-20 transition-all duration-300 ${scrolled ? "glass shadow-sm" : "bg-transparent"
+                    }`}
+            >
+                <div className="flex items-center gap-3">
+                    <div className="bg-foreground rounded-full flex items-center justify-center w-10 h-10 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)]">
+                        <Image
+                            src="/DEALWITHIT.png"
+                            alt="Logo"
+                            width={28}
+                            height={28}
+                            className="w-7 h-7 object-contain"
+                        />
+                    </div>
+                    <span className="text-lg font-bold font-display tracking-tight text-foreground whitespace-nowrap">
+                        Mike<span className="text-gradient"> Cedrick</span>
+                    </span>
                 </div>
 
-                {/* Mobile Menu */}
-                <AnimatePresence>
-                    {mobileOpen && (
-                        <motion.div
-                            variants={mobileMenuVariants}
-                            initial="closed"
-                            animate="open"
-                            exit="closed"
-                            className="md:hidden overflow-hidden pb-4"
-                        >
-                            <div className="flex flex-col gap-1 pt-2 border-t border-border/50">
-                                {navLinks.map((link, i) => (
+                <div className="flex items-center gap-4">
+                    <AudioPlayer />
+                    <button
+                        onClick={() => setMobileOpen(true)}
+                        className="w-10 h-10 flex items-center justify-center rounded-full bg-accent hover:bg-accent/80 transition-colors"
+                        aria-label="Open menu"
+                    >
+                        <FiMenu className="w-5 h-5 text-foreground" />
+                    </button>
+                </div>
+            </motion.nav>
+
+            {/* Premium Mobile Menu Overlay */}
+            <AnimatePresence>
+                {mobileOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                        className="fixed inset-0 z-[70] bg-background/95 backdrop-blur-3xl md:hidden overflow-hidden flex flex-col"
+                    >
+                        {/* Overlay Header */}
+                        <div className="flex items-center justify-between px-6 h-20 flex-shrink-0">
+                            <span className="text-lg font-bold font-display tracking-tight text-foreground">
+                                Navigation<span className="text-violet-500">.</span>
+                            </span>
+                            <div className="flex items-center gap-4">
+                                {mounted && (
+                                    <button
+                                        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                                        className="w-10 h-10 flex items-center justify-center rounded-full bg-accent hover:bg-accent/80 transition-colors text-foreground"
+                                    >
+                                        {theme === "dark" ? <FiSun className="w-5 h-5" /> : <FiMoon className="w-5 h-5" />}
+                                    </button>
+                                )}
+                                <button
+                                    onClick={() => setMobileOpen(false)}
+                                    className="w-10 h-10 flex items-center justify-center rounded-full bg-foreground hover:bg-foreground/90 transition-colors"
+                                >
+                                    <FiX className="w-5 h-5 text-background" />
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Huge Typography Links */}
+                        <div className="flex-1 px-6 py-8 flex flex-col justify-center gap-4">
+                            {navLinks.map((link, i) => {
+                                const isActive = activeSection === link.name;
+                                return (
                                     <motion.a
                                         key={link.name}
                                         href={link.href}
@@ -220,29 +330,45 @@ export default function Navbar() {
                                             e.preventDefault();
                                             handleNavClick(link.href);
                                         }}
-                                        className="px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded-xl transition-colors"
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: i * 0.05 }}
+                                        initial={{ opacity: 0, y: 40, rotateX: 20 }}
+                                        animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                                        exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
+                                        transition={{ duration: 0.6, delay: 0.1 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                                        className="relative py-2 origin-left flex items-center group"
                                     >
-                                        {link.name}
+                                        <span className={`text-5xl font-extrabold tracking-tighter uppercase transition-colors duration-300 ${isActive ? "text-foreground" : "text-muted-foreground group-hover:text-foreground"}`}>
+                                            {link.name}
+                                        </span>
+                                        {isActive && (
+                                            <motion.span
+                                                layoutId="mobile-active"
+                                                className="ml-4 w-12 h-1 bg-violet-500 rounded-full inline-block"
+                                            />
+                                        )}
                                     </motion.a>
-                                ))}
-                                <motion.a
-                                    href="#"
-                                    className="flex items-center gap-2 px-4 py-3 mt-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-sm font-medium text-center justify-center"
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: navLinks.length * 0.05 }}
-                                >
-                                    <FiDownload className="w-4 h-4" />
-                                    Download Resume
-                                </motion.a>
-                            </div>
+                                );
+                            })}
+                        </div>
+
+                        {/* Resume Footer */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.6, delay: 0.6 }}
+                            className="p-6 border-t border-border/50 pb-12"
+                        >
+                            <a
+                                href="#"
+                                className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-lg font-bold hover:shadow-lg hover:shadow-violet-500/25 transition-shadow"
+                            >
+                                <FiDownload className="w-5 h-5" />
+                                Download Resume
+                            </a>
                         </motion.div>
-                    )}
-                </AnimatePresence>
-            </div>
-        </motion.nav>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
     );
 }

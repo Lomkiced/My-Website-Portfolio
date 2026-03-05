@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { useThemeStore } from "@/lib/store";
+
 /* ─────────────────────────────────────────────────────────────────────────────
    SVG Path Definitions for "MIKE CEDRICK"
    Each letter is hand-crafted as a continuous SVG <path> with pathLength="360"
@@ -113,12 +115,14 @@ const CEDRICK_LETTERS: LetterDef[] = [
 
 export default function LoadingScreen() {
     const [isLoading, setIsLoading] = useState(true);
+    const setIsAppLoaded = useThemeStore((s) => s.setIsAppLoaded);
 
     useEffect(() => {
         document.body.style.overflow = "hidden";
 
         const timer = setTimeout(() => {
             setIsLoading(false);
+            setIsAppLoaded(true);
             document.body.style.overflow = "auto";
         }, 3200);
 
@@ -126,7 +130,7 @@ export default function LoadingScreen() {
             clearTimeout(timer);
             document.body.style.overflow = "auto";
         };
-    }, []);
+    }, [setIsAppLoaded]);
 
     /* Renders one word row of animated SVG letters */
     const renderRow = (

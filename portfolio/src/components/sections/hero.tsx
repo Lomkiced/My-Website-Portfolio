@@ -176,41 +176,130 @@ export default function Hero() {
                         </motion.div>
                     </div>
 
-                    {/* Name - CSS Text Fill Animation Style */}
-                    <div className="flex flex-col items-center select-none pt-4">
-                        <motion.h1
-                            variants={itemVariants}
-                            className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black font-display tracking-tight flex flex-col items-center"
-                        >
+                    {/* Name — SVG Path-Drawing Animation */}
+                    <motion.div variants={itemVariants} className="flex flex-col items-center select-none pt-4">
 
-                            {/* Upper Name */}
-                            <div className="flex justify-center mb-2">
-                                <span
-                                    className="text-fill-hero text-foreground"
-                                    data-text="Mike Cedrick"
-                                >
-                                    Mike Cedrick
-                                </span>
+                        {/* Shared SVG Gradient Definitions */}
+                        <svg height="0" width="0" viewBox="0 0 64 64" className="absolute">
+                            <defs>
+                                {/* Dark-mode: white → light slate | Light-mode: overridden by CSS */}
+                                <linearGradient gradientUnits="userSpaceOnUse" y2="2" x2="0" y1="62" x1="0" id="hero-grad-name">
+                                    <stop stopColor="var(--hero-name-stop1, #FFFFFF)" />
+                                    <stop stopColor="var(--hero-name-stop2, #CBD5E1)" offset="1" />
+                                </linearGradient>
+                                {/* Purple gradient with rotating transform */}
+                                <linearGradient gradientUnits="userSpaceOnUse" y2="2" x2="0" y1="62" x1="0" id="hero-grad-purple">
+                                    <stop stopColor="#A855F7" />
+                                    <stop stopColor="#7C3AED" offset="1" />
+                                    <animateTransform
+                                        repeatCount="indefinite"
+                                        keySplines=".42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1"
+                                        keyTimes="0; 0.125; 0.25; 0.375; 0.5; 0.625; 0.75; 0.875; 1"
+                                        dur="8s"
+                                        values="0 32 32;-270 32 32;-270 32 32;-540 32 32;-540 32 32;-810 32 32;-810 32 32;-1080 32 32;-1080 32 32"
+                                        type="rotate"
+                                        attributeName="gradientTransform"
+                                    />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+
+                        {/* ── "MIKE" row — theme-aware stroke ── */}
+                        <div className="flex items-center justify-center">
+                            {/* M */}
+                            <svg viewBox="0 0 76 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
+                                <path d="M 6,58 L 6,6 L 38,38 L 70,6 L 70,58" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" />
+                            </svg>
+                            {/* I */}
+                            <svg viewBox="0 0 24 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
+                                <path d="M 12,6 L 12,58" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.12s, 0.12s' }} />
+                            </svg>
+                            {/* K */}
+                            <svg viewBox="0 0 58 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
+                                <path d="M 10,6 L 10,58" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.24s, 0.24s' }} />
+                                <path d="M 52,6 L 10,34 L 52,58" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.30s, 0.30s' }} />
+                            </svg>
+                            {/* E */}
+                            <svg viewBox="0 0 50 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
+                                <path d="M 44,6 L 8,6 L 8,58 L 44,58" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.36s, 0.36s' }} />
+                                <path d="M 8,32 L 36,32" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.42s, 0.42s' }} />
+                            </svg>
+                        </div>
+
+                        {/* ── "CEDRICK" row — purple stroke ── */}
+                        <div className="flex items-center justify-center mt-1 sm:mt-2">
+                            {/* C */}
+                            <svg viewBox="0 0 52 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
+                                <path d="M 48,6 L 8,6 L 8,58 L 48,58" stroke="url(#hero-grad-purple)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.50s, 0.50s' }} />
+                            </svg>
+                            {/* E */}
+                            <svg viewBox="0 0 50 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
+                                <path d="M 44,6 L 8,6 L 8,58 L 44,58" stroke="url(#hero-grad-purple)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.62s, 0.62s' }} />
+                                <path d="M 8,32 L 36,32" stroke="url(#hero-grad-purple)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.68s, 0.68s' }} />
+                            </svg>
+                            {/* D */}
+                            <svg viewBox="0 0 56 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
+                                <path d="M 8,6 L 8,58 L 34,58 C 52,58 52,6 34,6 Z" stroke="url(#hero-grad-purple)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.74s, 0.74s' }} />
+                            </svg>
+                            {/* R */}
+                            <svg viewBox="0 0 56 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
+                                <path d="M 8,58 L 8,6 L 36,6 C 50,6 50,30 36,30 L 8,30 L 48,58" stroke="url(#hero-grad-purple)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.86s, 0.86s' }} />
+                            </svg>
+                            {/* I */}
+                            <svg viewBox="0 0 24 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
+                                <path d="M 12,6 L 12,58" stroke="url(#hero-grad-purple)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '0.98s, 0.98s' }} />
+                            </svg>
+                            {/* C */}
+                            <svg viewBox="0 0 52 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
+                                <path d="M 48,6 L 8,6 L 8,58 L 48,58" stroke="url(#hero-grad-purple)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '1.10s, 1.10s' }} />
+                            </svg>
+                            {/* K */}
+                            <svg viewBox="0 0 58 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
+                                <path d="M 10,6 L 10,58" stroke="url(#hero-grad-purple)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '1.22s, 1.22s' }} />
+                                <path d="M 52,6 L 10,34 L 52,58" stroke="url(#hero-grad-purple)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '1.28s, 1.28s' }} />
+                            </svg>
+                        </div>
+
+                        {/* ── "Dañocup" — SVG path-drawing, white/dark theme-aware ── */}
+                        <div className="relative mt-1 sm:mt-2 flex justify-center pb-2 px-10">
+                            {/* Ambient aura */}
+                            <div
+                                className="absolute -inset-x-8 inset-y-0 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-indigo-600 blur-3xl z-0 animate-aura-pulse"
+                            />
+                            <div className="relative z-10 flex items-center justify-center">
+                                {/* D */}
+                                <svg viewBox="0 0 56 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
+                                    <path d="M 8,6 L 8,58 L 34,58 C 52,58 52,6 34,6 Z" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '1.40s, 1.40s' }} />
+                                </svg>
+                                {/* A */}
+                                <svg viewBox="0 0 64 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
+                                    <path d="M 6,58 L 32,6 L 58,58" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '1.52s, 1.52s' }} />
+                                    <path d="M 18,38 L 46,38" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '1.58s, 1.58s' }} />
+                                </svg>
+                                {/* Ñ — tilde rendered above via overflow:visible */}
+                                <svg viewBox="0 0 64 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
+                                    <path d="M 8,58 L 8,6 L 56,58 L 56,6" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '1.64s, 1.64s' }} />
+                                    <path d="M 20,-2 Q 27,-9 32,-2 Q 37,5 44,-2" stroke="url(#hero-grad-name)" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" fill="none" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '1.70s, 1.70s' }} />
+                                </svg>
+                                {/* O */}
+                                <svg viewBox="0 0 64 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
+                                    <path d="M 32,6 C 6,6 6,58 32,58 C 58,58 58,6 32,6 Z" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '1.76s, 1.76s' }} />
+                                </svg>
+                                {/* C */}
+                                <svg viewBox="0 0 52 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
+                                    <path d="M 48,6 L 8,6 L 8,58 L 48,58" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '1.88s, 1.88s' }} />
+                                </svg>
+                                {/* U */}
+                                <svg viewBox="0 0 64 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
+                                    <path d="M 8,6 V 42 Q 8,58 32,58 Q 56,58 56,42 V 6" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '2.00s, 2.00s' }} />
+                                </svg>
+                                {/* P */}
+                                <svg viewBox="0 0 52 64" fill="none" overflow="visible" className="h-[48px] sm:h-[64px] md:h-[88px] lg:h-[110px] w-auto">
+                                    <path d="M 8,58 L 8,6 L 36,6 C 50,6 50,30 36,30 L 8,30" stroke="url(#hero-grad-name)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" pathLength={360} className="hero-letter-dash" style={{ animationDelay: '2.12s, 2.12s' }} />
+                                </svg>
                             </div>
-
-                            {/* Lower Name - Gradient Applied to Bouncing Text Container */}
-                            <div className="relative mt-2 flex justify-center pb-2 px-10">
-                                {/* Exquisite Ambient Aura — CSS animated */}
-                                <div
-                                    className="absolute -inset-x-8 inset-y-0 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-indigo-600 blur-3xl z-0 animate-aura-pulse"
-                                />
-
-                                <div className="relative z-10 block drop-shadow-sm flex">
-                                    <span
-                                        className="text-fill-hero text-fill-purple"
-                                        data-text="Dañocup"
-                                    >
-                                        Dañocup
-                                    </span>
-                                </div>
-                            </div>
-                        </motion.h1>
-                    </div>
+                        </div>
+                    </motion.div>
 
                     {/* Title */}
                     <motion.p

@@ -1,21 +1,21 @@
 "use client";
 
-import { motion, useMotionTemplate, useMotionValue, useSpring, Variants, useReducedMotion } from "framer-motion";
+import { motion, useMotionTemplate, useMotionValue, useReducedMotion, useSpring, Variants } from "framer-motion";
 import React, { useRef, useState } from "react";
 import {
-    SiReact,
-    SiNextdotjs,
-    SiTailwindcss,
-    SiFramer,
-    SiRedux,
-    SiNodedotjs,
-    SiExpress,
-    SiNestjs,
-    SiPhp,
-    SiLaravel,
-    SiPrisma,
-    SiExpo,
     SiDocker,
+    SiExpo,
+    SiExpress,
+    SiFramer,
+    SiLaravel,
+    SiNestjs,
+    SiNextdotjs,
+    SiNodedotjs,
+    SiPhp,
+    SiPrisma,
+    SiReact,
+    SiRedux,
+    SiTailwindcss,
     SiVercel,
 } from "react-icons/si";
 import { TbBrandReactNative } from "react-icons/tb";
@@ -223,7 +223,7 @@ export default function Skills() {
                     transition={{ duration: 0.8, ease: "easeOut" }}
                 >
                     <span className="inline-block py-1 px-3 rounded-full bg-violet-500/10 border border-violet-500/20 text-sm font-semibold text-violet-600 dark:text-violet-400 uppercase tracking-widest mb-4">
-                        Skills & Arsenal
+                        Skills
                     </span>
                     <h2 className="text-4xl md:text-6xl font-bold font-display tracking-tight text-foreground">
                         My Tech Stack

@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
 import Image from "next/image";
-import { FiAward, FiCode, FiLayers, FiMapPin, FiGithub, FiLinkedin, FiMail } from "react-icons/fi";
+import { FiAward, FiMapPin, FiGithub, FiLinkedin, FiMail } from "react-icons/fi";
 import { SiNextdotjs, SiTailwindcss, SiTypescript, SiNodedotjs, SiReact } from "react-icons/si";
 import SectionTitle from "@/components/animations/section-title";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
@@ -154,7 +154,7 @@ export default function About() {
                     {/* 4. Contact / Socials (Spans 4 cols) */}
                     <div className="md:col-span-2 lg:col-span-4">
                         <BentoCard delay={0.4} className="p-8 flex flex-col justify-center items-center text-center">
-                            <h4 className="font-semibold text-foreground/90 font-display mb-6">Let's Connect</h4>
+                            <h4 className="font-semibold text-foreground/90 font-display mb-6">Let&apos;s Connect</h4>
                             <div className="flex justify-center gap-6">
                                 <a href="https://github.com/mcdanocup" target="_blank" rel="noreferrer" className="p-3 rounded-full bg-foreground/5 hover:bg-violet-500/20 hover:text-violet-500 transition-colors">
                                     <FiGithub size={24} />

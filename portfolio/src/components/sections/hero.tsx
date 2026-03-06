@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, Suspense } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { FiArrowDown, FiMail } from "react-icons/fi";
 import { Music, MousePointerClick } from "lucide-react";
@@ -229,10 +229,6 @@ export default function Hero() {
         const el = document.querySelector(href);
         if (el) el.scrollIntoView({ behavior: "smooth" });
     };
-
-    const mapped = gradientMap[activeSectionColor];
-    const overlayFrom = mapped?.from ?? "transparent";
-    const overlayTo = mapped?.to ?? "transparent";
 
     return (
         <section

@@ -28,23 +28,6 @@ const itemVariants = {
     },
 };
 
-// ─── Color mapping for scrollytelling ─────────────────────────────────────────
-
-const gradientMap: Record<string, { from: string; to: string }> = {
-    "from-violet-600 to-indigo-600": {
-        from: "rgba(124, 58, 237, 0.12)",
-        to: "rgba(79, 70, 229, 0.12)",
-    },
-    "from-purple-600 to-pink-600": {
-        from: "rgba(147, 51, 234, 0.12)",
-        to: "rgba(219, 39, 119, 0.12)",
-    },
-    "from-indigo-600 to-cyan-600": {
-        from: "rgba(79, 70, 229, 0.12)",
-        to: "rgba(8, 145, 178, 0.12)",
-    },
-};
-
 // ─── Scramble Text Configuration ──────────────────────────────────────────────
 
 interface LineConfig {
@@ -222,7 +205,6 @@ function ScrambleLine({ config, trigger, isAppLoaded, isVisible }: { config: Lin
 
 export default function Hero() {
     const sectionRef = useRef<HTMLElement>(null);
-    const activeSectionColor = useThemeStore((s) => s.activeSectionColor);
     const autoplayStatus = useThemeStore((s) => s.autoplayStatus);
 
     const handleNavClick = (href: string) => {

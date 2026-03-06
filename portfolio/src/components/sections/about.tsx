@@ -1,74 +1,30 @@
 "use client";
 
-import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { ReactNode } from "react";
 import Image from "next/image";
-import { FiAward, FiCode, FiLayers, FiMapPin } from "react-icons/fi";
+import { FiAward, FiCode, FiLayers, FiMapPin, FiGithub, FiLinkedin, FiMail } from "react-icons/fi";
+import { SiNextdotjs, SiTailwindcss, SiTypescript, SiNodedotjs, SiReact } from "react-icons/si";
 import SectionTitle from "@/components/animations/section-title";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
 
-const highlights = [
-    {
-        icon: FiCode,
-        title: "Full Stack Development",
-        description: "End-to-end web and mobile application development",
-    },
-    {
-        icon: FiLayers,
-        title: "Modern Tech Stack",
-        description: "Next.js, NestJS, Prisma, React Native",
-    },
-    {
-        icon: FiAward,
-        title: "BS Information Technology",
-        description: "Strong academic foundation in IT",
-    },
-];
-
-// 4. Mouse-Tracking Spotlight logic
-function SpotlightCard({ children, className = "" }: { children: ReactNode; className?: string }) {
-    const divRef = useRef<HTMLDivElement>(null);
-    const [isMounted, setIsMounted] = useState(false);
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
-
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
-
-    const shouldReduceMotion = useReducedMotion();
-
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (shouldReduceMotion || window.matchMedia("(pointer: coarse)").matches) return;
-        if (!divRef.current) return;
-        const rect = divRef.current.getBoundingClientRect();
-        mouseX.set(e.clientX - rect.left);
-        mouseY.set(e.clientY - rect.top);
-    };
-
-    const background = useTransform(
-        [mouseX, mouseY],
-        ([x, y]) => `radial-gradient(400px circle at ${x}px ${y}px, rgba(139, 92, 246, 0.15), transparent 40%)`
-    );
-
+// ─── Bento Box Card Wrapper ──────────────────────────────────────────────────
+// Uses pure CSS for hover states instead of heavy JS tracking
+function BentoCard({ children, className = "", delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
     return (
-        <motion.div
-            ref={divRef}
-            onMouseMove={handleMouseMove}
-            className={`group relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/5 bg-white/5 dark:bg-black/5 backdrop-blur-md md:backdrop-blur-xl shadow-xl transition-all hover:shadow-2xl will-change-transform ${className}`}
-        >
-            {isMounted && !shouldReduceMotion && (
-                <motion.div
-                    className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-300 group-hover:opacity-100 will-change-opacity"
-                    style={{ background }}
-                />
-            )}
-            <div className="relative z-10 h-full">{children}</div>
-        </motion.div>
+        <ScrollReveal variant="slideScale" delay={delay} className="h-full">
+            <div
+                className={`group relative overflow-hidden rounded-[2rem] border border-white/10 dark:border-white/5 bg-white/40 dark:bg-black/40 backdrop-blur-xl shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 ${className}`}
+            >
+                {/* Premium Glassmorphism Shine */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-white/0 dark:from-white/10 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] pointer-events-none" />
+                <div className="relative z-10 h-full">{children}</div>
+            </div>
+        </ScrollReveal>
     );
 }
 
-// 2. Staggered Text Reveal
+// ─── Staggered Text Reveal ──────────────────────────────────────────────────
 const revealVariants = {
     hidden: { opacity: 0, y: "100%" },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.2, 0.65, 0.3, 0.9] as const } },
@@ -90,7 +46,7 @@ function StaggeredText({ text, className }: { text: string; className?: string }
             variants={textContainer}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: false, margin: "-10%" }}
+            viewport={{ once: true, margin: "-10%" }}
         >
             {words.map((word, index) => (
                 <div key={index} className="overflow-hidden pb-2 mr-2 md:mr-3 last:mr-0 inline-flex">
@@ -103,258 +59,132 @@ function StaggeredText({ text, className }: { text: string; className?: string }
     );
 }
 
+// ─── Main Component ──────────────────────────────────────────────────────────
 export default function About() {
-    // 1. 3D Parallax Profile Card
-    const cardRef = useRef<HTMLDivElement>(null);
-    const x = useMotionValue(0);
-    const y = useMotionValue(0);
-
-    const mouseXSpring = useSpring(x, { stiffness: 150, damping: 15, mass: 0.1 });
-    const mouseYSpring = useSpring(y, { stiffness: 150, damping: 15, mass: 0.1 });
-
-    const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
-    const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
-    const glareX = useTransform(mouseXSpring, [-0.5, 0.5], ["100%", "0%"]);
-    const glareY = useTransform(mouseYSpring, [-0.5, 0.5], ["100%", "0%"]);
-
-    const shouldReduceMotion = useReducedMotion();
-
-    const handleMouseMoveCard = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (shouldReduceMotion || window.matchMedia("(pointer: coarse)").matches) return;
-        if (!cardRef.current) return;
-        const rect = cardRef.current.getBoundingClientRect();
-        const width = rect.width;
-        const height = rect.height;
-        const mousePosX = e.clientX - rect.left;
-        const mousePosY = e.clientY - rect.top;
-        const xPct = mousePosX / width - 0.5;
-        const yPct = mousePosY / height - 0.5;
-        x.set(xPct);
-        y.set(yPct);
-    };
-
-    const handleMouseLeaveCard = () => {
-        x.set(0);
-        y.set(0);
-    };
-
     return (
         <section id="about" className="py-20 md:py-32 relative overflow-hidden">
-            {/* 5. Continuous Floating Badges (Background Blur) — CSS animated for GPU compositing */}
-            <div
-                className="absolute top-0 right-0 w-96 h-96 bg-violet-500/20 rounded-full blur-3xl md:blur-[100px] -translate-y-1/2 translate-x-1/4 pointer-events-none will-change-transform animate-float-blob-up"
-            />
-
-            <div
-                className="absolute bottom-0 left-0 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl md:blur-[80px] translate-y-1/4 -translate-x-1/4 pointer-events-none will-change-transform animate-float-blob-down"
-            />
+            {/* Ambient Base Backgrounds */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-violet-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/4 pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-72 h-72 bg-indigo-500/10 rounded-full blur-[80px] translate-y-1/4 -translate-x-1/4 pointer-events-none" />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                {/* Section header */}
                 <SectionTitle
                     label="About Me"
                     title="Get to Know Me"
                     decorativeLines
-                    className="mb-16"
+                    className="mb-12 md:mb-16"
                 />
 
-                <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-                    {/* Left — Profile Image (3D Parallax) */}
-                    <div className="lg:col-span-5 relative" style={{ perspective: "1000px" }}>
-                        <motion.div
-                            ref={cardRef}
-                            style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-                            onMouseMove={handleMouseMoveCard}
-                            onMouseLeave={handleMouseLeaveCard}
-                            initial={{ opacity: 0, scale: 0.9, y: 40 }}
-                            whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                            viewport={{ once: false, margin: "-10%" }}
-                            transition={{ duration: 0.8, ease: "easeOut" }}
-                            className="relative w-full max-w-sm mx-auto aspect-[4/5] rounded-[2rem] cursor-pointer group will-change-transform"
-                        >
-                            {/* Premium Glassmorphism & Shadow */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-violet-600/20 via-purple-600/10 to-indigo-600/20 rounded-[2rem] blur-xl md:blur-2xl transition-opacity duration-300 group-hover:opacity-100 opacity-60" style={{ transform: "translateZ(-10px)" }} />
-                            <div className="absolute inset-0 rounded-[2rem] border border-white/20 dark:border-white/10 bg-white/5 dark:bg-black/5 backdrop-blur-md md:backdrop-blur-3xl overflow-hidden shadow-2xl" style={{ transformStyle: "preserve-3d" }}>
+                {/* ── BENTO GRID LAYOUT ── */}
+                <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-12 gap-6 auto-rows-[minmax(180px,auto)]">
 
-                                {/* Glare Effect */}
-                                <motion.div
-                                    className="absolute z-20 pointer-events-none bg-gradient-to-tr from-white/0 via-white/30 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                                    style={{
-                                        left: glareX,
-                                        top: glareY,
-                                        width: "200%",
-                                        height: "200%",
-                                        transform: "translate(-50%, -50%) rotate(-45deg)",
-                                    }}
-                                />
-
-                                {/* Photo placeholder / actual content */}
-                                <div className="absolute inset-[2px] rounded-[1.8rem] overflow-hidden shadow-inner group/image" style={{ transform: "translateZ(20px)", transformStyle: "preserve-3d" }}>
-                                    <motion.div
-                                        className="w-full h-full relative"
-                                        style={{
-                                            x: useTransform(mouseXSpring, [-0.5, 0.5], ["-5%", "5%"]),
-                                            y: useTransform(mouseYSpring, [-0.5, 0.5], ["-5%", "5%"]),
-                                            scale: 1.1, // Scale up slightly to hide edges during parallax
-                                        }}
+                    {/* 1. Main Profile Intro (Spans full width on mobile, 7 cols on large desktop) */}
+                    <div className="md:col-span-4 lg:col-span-7 lg:row-span-2 h-full">
+                        <BentoCard delay={0.1} className="p-8 md:p-10 flex flex-col justify-between overflow-visible">
+                            <div className="space-y-6 relative z-10">
+                                <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold font-display leading-tight flex flex-wrap gap-x-2">
+                                    <StaggeredText text="A Passionate" className="inline-flex" />
+                                    <motion.span
+                                        initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                                        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
+                                        className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600 dark:from-violet-400 dark:to-indigo-400 inline-block overflow-visible"
                                     >
-                                        <Image
-                                            src="/profile.jpg"
-                                            alt="Mike Cedrick"
-                                            fill
-                                            className="object-cover transition-transform duration-700 ease-out group-hover/image:scale-105"
-                                            priority
-                                            sizes="(max-width: 768px) 100vw, 400px"
-                                        />
-                                        {/* Premium gradient overlay to ensure text readability */}
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80" />
-                                    </motion.div>
+                                        Full Stack Developer
+                                    </motion.span>
+                                </h3>
 
-                                    {/* Floating Info Panel at the Bottom */}
-                                    <div className="absolute bottom-6 inset-x-6" style={{ transform: "translateZ(40px)" }}>
-                                        <div className="bg-white/10 dark:bg-black/30 backdrop-blur-md border border-white/20 dark:border-white/10 p-5 rounded-2xl shadow-2xl transform transition-transform duration-500 hover:scale-105">
-                                            <h3 className="text-xl md:text-2xl font-bold font-display text-white drop-shadow-md">Mike Cedrick</h3>
-                                            <p className="text-sm md:text-base text-white/80 font-medium tracking-wide mt-1">
-                                                Software Developer
-                                            </p>
-                                        </div>
-                                    </div>
+                                <div className="space-y-4 text-base md:text-lg text-foreground/75 leading-relaxed font-light max-w-2xl">
+                                    <p>
+                                        As a Full Stack Developer and BSIT graduate, I am obsessed
+                                        with building high-performance, type-safe web and mobile
+                                        applications that feel incredibly fluid and native.
+                                    </p>
+                                    <p>
+                                        I specialize in bridging powerful, scalable backend systems with
+                                        pixel-perfect, hardware-accelerated frontend designs. My ultimate
+                                        goal is to build digital products that leave a lasting impression.
+                                    </p>
                                 </div>
                             </div>
-                        </motion.div>
 
-                        {/* 5. Continuous Floating Location badge — CSS animated */}
-                        <motion.div
-                            className="absolute -bottom-6 -right-4 lg:-right-8 z-30 pointer-events-none animate-float-badge"
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: false }}
-                        >
-                            <SpotlightCard className="!rounded-2xl px-5 py-3.5 flex items-center gap-3 !bg-white/70 dark:!bg-black/50 backdrop-blur-md md:backdrop-blur-2xl !border-white/40 dark:!border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.12)] pointer-events-auto">
-                                <div className="p-2 rounded-full bg-violet-500/10 dark:bg-violet-500/20 text-violet-600 dark:text-violet-400">
-                                    <FiMapPin className="w-4 h-4" />
-                                </div>
-                                <span className="text-sm font-semibold tracking-wide text-foreground/90">
-                                    San Marcos, Agoo, La Union
-                                </span>
-                            </SpotlightCard>
-                        </motion.div>
+                            {/* Decorative Tech Mesh Background inside the card */}
+                            <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.1)_0%,transparent_70%)] rounded-full blur-2xl pointer-events-none group-hover:bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.15)_0%,transparent_70%)] transition-colors duration-700" />
+                        </BentoCard>
                     </div>
 
-                    {/* Right — Description & Highlights */}
-                    <div className="lg:col-span-7 space-y-8 mt-10 lg:mt-0">
-                        <div className="space-y-6">
-                            <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold font-display leading-tight flex flex-wrap gap-x-2">
-                                {/* 2. Staggered Text Reveal */}
-                                <StaggeredText text="A Passionate" className="inline-flex" />
-                                <motion.span
-                                    initial={{ opacity: 0, scale: 0.9, y: 10 }}
-                                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                                    viewport={{ once: false }}
-                                    transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
-                                    className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600 dark:from-violet-400 dark:to-indigo-400 inline-block overflow-visible"
-                                >
-                                    Full Stack Developer
-                                </motion.span>
-                            </h3>
+                    {/* 2. Photo Card (Spans 5 cols) */}
+                    <div className="md:col-span-4 lg:col-span-5 lg:row-span-2 h-full">
+                        <BentoCard delay={0.2} className="relative h-[400px] lg:h-full w-full p-0">
+                            <div className="absolute inset-0 w-full h-full">
+                                <Image
+                                    src="/profile.jpg"
+                                    alt="Mike Cedrick"
+                                    fill
+                                    className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
+                                    priority
+                                    sizes="(max-width: 768px) 100vw, 50vw"
+                                />
+                                {/* Elegant Inner Shadow & Gradient */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-700 ease-out opacity-80 group-hover:opacity-60" />
+                                <div className="absolute inset-0 ring-1 ring-inset ring-white/20 rounded-[2rem]" />
+                            </div>
 
-                            <ScrollReveal variant="blurIn" delay={0.3}>
-                                <div className="space-y-4 text-base md:text-lg text-foreground/70 leading-relaxed font-light">
-                                    <p>
-                                        As a Full Stack Developer and BSIT graduate, I am passionate
-                                        about building high-performance, type-safe web and mobile
-                                        applications that offer fluid user experiences. I leverage a
-                                        modern stack including Next.js, NestJS, and Prisma to develop
-                                        scalable architectures.
-                                    </p>
-                                    <p>
-                                        Using Tailwind CSS and Framer Motion, I ensure polished,
-                                        interactive interfaces. My goal is to bridge complex backend
-                                        systems with intuitive frontend design to deliver seamless
-                                        digital products from conception to deployment.
-                                    </p>
-                                </div>
-                            </ScrollReveal>
-                        </div>
-
-                        {/* 3. Interactive Bento Highlights */}
-                        <div className="grid sm:grid-cols-2 gap-4 pt-4">
-                            {highlights.map((highlight, index) => (
-                                <ScrollReveal
-                                    key={highlight.title}
-                                    variant="slideScale"
-                                    delay={0.15 + index * 0.1}
-                                    viewportMargin="-10%"
-                                >
-                                    <SpotlightCard className="p-6 h-full flex flex-col justify-center group/bento">
-                                        <div className="flex items-center gap-4 mb-3">
-                                            <div className="w-12 h-12 rounded-xl bg-violet-500/10 dark:bg-violet-500/20 flex items-center justify-center shrink-0 group-hover/bento:bg-violet-500/20 dark:group-hover/bento:bg-violet-500/30 group-hover/bento:scale-110 transition-all duration-300">
-                                                <highlight.icon className="w-6 h-6 text-violet-600 dark:text-violet-400" />
-                                            </div>
-                                            <h4 className="font-semibold text-foreground md:text-lg leading-tight">
-                                                {highlight.title}
-                                            </h4>
-                                        </div>
-                                        <p className="text-sm text-foreground/60 leading-relaxed group-hover/bento:text-foreground/80 transition-colors">
-                                            {highlight.description}
-                                        </p>
-                                    </SpotlightCard>
-                                </ScrollReveal>
-                            ))}
-                            {/* Extra bento card to complete 2x2 grid nicely */}
-                            <ScrollReveal
-                                variant="slideScale"
-                                delay={0.15 + highlights.length * 0.1}
-                                viewportMargin="-10%"
-                                className="h-full"
-                            >
-                                <SpotlightCard className="p-6 h-full w-full flex flex-col items-center justify-center bg-gradient-to-br from-violet-500/5 to-indigo-500/5 group/bento relative overflow-hidden rounded-2xl">
-                                    <div className="flex-1 flex flex-col items-center justify-center w-full relative z-10">
-                                        {/* Advanced Loading Animation */}
-                                        <div className="w-14 h-14 mb-5 relative flex items-center justify-center shrink-0">
-                                            {/* Ambient Core Glow */}
-                                            <div className="absolute inset-0 bg-violet-500/20 rounded-full blur-md" />
-
-                                            {/* Outer Dashed Orbit — CSS animated */}
-                                            <div
-                                                className="absolute inset-0 rounded-full border border-dashed border-violet-500/40"
-                                                style={{ animation: 'orbit-slow 8s linear infinite' }}
-                                            />
-
-                                            {/* Inner Continuous Energy Orbit — CSS animated */}
-                                            <div
-                                                className="absolute inset-1.5 rounded-full border border-transparent border-t-violet-400 border-b-indigo-400 opacity-80"
-                                                style={{ animation: 'orbit-reverse 4s linear infinite' }}
-                                            />
-
-                                            {/* Pulsing Quantum Core — CSS animated */}
-                                            <div
-                                                className="w-3 h-3 rounded-full bg-gradient-to-br from-violet-400 to-indigo-400 shadow-[0_0_12px_rgba(167,139,250,0.9)]"
-                                                style={{ animation: 'pulse-core 2s ease-in-out infinite' }}
-                                            />
-
-                                            {/* Orbiting Satellite Particle — CSS animated */}
-                                            <div
-                                                className="absolute inset-0 z-10 origin-center"
-                                                style={{ animation: 'orbit-slow 3s linear infinite' }}
-                                            >
-                                                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,1)]" />
-                                            </div>
-                                        </div>
-
-                                        {/* Text Content */}
-                                        <div className="text-center">
-                                            <h4 className="font-semibold text-foreground/90 font-display transition-colors group-hover/bento:text-foreground">Always Learning</h4>
-                                            <p className="text-xs text-foreground/50 mt-1 transition-colors group-hover/bento:text-foreground/70">Exploring new frontiers</p>
-                                        </div>
-                                    </div>
-
-                                    {/* Advanced Hover Ambient Lighting */}
-                                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-violet-500/10 to-transparent opacity-0 group-hover/bento:opacity-100 transition-opacity duration-500" />
-                                </SpotlightCard>
-                            </ScrollReveal>
-                        </div>
+                            <div className="absolute bottom-0 left-0 right-0 p-8 z-20">
+                                <h3 className="text-2xl font-bold font-display text-white drop-shadow-md">Mike Cedrick</h3>
+                                <p className="text-white/80 font-medium tracking-wide mt-1 flex items-center gap-2">
+                                    <FiMapPin className="text-violet-400" />
+                                    La Union, Philippines
+                                </p>
+                            </div>
+                        </BentoCard>
                     </div>
+
+                    {/* 3. Tech Stack / Skills (Spans 4 cols) */}
+                    <div className="md:col-span-2 lg:col-span-4">
+                        <BentoCard delay={0.3} className="p-8 flex flex-col justify-center items-center text-center bg-gradient-to-br from-violet-500/5 to-indigo-500/5">
+                            <h4 className="font-semibold text-foreground/90 font-display mb-6">Core Stack</h4>
+                            <div className="flex flex-wrap justify-center gap-4 text-foreground/60 w-full">
+                                <SiNextdotjs size={32} className="hover:text-foreground transition-colors" />
+                                <SiReact size={32} className="hover:text-[#61DAFB] transition-colors" />
+                                <SiTypescript size={32} className="hover:text-[#3178C6] transition-colors" />
+                                <SiTailwindcss size={32} className="hover:text-[#06B6D4] transition-colors" />
+                                <SiNodedotjs size={32} className="hover:text-[#339933] transition-colors" />
+                            </div>
+                        </BentoCard>
+                    </div>
+
+                    {/* 4. Contact / Socials (Spans 4 cols) */}
+                    <div className="md:col-span-2 lg:col-span-4">
+                        <BentoCard delay={0.4} className="p-8 flex flex-col justify-center items-center text-center">
+                            <h4 className="font-semibold text-foreground/90 font-display mb-6">Let's Connect</h4>
+                            <div className="flex justify-center gap-6">
+                                <a href="https://github.com/mcdanocup" target="_blank" rel="noreferrer" className="p-3 rounded-full bg-foreground/5 hover:bg-violet-500/20 hover:text-violet-500 transition-colors">
+                                    <FiGithub size={24} />
+                                </a>
+                                <a href="https://linkedin.com/in/mcdanocup" target="_blank" rel="noreferrer" className="p-3 rounded-full bg-foreground/5 hover:bg-blue-500/20 hover:text-blue-500 transition-colors">
+                                    <FiLinkedin size={24} />
+                                </a>
+                                <a href="mailto:mikecedrickdanocup@gmail.com" className="p-3 rounded-full bg-foreground/5 hover:bg-pink-500/20 hover:text-pink-500 transition-colors">
+                                    <FiMail size={24} />
+                                </a>
+                            </div>
+                        </BentoCard>
+                    </div>
+
+                    {/* 5. Education / Degree (Spans 4 cols) */}
+                    <div className="md:col-span-4 lg:col-span-4">
+                        <BentoCard delay={0.5} className="p-8 flex flex-col justify-center items-center text-center relative overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-tr from-fuchsia-500/10 to-transparent opacity-50" />
+                            <div className="w-14 h-14 rounded-2xl bg-fuchsia-500/20 text-fuchsia-500 flex items-center justify-center mb-4 relative z-10">
+                                <FiAward size={28} />
+                            </div>
+                            <h4 className="font-bold text-foreground text-lg relative z-10">BS Information Technology</h4>
+                            <p className="text-sm text-foreground/60 mt-2 relative z-10">Strong academic foundation</p>
+                        </BentoCard>
+                    </div>
+
                 </div>
             </div>
         </section>

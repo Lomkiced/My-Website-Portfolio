@@ -4,10 +4,6 @@ import { useRef, useEffect, MouseEvent } from "react";
 import {
     motion,
     useInView,
-    useMotionValue,
-    useSpring,
-    useMotionTemplate,
-    useReducedMotion,
 } from "framer-motion";
 import { FiExternalLink, FiGithub } from "react-icons/fi";
 import { PROJECT_DATA } from "@/lib/data";
@@ -24,7 +20,7 @@ const containerVariants = {
 };
 
 const cardVariants = {
-    hidden: { opacity: 0, y: 40, scale: 0.95 },
+    hidden: { opacity: 0, y: 20, scale: 0.98 },
     visible: {
         opacity: 1,
         y: 0,
@@ -47,64 +43,20 @@ function ProjectCard({ project }: { project: (typeof PROJECT_DATA)[number] }) {
         }
     }, [isInView, project.gradient, setColor]);
 
-    // Spotlight effect
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
-
-    // Parallax Tilt
-    const rotateX = useSpring(0, { stiffness: 300, damping: 30 });
-    const rotateY = useSpring(0, { stiffness: 300, damping: 30 });
-    const shouldReduceMotion = useReducedMotion();
-
-    function handleMouseMove(event: MouseEvent<HTMLDivElement>) {
-        if (shouldReduceMotion || window.matchMedia("(pointer: coarse)").matches) return;
-        const { currentTarget, clientX, clientY } = event;
-        const { left, top, width, height } = currentTarget.getBoundingClientRect();
-
-        mouseX.set(clientX - left);
-        mouseY.set(clientY - top);
-
-        const xPct = (clientX - left) / width - 0.5;
-        const yPct = (clientY - top) / height - 0.5;
-
-        // Tilt amount
-        rotateX.set(yPct * -15);
-        rotateY.set(xPct * 15);
-    }
-
-    function handleMouseLeave() {
-        rotateX.set(0);
-        rotateY.set(0);
-    }
-
-    const mouseXSpring = useSpring(mouseX, { stiffness: 500, damping: 100 });
-    const mouseYSpring = useSpring(mouseY, { stiffness: 500, damping: 100 });
-
-    const maskImage = useMotionTemplate`radial-gradient(400px circle at ${mouseXSpring}px ${mouseYSpring}px, white, transparent 80%)`;
-
     return (
         <motion.div
             ref={cardRef}
             variants={cardVariants}
-            style={{
-                rotateX,
-                rotateY,
-                transformStyle: "preserve-3d",
-            }}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            className="group relative rounded-3xl overflow-hidden bg-white/60 dark:bg-black/20 border border-neutral-200/50 dark:border-white/5 backdrop-blur-md md:backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-lg hover:shadow-[0_8px_30px_rgba(139,92,246,0.12)] dark:hover:shadow-[0_0_40px_rgba(139,92,246,0.15)] transition-[box-shadow,border-color] duration-500 will-change-transform"
+            className="group relative rounded-3xl overflow-hidden bg-white/60 dark:bg-black/20 border border-neutral-200/50 dark:border-white/5 backdrop-blur-md md:backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-lg hover:shadow-[0_8px_30px_rgba(139,92,246,0.12)] dark:hover:shadow-[0_0_40px_rgba(139,92,246,0.15)] transition-all hover:-translate-y-2 duration-500 will-change-transform"
         >
-            {/* Spotlight overlay */}
-            <motion.div
-                className="pointer-events-none absolute inset-0 z-0 bg-violet-500/15 dark:bg-violet-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                style={{ WebkitMaskImage: maskImage, maskImage }}
+            {/* Spotlight overlay (now pure CSS) */}
+            <div
+                className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-br from-violet-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
             />
 
-            {/* Content Container (parallax lift) */}
+            {/* Content Container */}
             <div
                 className="relative z-10 flex flex-col h-full bg-transparent"
-                style={{ transform: "translateZ(40px)" }}
             >
                 {/* Header Graphic */}
                 <div
@@ -121,21 +73,20 @@ function ProjectCard({ project }: { project: (typeof PROJECT_DATA)[number] }) {
                     {!project.image && (
                         <>
                             <div
-                                className="absolute -top-10 -left-10 w-48 h-48 bg-white/30 blur-2xl md:blur-3xl rounded-full will-change-transform"
+                                className="absolute -top-10 -left-10 w-48 h-48 bg-white/30 blur-2xl md:blur-3xl rounded-full"
                                 style={{ animation: 'orb-drift-1 5s ease-in-out infinite' }}
                             />
                             <div
-                                className="absolute -bottom-10 -right-10 w-64 h-64 bg-black/20 blur-2xl md:blur-3xl rounded-full will-change-transform"
+                                className="absolute -bottom-10 -right-10 w-64 h-64 bg-black/20 blur-2xl md:blur-3xl rounded-full"
                                 style={{ animation: 'orb-drift-2 7s ease-in-out infinite' }}
                             />
                         </>
                     )}
 
                     {/* Title Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent flex items-end p-6">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-6">
                         <h3
                             className="text-2xl font-bold text-white font-display drop-shadow-md"
-                            style={{ transform: "translateZ(30px)" }}
                         >
                             {project.title}
                         </h3>
@@ -146,15 +97,12 @@ function ProjectCard({ project }: { project: (typeof PROJECT_DATA)[number] }) {
                 <div className="flex-1 p-6 flex flex-col gap-5">
                     <p
                         className="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed whitespace-pre-wrap flex-1 drop-shadow-sm"
-                        style={{ transform: "translateZ(20px)" }}
                     >
                         {project.description}
                     </p>
 
-                    {/* Tech Stack */}
                     <div
                         className="flex flex-wrap gap-2"
-                        style={{ transform: "translateZ(25px)" }}
                     >
                         {project.techStack.map((tech) => (
                             <span
@@ -169,7 +117,6 @@ function ProjectCard({ project }: { project: (typeof PROJECT_DATA)[number] }) {
                     {/* Magnetic Buttons */}
                     <div
                         className="flex flex-wrap items-center gap-3 pt-4 border-t border-neutral-200/60 dark:border-white/10"
-                        style={{ transform: "translateZ(30px)" }}
                     >
                         <MagneticButton
                             href={project.liveUrl}
@@ -218,7 +165,7 @@ export default function Projects() {
                     variants={containerVariants}
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: false, margin: "-50px" }}
+                    viewport={{ once: true, margin: "-50px" }}
                 >
                     {PROJECT_DATA.map((project) => (
                         <ProjectCard key={project.title} project={project} />

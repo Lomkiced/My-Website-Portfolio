@@ -7,19 +7,17 @@ import { motion, Variants, useReducedMotion } from "framer-motion";
 const charVariants: Variants = {
     hidden: {
         opacity: 0,
-        y: "40%",
-        rotateX: 45,
-        filter: "blur(6px)",
+        y: "15%",
+        rotateX: 15,
     },
     visible: {
         opacity: 1,
         y: "0%",
         rotateX: 0,
-        filter: "blur(0px)",
         transition: {
             type: "spring",
-            damping: 20,
-            stiffness: 120,
+            damping: 25,
+            stiffness: 100,
         },
     },
 };
@@ -79,7 +77,7 @@ export default function SectionTitle({
                     className={`mb-4 ${center ? "flex items-center justify-center" : "flex items-center"}`}
                     initial={{ opacity: 0, y: 15 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, margin: "-80px" }}
+                    viewport={{ once: true, margin: "-80px" }}
                     transition={{ duration: 0.5, ease: "easeOut" }}
                 >
                     {decorativeLines && (
@@ -87,7 +85,7 @@ export default function SectionTitle({
                             className="w-8 h-px bg-violet-500/50 mr-3"
                             initial={{ scaleX: 0 }}
                             whileInView={{ scaleX: 1 }}
-                            viewport={{ once: false, margin: "-80px" }}
+                            viewport={{ once: true, margin: "-80px" }}
                             transition={{ duration: 0.6, delay: 0.2 }}
                             style={{ transformOrigin: "right" }}
                         />
@@ -111,7 +109,7 @@ export default function SectionTitle({
                             className="w-8 h-px bg-violet-500/50 ml-3"
                             initial={{ scaleX: 0 }}
                             whileInView={{ scaleX: 1 }}
-                            viewport={{ once: false, margin: "-80px" }}
+                            viewport={{ once: true, margin: "-80px" }}
                             transition={{ duration: 0.6, delay: 0.2 }}
                             style={{ transformOrigin: "left" }}
                         />
@@ -125,7 +123,7 @@ export default function SectionTitle({
                 variants={wordContainerVariants}
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: false, margin: "-80px" }}
+                viewport={{ once: true, margin: "-80px" }}
             >
                 {words.map((word, wordIndex) => (
                     <span key={wordIndex} className="inline-block mr-[0.25em] last:mr-0">
@@ -148,7 +146,7 @@ export default function SectionTitle({
                         className="absolute -bottom-2 left-0 right-0 h-[3px] bg-gradient-to-r from-violet-600 via-purple-500 to-indigo-600 rounded-full"
                         initial={{ scaleX: 0 }}
                         whileInView={{ scaleX: 1 }}
-                        viewport={{ once: false, margin: "-80px" }}
+                        viewport={{ once: true, margin: "-80px" }}
                         transition={{ duration: 0.8, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
                         style={{ transformOrigin: "left" }}
                     />
@@ -159,9 +157,9 @@ export default function SectionTitle({
             {subtitle && (
                 <motion.p
                     className={`text-muted-foreground mt-6 text-lg max-w-xl leading-relaxed ${center ? "mx-auto" : ""}`}
-                    initial={{ opacity: 0, y: 15, filter: "blur(6px)" }}
-                    whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                    viewport={{ once: false, margin: "-80px" }}
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-80px" }}
                     transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
                 >
                     {subtitle}

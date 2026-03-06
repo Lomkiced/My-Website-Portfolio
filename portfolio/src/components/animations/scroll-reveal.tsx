@@ -7,36 +7,36 @@ import { ReactNode } from "react";
 
 const presets = {
     fadeUp: {
-        hidden: { opacity: 0, y: 40 },
+        hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0 },
     },
     fadeDown: {
-        hidden: { opacity: 0, y: -40 },
+        hidden: { opacity: 0, y: -20 },
         visible: { opacity: 1, y: 0 },
     },
     fadeLeft: {
-        hidden: { opacity: 0, x: -40 },
+        hidden: { opacity: 0, x: -20 },
         visible: { opacity: 1, x: 0 },
     },
     fadeRight: {
-        hidden: { opacity: 0, x: 40 },
+        hidden: { opacity: 0, x: 20 },
         visible: { opacity: 1, x: 0 },
     },
     scaleUp: {
-        hidden: { opacity: 0, scale: 0.9, y: 20 },
+        hidden: { opacity: 0, scale: 0.95, y: 10 },
         visible: { opacity: 1, scale: 1, y: 0 },
     },
     blurIn: {
-        hidden: { opacity: 0, filter: "blur(12px)", y: 20 },
-        visible: { opacity: 1, filter: "blur(0px)", y: 0 },
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 },
     },
     clipReveal: {
         hidden: { opacity: 0, clipPath: "inset(0 100% 0 0)" },
         visible: { opacity: 1, clipPath: "inset(0 0% 0 0)" },
     },
     slideScale: {
-        hidden: { opacity: 0, y: 60, scale: 0.95, rotateX: 8 },
-        visible: { opacity: 1, y: 0, scale: 1, rotateX: 0 },
+        hidden: { opacity: 0, y: 30, scale: 0.95 },
+        visible: { opacity: 1, y: 0, scale: 1 },
     },
 } satisfies Record<string, { hidden: object; visible: object }>;
 
@@ -66,7 +66,7 @@ export function ScrollReveal({
     children,
     variant = "fadeUp",
     delay = 0,
-    duration = 0.7,
+    duration = 0.6,
     className = "",
     viewportMargin = "-80px",
     variants: customVariants,
@@ -98,7 +98,7 @@ export function ScrollReveal({
             variants={finalVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: false, margin: viewportMargin }}
+            viewport={{ once: true, margin: viewportMargin }}
         >
             {children}
         </MotionComponent>

@@ -1,598 +1,76 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
 import { useTheme } from "next-themes";
-
-// ─── Type Definitions ──────────────────────────────────────────────────────────
-
-/** Depth tier for parallax layering: far = slowest/smallest, near = fastest/biggest */
-type DepthTier = "far" | "mid" | "near";
-
-/** A single data-node particle in the constellation */
-interface Particle {
-    x: number;
-    y: number;
-    vx: number;
-    vy: number;
-    radius: number;
-    baseRadius: number;
-    tier: DepthTier;
-    /** Phase offset for sine-wave drift */
-    phase: number;
-    /** Per-particle opacity multiplier */
-    alpha: number;
-    /** Spatial grid cell index (updated each frame) */
-    cellKey: string;
-}
-
-/** A sparse code-rain column */
-interface RainColumn {
-    x: number;
-    y: number;
-    speed: number;
-    chars: string[];
-    length: number;
-    /** Opacity of the head character */
-    headAlpha: number;
-}
-
-/** A floating code keyword drifting across the canvas */
-interface FloatingText {
-    x: number;
-    y: number;
-    vx: number;
-    vy: number;
-    text: string;
-    alpha: number;
-    fontSize: number;
-}
-
-/** Theme-dependent color palette used inside the animation loop */
-interface ColorPalette {
-    /** Array of node/line colors to pick from */
-    nodeColors: string[];
-    /** Glow color for the cursor radial gradient */
-    cursorGlow: string;
-    /** Color for the code-rain head character */
-    rainHead: string;
-    /** Color for the code-rain tail characters */
-    rainTail: string;
-    /** Color for floating text fragments */
-    textColor: string;
-    /** Color for connecting lines between nodes */
-    lineColor: (alpha: number) => string;
-}
-
-// ─── Constants (OPTIMIZED) ─────────────────────────────────────────────────────
-
-const PARTICLE_COUNT = 50; // Reduced from 80
-const RAIN_COLUMN_COUNT = 12; // Reduced from 18
-const FLOATING_TEXT_COUNT = 8; // Reduced from 12
-const CONNECTION_DISTANCE = 150; // Reduced from 180
-const CONNECTION_DISTANCE_SQ = CONNECTION_DISTANCE * CONNECTION_DISTANCE;
-const MOUSE_REPULSION_RADIUS = 200;
-const MOUSE_REPULSION_RADIUS_SQ = MOUSE_REPULSION_RADIUS * MOUSE_REPULSION_RADIUS;
-const MOUSE_GLOW_RADIUS = 300;
-const RAIN_FONT_SIZE = 14;
-const SPATIAL_CELL_SIZE = CONNECTION_DISTANCE; // Grid cell = connection range
-
-/** Katakana + tech symbols for code rain */
-const RAIN_CHARS =
-    "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789<>{}[]=-+*#$%".split(
-        ""
-    );
-
-/** Floating code keywords that drift across the canvas */
-const CODE_KEYWORDS = [
-    "const",
-    "=>",
-    "async",
-    "<div>",
-    "0xFF",
-    "npm",
-    "export",
-    "return",
-    "void",
-    "type",
-    "interface",
-    "await",
-    "import",
-    "from",
-    "null",
-    "true",
-    "0x3F",
-    "git",
-    "push",
-    "deploy",
-];
-
-// ─── Palette Definitions ───────────────────────────────────────────────────────
-
-const DARK_PALETTE: ColorPalette = {
-    nodeColors: [
-        "rgba(139, 92, 246, 0.8)", // violet-500
-        "rgba(99, 102, 241, 0.7)", // indigo-500
-        "rgba(59, 130, 246, 0.6)", // blue-500
-        "rgba(6, 182, 212, 0.5)",  // cyan-500
-    ],
-    cursorGlow: "rgba(139, 92, 246, 0.15)",
-    rainHead: "rgba(255, 255, 255, 0.95)",
-    rainTail: "rgba(139, 92, 246, 0.4)",
-    textColor: "rgba(139, 92, 246, 0.08)",
-    lineColor: (a: number) => `rgba(139, 92, 246, ${(a * 0.35).toFixed(3)})`,
-};
-
-const LIGHT_PALETTE: ColorPalette = {
-    nodeColors: [
-        "rgba(79, 70, 229, 0.55)",  // indigo-600
-        "rgba(99, 102, 241, 0.45)", // indigo-500
-        "rgba(100, 116, 139, 0.4)", // slate-500
-        "rgba(71, 85, 105, 0.35)",  // slate-600
-    ],
-    cursorGlow: "rgba(79, 70, 229, 0.1)",
-    rainHead: "rgba(30, 41, 59, 0.7)",
-    rainTail: "rgba(79, 70, 229, 0.2)",
-    textColor: "rgba(79, 70, 229, 0.06)",
-    lineColor: (a: number) => `rgba(79, 70, 229, ${(a * 0.2).toFixed(3)})`,
-};
-
-// ─── Tier Configuration ────────────────────────────────────────────────────────
-
-const TIER_CONFIG: Record<DepthTier, { speedMul: number; radiusRange: [number, number]; alphaRange: [number, number] }> = {
-    far: { speedMul: 0.3, radiusRange: [1.0, 1.8], alphaRange: [0.25, 0.4] },
-    mid: { speedMul: 0.6, radiusRange: [1.8, 2.8], alphaRange: [0.45, 0.65] },
-    near: { speedMul: 1.0, radiusRange: [2.8, 4.2], alphaRange: [0.7, 0.9] },
-};
-
-// ─── Utility Helpers ───────────────────────────────────────────────────────────
-
-/** Random float in [min, max) */
-function rand(min: number, max: number): number {
-    return Math.random() * (max - min) + min;
-}
-
-/** Pick a random element from an array */
-function pick<T>(arr: T[]): T {
-    return arr[Math.floor(Math.random() * arr.length)];
-}
-
-// ─── Spatial Grid for O(n) Connection Lookups ──────────────────────────────────
-
-class SpatialGrid {
-    private cells: Map<string, number[]> = new Map();
-
-    clear() {
-        this.cells.clear();
-    }
-
-    /** Insert a particle index into the grid */
-    insert(idx: number, x: number, y: number) {
-        const key = `${Math.floor(x / SPATIAL_CELL_SIZE)},${Math.floor(y / SPATIAL_CELL_SIZE)}`;
-        let cell = this.cells.get(key);
-        if (!cell) {
-            cell = [];
-            this.cells.set(key, cell);
-        }
-        cell.push(idx);
-        return key;
-    }
-
-    /** Get all particle indices in neighboring cells (3x3 around the given cell) */
-    getNeighborIndices(cellKey: string): number[] {
-        const [cx, cy] = cellKey.split(",").map(Number);
-        const result: number[] = [];
-        for (let dx = -1; dx <= 1; dx++) {
-            for (let dy = -1; dy <= 1; dy++) {
-                const cell = this.cells.get(`${cx + dx},${cy + dy}`);
-                if (cell) {
-                    for (let i = 0; i < cell.length; i++) {
-                        result.push(cell[i]);
-                    }
-                }
-            }
-        }
-        return result;
-    }
-}
-
-// ─── Factory Functions ─────────────────────────────────────────────────────────
-
-function createParticle(w: number, h: number): Particle {
-    const tiers: DepthTier[] = ["far", "far", "far", "mid", "mid", "near"];
-    const tier = pick(tiers);
-    const cfg = TIER_CONFIG[tier];
-    const baseRadius = rand(cfg.radiusRange[0], cfg.radiusRange[1]);
-
-    return {
-        x: rand(0, w),
-        y: rand(0, h),
-        vx: rand(-0.4, 0.4) * cfg.speedMul,
-        vy: rand(-0.4, 0.4) * cfg.speedMul,
-        radius: baseRadius,
-        baseRadius,
-        tier,
-        phase: rand(0, Math.PI * 2),
-        alpha: rand(cfg.alphaRange[0], cfg.alphaRange[1]),
-        cellKey: "",
-    };
-}
-
-function createRainColumn(w: number, h: number): RainColumn {
-    const length = Math.floor(rand(8, 22));
-    return {
-        x: rand(0, w),
-        y: rand(-h, 0),
-        speed: rand(1.5, 4),
-        chars: Array.from({ length }, () => pick(RAIN_CHARS)),
-        length,
-        headAlpha: rand(0.6, 1.0),
-    };
-}
-
-function createFloatingText(w: number, h: number): FloatingText {
-    return {
-        x: rand(0, w),
-        y: rand(0, h),
-        vx: rand(-0.15, 0.15),
-        vy: rand(-0.1, 0.1),
-        text: pick(CODE_KEYWORDS),
-        alpha: rand(0.03, 0.09),
-        fontSize: rand(18, 42),
-    };
-}
-
-// ─── Component ─────────────────────────────────────────────────────────────────
+import { useEffect, useState } from "react";
 
 export default function TechMatrix() {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
     const { resolvedTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
 
-    /**
-     * Store the current palette in a ref so the animation loop always reads
-     * the latest colors without triggering a full effect re-run.
-     */
-    const paletteRef = useRef<ColorPalette>(DARK_PALETTE);
-
-    // Update palette ref whenever the theme changes
     useEffect(() => {
-        paletteRef.current = resolvedTheme === "light" ? LIGHT_PALETTE : DARK_PALETTE;
-    }, [resolvedTheme]);
-
-    /**
-     * Main animation setup — runs once on mount, cleans up on unmount.
-     * Reads paletteRef.current each frame for theme-aware rendering.
-     */
-    const setupAnimation = useCallback(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-
-        const ctx = canvas.getContext("2d", { alpha: true });
-        if (!ctx) return;
-
-        // ── State ────────────────────────────────────────────────────────────
-        let animationFrameId = 0;
-        let particles: Particle[] = [];
-        let rainColumns: RainColumn[] = [];
-        let floatingTexts: FloatingText[] = [];
-        let mouseX = -9999;
-        let mouseY = -9999;
-        let time = 0;
-        let logicalW = 0;
-        let logicalH = 0;
-        let frameCount = 0;
-        const spatialGrid = new SpatialGrid();
-
-        // ── Initialization ───────────────────────────────────────────────────
-
-        const init = () => {
-            const parent = canvas.parentElement;
-            logicalW = parent?.clientWidth || window.innerWidth;
-            logicalH = parent?.clientHeight || window.innerHeight;
-
-            const isMobile = logicalW < 768;
-
-            // Cap DPR on mobile to save performance
-            const dpr = typeof window !== "undefined"
-                ? (isMobile ? Math.min(window.devicePixelRatio || 1, 1.5) : Math.min(window.devicePixelRatio || 1, 2))
-                : 1;
-
-            canvas.style.width = `${logicalW}px`;
-            canvas.style.height = `${logicalH}px`;
-            canvas.width = logicalW * dpr;
-            canvas.height = logicalH * dpr;
-
-            ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset any previous scale
-            ctx.scale(dpr, dpr);
-
-            ctx.clearRect(0, 0, logicalW, logicalH);
-
-            // Mobile: aggressively reduce entity counts
-            const particleCount = isMobile ? Math.floor(PARTICLE_COUNT * 0.25) : PARTICLE_COUNT;
-            const rainCount = isMobile ? Math.floor(RAIN_COLUMN_COUNT * 0.2) : RAIN_COLUMN_COUNT;
-            const textCount = isMobile ? Math.floor(FLOATING_TEXT_COUNT * 0.3) : FLOATING_TEXT_COUNT;
-
-            particles = Array.from({ length: particleCount }, () => createParticle(logicalW, logicalH));
-            rainColumns = Array.from({ length: rainCount }, () => createRainColumn(logicalW, logicalH));
-            floatingTexts = Array.from({ length: textCount }, () => createFloatingText(logicalW, logicalH));
-        };
-
-        // ── Mouse Handlers ───────────────────────────────────────────────────
-
-        const onMouseMove = (e: MouseEvent) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        };
-
-        const onMouseLeave = () => {
-            mouseX = -9999;
-            mouseY = -9999;
-        };
-
-        window.addEventListener("mousemove", onMouseMove, { passive: true });
-        window.addEventListener("mouseleave", onMouseLeave);
-
-        // ── Resize Observer (debounced) ──────────────────────────────────────
-
-        let resizeTimeout: ReturnType<typeof setTimeout>;
-        const resizeObserver = new ResizeObserver(() => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => init(), 200);
-        });
-
-        if (canvas.parentElement) {
-            resizeObserver.observe(canvas.parentElement);
-        }
-
-        // ── Animation Loop (with frame throttling) ───────────────────────────
-
-        const draw = () => {
-            frameCount++;
-
-            // Skip every other frame → effective ~30fps (unnoticeable for ambient bg)
-            if (frameCount % 2 !== 0) {
-                animationFrameId = requestAnimationFrame(draw);
-                return;
-            }
-
-            const w = logicalW;
-            const h = logicalH;
-            const p = paletteRef.current;
-
-            time += 0.016; // ~2x increment since we're at half framerate
-
-            // ─ Clear canvas ─────────────────────────────────────────────────
-            ctx.clearRect(0, 0, w, h);
-
-            // ─ Layer 4: Floating text fragments ─────────────────────────────
-            ctx.save();
-            for (let i = 0; i < floatingTexts.length; i++) {
-                const ft = floatingTexts[i];
-
-                ft.x += ft.vx;
-                ft.y += ft.vy;
-
-                if (ft.x < -100) ft.x = w + 50;
-                if (ft.x > w + 100) ft.x = -50;
-                if (ft.y < -50) ft.y = h + 30;
-                if (ft.y > h + 50) ft.y = -30;
-
-                ctx.font = `${ft.fontSize}px "Courier New", monospace`;
-                ctx.fillStyle = p.textColor;
-                ctx.globalAlpha = ft.alpha + Math.sin(time * 2 + i) * 0.015;
-                ctx.fillText(ft.text, ft.x, ft.y);
-            }
-            ctx.restore();
-
-            // ─ Layer 2: Code rain streams ────────────────────────────────────
-            ctx.save();
-            ctx.font = `${RAIN_FONT_SIZE}px monospace`;
-            ctx.textAlign = "center";
-
-            for (let i = 0; i < rainColumns.length; i++) {
-                const col = rainColumns[i];
-
-                for (let j = 0; j < col.chars.length; j++) {
-                    const charY = col.y - j * RAIN_FONT_SIZE;
-                    if (charY < -RAIN_FONT_SIZE || charY > h + RAIN_FONT_SIZE) continue;
-
-                    if (j === 0) {
-                        // Head character: bright (no shadowBlur — GPU expensive)
-                        ctx.fillStyle = p.rainHead;
-                        ctx.globalAlpha = col.headAlpha;
-                    } else {
-                        const fadeRatio = 1 - j / col.length;
-                        ctx.fillStyle = p.rainTail;
-                        ctx.globalAlpha = fadeRatio * 0.6;
-                    }
-
-                    ctx.fillText(col.chars[j], col.x, charY);
-                }
-
-                col.y += col.speed;
-
-                // Randomize characters occasionally
-                if (Math.random() > 0.96) {
-                    const idx = Math.floor(Math.random() * col.chars.length);
-                    col.chars[idx] = pick(RAIN_CHARS);
-                }
-
-                if (col.y - col.length * RAIN_FONT_SIZE > h) {
-                    col.x = rand(0, w);
-                    col.y = rand(-h * 0.3, -RAIN_FONT_SIZE);
-                    col.speed = rand(1.5, 4);
-                    col.headAlpha = rand(0.6, 1.0);
-                }
-            }
-            ctx.restore();
-
-            // ─ Layer 1: Particle constellation ──────────────────────────────
-
-            // Update positions and build spatial grid
-            spatialGrid.clear();
-
-            for (let i = 0; i < particles.length; i++) {
-                const pt = particles[i];
-                const cfg = TIER_CONFIG[pt.tier];
-
-                pt.x += pt.vx + Math.sin(time * 1.5 + pt.phase) * 0.25 * cfg.speedMul;
-                pt.y += pt.vy + Math.cos(time * 1.2 + pt.phase) * 0.2 * cfg.speedMul;
-
-                // Mouse repulsion
-                const dx = pt.x - mouseX;
-                const dy = pt.y - mouseY;
-                const distSq = dx * dx + dy * dy;
-
-                if (distSq < MOUSE_REPULSION_RADIUS_SQ && distSq > 0) {
-                    const dist = Math.sqrt(distSq);
-                    const force = (1 - dist / MOUSE_REPULSION_RADIUS) * 3.5;
-                    const normX = dx / dist;
-                    const normY = dy / dist;
-                    pt.vx += normX * force * 0.15;
-                    pt.vy += normY * force * 0.15;
-                }
-
-                pt.vx *= 0.985;
-                pt.vy *= 0.985;
-
-                const pad = 20;
-                if (pt.x < -pad) pt.x = w + pad;
-                if (pt.x > w + pad) pt.x = -pad;
-                if (pt.y < -pad) pt.y = h + pad;
-                if (pt.y > h + pad) pt.y = -pad;
-
-                pt.radius = pt.baseRadius + Math.sin(time * 3 + pt.phase) * 0.4;
-
-                // Insert into spatial grid
-                pt.cellKey = spatialGrid.insert(i, pt.x, pt.y);
-            }
-
-            // Draw connections using spatial grid (O(n) instead of O(n²))
-            ctx.save();
-            ctx.lineWidth = 0.6;
-
-            const drawnPairs = new Set<string>();
-
-            for (let i = 0; i < particles.length; i++) {
-                const a = particles[i];
-                const neighbors = spatialGrid.getNeighborIndices(a.cellKey);
-
-                for (let n = 0; n < neighbors.length; n++) {
-                    const j = neighbors[n];
-                    if (j <= i) continue; // Skip self and already-processed pairs
-
-                    // Dedup check
-                    const pairKey = i < j ? `${i},${j}` : `${j},${i}`;
-                    if (drawnPairs.has(pairKey)) continue;
-                    drawnPairs.add(pairKey);
-
-                    const b = particles[j];
-                    const dx = a.x - b.x;
-                    const dy = a.y - b.y;
-                    const distSq = dx * dx + dy * dy;
-
-                    if (distSq < CONNECTION_DISTANCE_SQ) {
-                        const dist = Math.sqrt(distSq);
-                        const alpha = 1 - dist / CONNECTION_DISTANCE;
-                        ctx.strokeStyle = p.lineColor(alpha);
-                        ctx.beginPath();
-                        ctx.moveTo(a.x, a.y);
-                        ctx.lineTo(b.x, b.y);
-                        ctx.stroke();
-                    }
-                }
-            }
-            ctx.restore();
-
-            // Draw particle nodes
-            ctx.save();
-            for (let i = 0; i < particles.length; i++) {
-                const pt = particles[i];
-                const colorIdx = i % p.nodeColors.length;
-
-                // Proximity glow
-                let glowBoost = 0;
-                const dxM = pt.x - mouseX;
-                const dyM = pt.y - mouseY;
-                const distMSq = dxM * dxM + dyM * dyM;
-                if (distMSq < MOUSE_GLOW_RADIUS * MOUSE_GLOW_RADIUS) {
-                    glowBoost = (1 - Math.sqrt(distMSq) / MOUSE_GLOW_RADIUS) * 0.5;
-                }
-
-                ctx.globalAlpha = Math.min(pt.alpha + glowBoost, 1.0);
-                ctx.fillStyle = p.nodeColors[colorIdx];
-
-                // Minimal glow — only for near-tier with strong proximity
-                if (pt.tier === "near" && glowBoost > 0.2) {
-                    ctx.shadowBlur = 4;
-                    ctx.shadowColor = p.nodeColors[colorIdx];
-                } else {
-                    ctx.shadowBlur = 0;
-                }
-
-                ctx.beginPath();
-                ctx.arc(pt.x, pt.y, pt.radius, 0, Math.PI * 2);
-                ctx.fill();
-            }
-            ctx.shadowBlur = 0;
-            ctx.restore();
-
-            // ─ Layer 3: Cursor glow ──────────────────────────────────────────
-            if (mouseX > -9000 && mouseY > -9000) {
-                ctx.save();
-                const gradient = ctx.createRadialGradient(
-                    mouseX, mouseY, 0,
-                    mouseX, mouseY, MOUSE_GLOW_RADIUS
-                );
-                gradient.addColorStop(0, p.cursorGlow);
-                gradient.addColorStop(1, "transparent");
-                ctx.fillStyle = gradient;
-                ctx.beginPath();
-                ctx.arc(mouseX, mouseY, MOUSE_GLOW_RADIUS, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            }
-
-            animationFrameId = requestAnimationFrame(draw);
-        };
-
-        // ── Kickoff ──────────────────────────────────────────────────────────
-        init();
-        animationFrameId = requestAnimationFrame(draw);
-
-        // ── Cleanup ──────────────────────────────────────────────────────────
-        return () => {
-            cancelAnimationFrame(animationFrameId);
-            clearTimeout(resizeTimeout);
-            resizeObserver.disconnect();
-            window.removeEventListener("mousemove", onMouseMove);
-            window.removeEventListener("mouseleave", onMouseLeave);
-        };
+        setMounted(true);
     }, []);
 
-    // Run the animation once on mount
-    useEffect(() => {
-        const cleanup = setupAnimation();
-        return cleanup;
-    }, [setupAnimation]);
+    if (!mounted) return null;
+
+    const isLight = resolvedTheme === "light";
 
     return (
-        <div
-            className="absolute inset-0 overflow-hidden pointer-events-none"
-            style={{ zIndex: 0 }}
-            aria-hidden="true"
-        >
-            {/* Top fade mask */}
-            <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background to-transparent z-10" />
-
-            {/* The canvas fills the entire viewport */}
-            <canvas
-                ref={canvasRef}
-                className="w-full h-full opacity-40 sm:opacity-50"
-                style={{ display: "block" }}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>
+            {/* Base gradient layer */}
+            <div
+                className={`absolute inset-0 transition-colors duration-1000 ${isLight ? "bg-slate-50/50" : "bg-zinc-950/80"
+                    }`}
             />
 
-            {/* Bottom fade mask */}
-            <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent z-10" />
+            {/* Top/Bottom fade masks for seamless blending */}
+            <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-background to-transparent z-10" />
+            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent z-10" />
+
+            {/* Premium Animated CSS Mesh */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200vw] h-[200vh] opacity-30 md:opacity-20 flex justify-center items-center">
+                {/* Rotating multi-layered gradients replacing the canvas code rain */}
+                <div
+                    className="absolute inset-0 animate-spin-slow origin-center rounded-full"
+                    style={{
+                        background: `conic-gradient(from 0deg at 50% 50%, 
+                            ${isLight ? 'rgba(139, 92, 246, 0)' : 'rgba(139, 92, 246, 0)'} 0deg, 
+                            ${isLight ? 'rgba(139, 92, 246, 0.1)' : 'rgba(139, 92, 246, 0.2)'} 60deg, 
+                            ${isLight ? 'rgba(14, 165, 233, 0)' : 'rgba(14, 165, 233, 0)'} 120deg, 
+                            ${isLight ? 'rgba(139, 92, 246, 0.1)' : 'rgba(139, 92, 246, 0.2)'} 180deg, 
+                            ${isLight ? 'rgba(14, 165, 233, 0)' : 'rgba(14, 165, 233, 0)'} 240deg, 
+                            ${isLight ? 'rgba(139, 92, 246, 0.1)' : 'rgba(139, 92, 246, 0.2)'} 300deg, 
+                            ${isLight ? 'rgba(139, 92, 246, 0)' : 'rgba(139, 92, 246, 0)'} 360deg
+                        )`
+                    }}
+                />
+                <div
+                    className="absolute inset-0 animate-spin-reverse-slow origin-center rounded-full mix-blend-screen"
+                    style={{
+                        background: `conic-gradient(from 180deg at 50% 50%, 
+                            ${isLight ? 'rgba(14, 165, 233, 0)' : 'rgba(14, 165, 233, 0)'} 0deg, 
+                            ${isLight ? 'rgba(14, 165, 233, 0.1)' : 'rgba(14, 165, 233, 0.15)'} 90deg, 
+                            ${isLight ? 'rgba(139, 92, 246, 0)' : 'rgba(139, 92, 246, 0)'} 180deg, 
+                            ${isLight ? 'rgba(14, 165, 233, 0.1)' : 'rgba(14, 165, 233, 0.15)'} 270deg, 
+                            ${isLight ? 'rgba(14, 165, 233, 0)' : 'rgba(14, 165, 233, 0)'} 360deg
+                        )`
+                    }}
+                />
+            </div>
+
+            {/* Subtle floating orbs for depth instead of thousands of particles */}
+            <div className={`absolute top-[20%] left-[15%] w-96 h-96 ${isLight ? 'bg-violet-400/20' : 'bg-violet-600/10'} rounded-full blur-[100px] mix-blend-screen animate-pulse-slow`} />
+            <div className={`absolute top-[60%] right-[10%] w-[500px] h-[500px] ${isLight ? 'bg-indigo-300/20' : 'bg-indigo-600/10'} rounded-full blur-[120px] mix-blend-screen animate-blob animation-delay-2000`} />
+            <div className={`absolute bottom-[-10%] left-[40%] w-[600px] h-[600px] ${isLight ? 'bg-cyan-200/30' : 'bg-cyan-600/10'} rounded-full blur-[150px] mix-blend-screen animate-blob animation-delay-4000`} />
+
+            {/* High-performance CSS grid overlay */}
+            <div
+                className={`absolute inset-0 ${isLight ? 'opacity-[0.03]' : 'opacity-[0.05]'}`}
+                style={{
+                    backgroundImage: `linear-gradient(${isLight ? '#4f46e5' : '#8b5cf6'} 1px, transparent 1px), linear-gradient(90deg, ${isLight ? '#4f46e5' : '#8b5cf6'} 1px, transparent 1px)`,
+                    backgroundSize: "60px 60px"
+                }}
+            />
         </div>
     );
 }

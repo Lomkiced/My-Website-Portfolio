@@ -23,26 +23,14 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-    const [scrolled, setScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
     const [activeSection, setActiveSection] = useState("Home");
     const [hoveredSection, setHoveredSection] = useState<string | null>(null);
 
-    // Track scroll for pill morphing
-    const { scrollY } = useScroll();
-    const navTop = useTransform(scrollY, [0, 100], ["0px", "20px"]);
-    const navRadius = useTransform(scrollY, [0, 100], ["0px", "100px"]);
-
     useEffect(() => {
         setMounted(true);
-        const handleScroll = () => {
-            const isScrolled = window.scrollY > 20;
-            setScrolled((prev) => (prev !== isScrolled ? isScrolled : prev));
-        };
-        window.addEventListener("scroll", handleScroll, { passive: true });
-        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
     // Intersection Observer for active section tracking
@@ -82,22 +70,10 @@ export default function Navbar() {
 
     return (
         <>
-            {/* Desktop Dynamic Pill */}
-            <motion.div
-                initial={{ y: -100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="fixed left-0 right-0 z-50 flex justify-center hidden md:flex pointer-events-none"
-                style={{ top: navTop, paddingLeft: "16px", paddingRight: "16px" }}
-            >
-                <motion.nav
-                    style={{
-                        borderRadius: navRadius,
-                    }}
-                    className={`pointer-events-auto transition-all duration-500 overflow-hidden ${scrolled
-                        ? "w-[95%] max-w-[1000px] glass bg-background/70 shadow-[0_8px_32px_rgba(0,0,0,0.08)] border-border/40"
-                        : "w-full max-w-7xl bg-transparent border-transparent"
-                        }`}
+            {/* Desktop Navigation */}
+            <div className="fixed top-0 left-0 right-0 z-50 flex justify-center hidden md:flex pointer-events-none px-4 pt-6">
+                <nav
+                    className="pointer-events-auto w-full max-w-6xl rounded-[2.5rem] bg-background/60 dark:bg-zinc-950/60 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] border border-white/20 dark:border-white/10 dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
                 >
                     <div className="flex items-center justify-between px-6 h-[72px]">
                         {/* Logo */}
@@ -119,8 +95,8 @@ export default function Navbar() {
                                     className="w-8 h-8 object-contain drop-shadow-md"
                                 />
                             </div>
-                            <span className="hidden lg:block text-lg font-bold font-display text-foreground whitespace-nowrap overflow-hidden">
-                                My<span className="text-gradient"> Portfolio</span>
+                            <span className="hidden xl:block text-lg font-bold font-display text-foreground whitespace-nowrap overflow-hidden">
+                                Mike<span className="text-gradient"> Cedrick</span>
                             </span>
                         </motion.button>
 
@@ -213,15 +189,12 @@ export default function Navbar() {
                             </MagneticButton>
                         </div>
                     </div>
-                </motion.nav>
-            </motion.div>
+                </nav>
+            </div>
 
             {/* Mobile Header */}
-            <motion.nav
-                initial={{ y: -100 }}
-                animate={{ y: 0 }}
-                className={`fixed top-0 left-0 right-0 z-[60] flex md:hidden items-center justify-between px-6 h-20 transition-all duration-300 ${scrolled ? "glass shadow-sm" : "bg-transparent"
-                    }`}
+            <nav
+                className="fixed top-0 left-0 right-0 z-[60] flex md:hidden items-center justify-between px-6 h-20 bg-background/70 dark:bg-zinc-950/70 backdrop-blur-xl border-b border-white/10 shadow-sm"
             >
                 <div className="flex items-center gap-3">
                     <div className="bg-foreground rounded-full flex items-center justify-center w-10 h-10 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)]">
@@ -248,7 +221,7 @@ export default function Navbar() {
                         <FiMenu className="w-5 h-5 text-foreground" />
                     </button>
                 </div>
-            </motion.nav>
+            </nav>
 
             {/* Premium Mobile Menu Overlay */}
             <AnimatePresence>
@@ -257,7 +230,7 @@ export default function Navbar() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 0.4, ease: "easeOut" }}
                         className="fixed inset-0 z-[70] bg-background/95 backdrop-blur-3xl md:hidden overflow-hidden flex flex-col"
                     >
                         {/* Overlay Header */}
@@ -295,10 +268,10 @@ export default function Navbar() {
                                             e.preventDefault();
                                             handleNavClick(link.href);
                                         }}
-                                        initial={{ opacity: 0, y: 40, rotateX: 20 }}
+                                        initial={{ opacity: 0, y: 15, rotateX: 10 }}
                                         animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                                        exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
-                                        transition={{ duration: 0.6, delay: 0.1 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                                        exit={{ opacity: 0, y: -10, transition: { duration: 0.2 } }}
+                                        transition={{ duration: 0.6, delay: 0.1 + i * 0.08, ease: "easeOut" }}
                                         className="relative py-2 origin-left flex items-center group"
                                     >
                                         <span className={`text-5xl font-extrabold tracking-tighter uppercase transition-colors duration-300 ${isActive ? "text-foreground" : "text-muted-foreground group-hover:text-foreground"}`}>

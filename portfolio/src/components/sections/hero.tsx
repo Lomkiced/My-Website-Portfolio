@@ -1,17 +1,13 @@
 "use client";
 
 import { useState, useEffect, useRef, Suspense } from "react";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { FiArrowDown, FiMail } from "react-icons/fi";
 import { Music, MousePointerClick } from "lucide-react";
 import { useThemeStore } from "@/lib/store";
 
 import dynamic from "next/dynamic";
 import { MagneticButton } from "@/components/ui/magnetic-button";
-
-const TechMatrix = dynamic(() => import("@/components/backgrounds/tech-matrix"), {
-    ssr: false,
-});
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -92,7 +88,7 @@ function randomGlyph(): string {
 
 // ─── Single line scramble hook ────────────────────────────────────────────────
 
-function useScrambleLine(text: string, startDelay: number, trigger: number, isAppLoaded: boolean) {
+function useScrambleLine(text: string, startDelay: number, trigger: number, isAppLoaded: boolean, isVisible: boolean) {
     // Initialize with the real text so SSR and client match (no hydration mismatch)
     const [display, setDisplay] = useState<string[]>(() => text.split(""));
     const [resolvedCount, setResolvedCount] = useState(text.length);
@@ -103,7 +99,7 @@ function useScrambleLine(text: string, startDelay: number, trigger: number, isAp
     useEffect(() => { setMounted(true); }, []);
 
     useEffect(() => {
-        if (!mounted || !isAppLoaded) return;
+        if (!mounted || !isAppLoaded || !isVisible) return;
         let resolved = 0;
         setResolvedCount(0);
         setDisplay(chars.map((ch) => (ch === " " ? " " : randomGlyph())));
@@ -149,7 +145,7 @@ function useScrambleLine(text: string, startDelay: number, trigger: number, isAp
 
         return () => clearTimeout(delayTimer);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [trigger, mounted, isAppLoaded]);
+    }, [trigger, mounted, isAppLoaded, isVisible]);
 
     return { display, resolvedCount };
 }
@@ -159,6 +155,8 @@ function useScrambleLine(text: string, startDelay: number, trigger: number, isAp
 function ScrambleText() {
     const [cycle, setCycle] = useState(0);
     const isAppLoaded = useThemeStore((s) => s.isAppLoaded);
+    const ref = useRef<HTMLDivElement>(null);
+    const isVisible = useInView(ref, { margin: "0px 0px -200px 0px" });
 
     // Compute total time for longest line to finish
     const longestLine = LINES.reduce((max, line) =>
@@ -167,29 +165,29 @@ function ScrambleText() {
 
     // Re-trigger scramble loop
     useEffect(() => {
-        if (!isAppLoaded) return;
+        if (!isAppLoaded || !isVisible) return;
         const timer = setTimeout(() => {
             setCycle((prev) => prev + 1);
         }, longestLine + LOOP_PAUSE);
         return () => clearTimeout(timer);
-    }, [cycle, longestLine, isAppLoaded]);
+    }, [cycle, longestLine, isAppLoaded, isVisible]);
 
     return (
-        <div className="scramble-text-container">
+        <div ref={ref} className="scramble-text-container">
             {/* Ambient aura - optimized with radial gradient instead of heavy blur */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-violet-600/20 via-fuchsia-500/5 to-transparent z-0 animate-aura-pulse pointer-events-none scale-150" />
 
             <div className="relative z-10 flex flex-col items-center gap-0 sm:gap-1">
                 {LINES.map((line, idx) => (
-                    <ScrambleLine key={idx} config={line} trigger={cycle} isAppLoaded={isAppLoaded} />
+                    <ScrambleLine key={idx} config={line} trigger={cycle} isAppLoaded={isAppLoaded} isVisible={isVisible} />
                 ))}
             </div>
         </div>
     );
 }
 
-function ScrambleLine({ config, trigger, isAppLoaded }: { config: LineConfig; trigger: number; isAppLoaded: boolean }) {
-    const { display, resolvedCount } = useScrambleLine(config.text, config.startDelay, trigger, isAppLoaded);
+function ScrambleLine({ config, trigger, isAppLoaded, isVisible }: { config: LineConfig; trigger: number; isAppLoaded: boolean; isVisible: boolean }) {
+    const { display, resolvedCount } = useScrambleLine(config.text, config.startDelay, trigger, isAppLoaded, isVisible);
 
     return (
         <div className="flex items-center justify-center flex-wrap">
@@ -228,14 +226,6 @@ export default function Hero() {
     const activeSectionColor = useThemeStore((s) => s.activeSectionColor);
     const autoplayStatus = useThemeStore((s) => s.autoplayStatus);
 
-    const { scrollYProgress } = useScroll({
-        target: sectionRef,
-        offset: ["start start", "end start"],
-    });
-
-    const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-    const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-
     const handleNavClick = (href: string) => {
         const el = document.querySelector(href);
         if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -251,34 +241,46 @@ export default function Hero() {
             id="home"
             className="relative min-h-screen flex items-center justify-center overflow-hidden pt-32 pb-32"
         >
-            {/* ── Animated gradient background ─────────────────────────────────── */}
-            <motion.div className="absolute inset-0 -z-10" style={{ y }}>
-                <div className="absolute inset-0 bg-gradient-to-br from-violet-950/20 via-background to-indigo-950/20 dark:from-violet-950/40 dark:via-background dark:to-indigo-950/40" />
-                <motion.div
-                    className="absolute inset-0 transition-all duration-1000 ease-in-out"
-                    style={{
-                        background: `linear-gradient(135deg, ${overlayFrom} 0%, transparent 50%, ${overlayTo} 100%)`,
-                    }}
-                />
-                <div
-                    className="absolute inset-0 opacity-[0.02] dark:opacity-[0.04]"
-                    style={{
-                        backgroundImage: `linear-gradient(rgba(139, 92, 246, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(139, 92, 246, 0.3) 1px, transparent 1px)`,
-                        backgroundSize: "60px 60px",
-                    }}
-                />
-                <div className="noise-overlay absolute inset-0" />
-            </motion.div>
+            {/* ── World-Class Aurora Gradient Background ─────────────────────────────────── */}
+            <div className="absolute inset-0 -z-10 overflow-hidden">
+                {/* Base dark/light layer */}
+                <div className="absolute inset-0 bg-background" />
 
-            {/* ── Tech Matrix Background ───────────────────────────────────────── */}
-            <Suspense fallback={null}>
-                <TechMatrix />
-            </Suspense>
+                {/* Scrollytelling animated overlay */}
+                <motion.div
+                    className="absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-40 dark:opacity-60 mix-blend-normal dark:mix-blend-screen"
+                    style={{
+                        background: `radial-gradient(circle at 50% 50%, ${overlayFrom} 0%, transparent 60%)`,
+                    }}
+                />
+
+                {/* Premium Animated Aurora Mesh */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vh] opacity-50 dark:opacity-40 animate-spin-slow pointer-events-none origin-center" style={{ filter: 'blur(100px)' }}>
+                    <div className="absolute top-1/4 left-1/4 w-[50%] h-[50%] bg-violet-500/30 dark:bg-violet-600/20 rounded-full mix-blend-screen animate-blob" />
+                    <div className="absolute top-1/3 right-1/4 w-[45%] h-[45%] bg-fuchsia-400/30 dark:bg-fuchsia-600/20 rounded-full mix-blend-screen animate-blob animation-delay-2000" />
+                    <div className="absolute bottom-1/4 left-1/3 w-[60%] h-[60%] bg-indigo-500/30 dark:bg-indigo-600/20 rounded-full mix-blend-screen animate-blob animation-delay-4000" />
+                    <div className="absolute bottom-1/3 right-1/3 w-[40%] h-[40%] bg-cyan-400/20 dark:bg-cyan-500/10 rounded-full mix-blend-screen animate-blob" />
+                </div>
+
+                {/* High-end subtle dot grid replacing the matrix rain */}
+                <div
+                    className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] mix-blend-overlay"
+                    style={{
+                        backgroundImage: `radial-gradient(circle at center, rgba(139, 92, 246, 0.8) 1px, transparent 1px)`,
+                        backgroundSize: "32px 32px",
+                    }}
+                />
+
+                {/* Vignette to focus center */}
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,var(--background)_100%)] opacity-80" />
+
+                {/* Film noise for texture */}
+                <div className="noise-overlay absolute inset-0 opacity-40" />
+            </div>
 
             {/* ── Content ──────────────────────────────────────────────────────── */}
-            <motion.div
+            <div
                 className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
-                style={{ opacity }}
             >
                 <motion.div
                     variants={containerVariants}
@@ -387,7 +389,7 @@ export default function Hero() {
                         </MagneticButton>
                     </motion.div>
                 </motion.div>
-            </motion.div>
+            </div>
 
             {/* ── Scroll indicator ─────────────────────────────────────────────── */}
             <motion.div

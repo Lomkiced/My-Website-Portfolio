@@ -40,7 +40,7 @@ const containerVariants = {
 };
 
 const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 10 },
     visible: {
         opacity: 1,
         y: 0,
@@ -101,7 +101,7 @@ export default function Contact() {
                         variants={containerVariants}
                         initial="hidden"
                         whileInView="visible"
-                        viewport={{ once: false }}
+                        viewport={{ once: true }}
                     >
                         {/* Toast notification */}
                         {toast && (
@@ -127,6 +127,9 @@ export default function Contact() {
                             ref={formRef}
                             className="space-y-6"
                             variants={containerVariants}
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true }}
                             onSubmit={handleSubmit}
                         >
                             <motion.div variants={itemVariants} className="space-y-2">
@@ -208,7 +211,7 @@ export default function Contact() {
                         variants={containerVariants}
                         initial="hidden"
                         whileInView="visible"
-                        viewport={{ once: false }}
+                        viewport={{ once: true }}
                     >
                         <motion.div variants={itemVariants}>
                             <h3 className="text-xl font-bold font-display mb-2">

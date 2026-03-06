@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useMotionTemplate, useMotionValue, useReducedMotion, useSpring, Variants } from "framer-motion";
-import React, { useRef } from "react";
+import { motion, Variants } from "framer-motion";
+import React from "react";
 import {
     SiDocker,
     SiExpo,
@@ -108,78 +108,28 @@ const containerVariants: Variants = {
 };
 
 const badgeVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.8, y: 30, rotateX: 30, rotateY: -15 },
+    hidden: { opacity: 0, scale: 0.95, y: 15 },
     visible: {
         opacity: 1,
         scale: 1,
         y: 0,
-        rotateX: 0,
-        rotateY: 0,
         transition: { type: "spring", damping: 15, stiffness: 100 },
     },
 };
 
 function SkillBadge({ skill }: { skill: Skill }) {
-    const ref = useRef<HTMLDivElement>(null);
-
-    // Magnetic effect core
-    const x = useMotionValue(0);
-    const y = useMotionValue(0);
-
-    // Mouse relative position for spotlight
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
-
-    // Spring configuration smoothing the movement
-    const springConfig = { damping: 25, stiffness: 200, mass: 0.2 };
-    const springX = useSpring(x, springConfig);
-    const springY = useSpring(y, springConfig);
-
-    const shouldReduceMotion = useReducedMotion();
-
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (shouldReduceMotion || window.matchMedia("(pointer: coarse)").matches) return;
-        if (!ref.current) return;
-        const rect = ref.current.getBoundingClientRect();
-
-        // Magnet effect calculations
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        const pullStrengthX = 0.2;
-        const pullStrengthY = 0.3;
-
-        x.set((e.clientX - centerX) * pullStrengthX);
-        y.set((e.clientY - centerY) * pullStrengthY);
-
-        // Spotlight calculations
-        mouseX.set(e.clientX - rect.left);
-        mouseY.set(e.clientY - rect.top);
-    };
-
-    const handleMouseLeave = () => {
-        x.set(0);
-        y.set(0);
-    };
-
     const glowColor = colorMap[skill.color] || "rgba(150, 150, 150, 0.3)";
-    const background = useMotionTemplate`radial-gradient(120px circle at ${mouseX}px ${mouseY}px, ${glowColor}, transparent 80%)`;
 
     return (
         <motion.div
             variants={badgeVariants}
-            className="group relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl cursor-default border border-white/10 dark:border-white/5 bg-white/20 dark:bg-white/[0.03] backdrop-blur-md shadow-[0_4px_24px_-8px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.2)] dark:shadow-[0_4px_24px_-8px_rgba(0,0,0,0.5)] dark:hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.6)] transition-all duration-300 will-change-transform"
-            ref={ref}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            style={{ x: springX, y: springY }}
+            className="group relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl cursor-default border border-white/10 dark:border-white/5 bg-white/20 dark:bg-white/[0.03] backdrop-blur-md shadow-[0_4px_24px_-8px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.2)] dark:shadow-[0_4px_24px_-8px_rgba(0,0,0,0.5)] dark:hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.6)] transition-all duration-300 hover:-translate-y-1 will-change-transform"
         >
-            {/* Dynamic Spotlight Glow */}
-            {!shouldReduceMotion && (
-                <motion.div
-                    className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100 z-0 will-change-opacity overflow-hidden rounded-xl"
-                    style={{ background }}
-                />
-            )}
+            {/* Spotlight Glow (Static) */}
+            <div
+                className="pointer-events-none absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100 z-0 overflow-hidden rounded-xl"
+                style={{ background: `radial-gradient(120px circle at center, ${glowColor}, transparent 80%)` }}
+            />
 
             {/* Top gradient reflecting gloss */}
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
@@ -201,9 +151,9 @@ export default function Skills() {
     return (
         <section id="skills" className="py-20 md:py-32 relative overflow-hidden">
             {/* Background accent */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[600px] bg-gradient-to-b from-transparent via-indigo-500/5 to-transparent blur-2xl md:blur-3xl -z-10 pointer-events-none will-change-transform" />
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-violet-600/10 rounded-full blur-3xl md:blur-[100px] translate-y-1/2 -translate-x-1/2 pointer-events-none -z-10 will-change-transform" />
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-600/10 rounded-full blur-3xl md:blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none -z-10 will-change-transform" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[600px] bg-gradient-to-b from-transparent via-indigo-500/5 to-transparent blur-2xl md:blur-3xl -z-10 pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-violet-600/10 rounded-full blur-3xl md:blur-[100px] translate-y-1/2 -translate-x-1/2 pointer-events-none -z-10" />
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-600/10 rounded-full blur-3xl md:blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none -z-10" />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Section header */}
@@ -235,7 +185,7 @@ export default function Skills() {
                                 variants={containerVariants}
                                 initial="hidden"
                                 whileInView="visible"
-                                viewport={{ once: false, margin: "-50px" }}
+                                viewport={{ once: true, margin: "-50px" }}
                             >
                                 {category.skills.map((skill) => (
                                     <SkillBadge key={skill.name} skill={skill} />

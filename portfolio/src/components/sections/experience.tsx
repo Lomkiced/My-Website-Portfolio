@@ -53,19 +53,24 @@ export default function Experience() {
                                         }`}
                                     initial={{
                                         opacity: 0,
-                                        x: isLeft ? -40 : 40,
+                                        x: isLeft ? -20 : 20,
                                     }}
                                     whileInView={{
                                         opacity: 1,
                                         x: 0,
                                     }}
-                                    viewport={{ once: false }}
+                                    viewport={{ once: true }}
                                     transition={{ duration: 0.6, ease: "easeOut" }}
                                 >
-                                    {/* Timeline dot */}
-                                    <div className="absolute left-4 md:left-1/2 w-8 h-8 -translate-x-1/2 rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-500/20 z-10">
+                                    <motion.div
+                                        className="absolute left-4 md:left-1/2 w-8 h-8 -translate-x-1/2 rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-500/20 z-10"
+                                        initial={{ scale: 0 }}
+                                        whileInView={{ scale: 1 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.4, delay: 0.2 }}
+                                    >
                                         <Icon className="w-3.5 h-3.5 text-white" />
-                                    </div>
+                                    </motion.div>
 
                                     {/* Content card */}
                                     <div

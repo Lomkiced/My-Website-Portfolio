@@ -471,10 +471,32 @@
 }
 
 @media (max-width: 768px) {
+
+  .backdrop-blur-md,
+  .backdrop-blur-lg,
   .backdrop-blur-xl,
   .backdrop-blur-2xl,
   .backdrop-blur-3xl {
-    backdrop-filter: blur(6px) !important;
-    -webkit-backdrop-filter: blur(6px) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
   }
+
+  /* Reduce filter-blur on decorative backgrounds */
+  .blur-2xl {
+    filter: blur(24px) !important;
+  }
+
+  .blur-3xl {
+    filter: blur(30px) !important;
+  }
+}
+
+/* ─── Performance: Skip rendering off-screen sections ────────────────────────
+   content-visibility: auto allows the browser to skip layout, paint, and
+   compositing for sections not currently in the viewport. This is the most
+   impactful single CSS property for long-page scroll performance.
+*/
+section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
 }

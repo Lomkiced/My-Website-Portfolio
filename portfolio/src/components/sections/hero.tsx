@@ -5,8 +5,7 @@ import { motion, AnimatePresence, useInView } from "framer-motion";
 import { FiArrowDown, FiMail } from "react-icons/fi";
 import { Music, MousePointerClick } from "lucide-react";
 import { useThemeStore } from "@/lib/store";
-
-import dynamic from "next/dynamic";
+import { ParticleNetwork } from "@/components/animations/particle-network";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 
 const containerVariants = {
@@ -241,154 +240,122 @@ export default function Hero() {
             id="home"
             className="relative min-h-screen flex items-center justify-center overflow-hidden pt-32 pb-32"
         >
-            {/* ── World-Class Aurora Gradient Background ─────────────────────────────────── */}
-            <div className="absolute inset-0 -z-10 overflow-hidden">
-                {/* Base dark/light layer */}
-                <div className="absolute inset-0 bg-background" />
-
-                {/* Scrollytelling animated overlay */}
-                <motion.div
-                    className="absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-40 dark:opacity-60 mix-blend-normal dark:mix-blend-screen"
-                    style={{
-                        background: `radial-gradient(circle at 50% 50%, ${overlayFrom} 0%, transparent 60%)`,
-                    }}
-                />
-
-                {/* Premium Animated Aurora Mesh */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vh] opacity-50 dark:opacity-40 animate-spin-slow pointer-events-none origin-center" style={{ filter: 'blur(100px)' }}>
-                    <div className="absolute top-1/4 left-1/4 w-[50%] h-[50%] bg-violet-500/30 dark:bg-violet-600/20 rounded-full mix-blend-screen animate-blob" />
-                    <div className="absolute top-1/3 right-1/4 w-[45%] h-[45%] bg-fuchsia-400/30 dark:bg-fuchsia-600/20 rounded-full mix-blend-screen animate-blob animation-delay-2000" />
-                    <div className="absolute bottom-1/4 left-1/3 w-[60%] h-[60%] bg-indigo-500/30 dark:bg-indigo-600/20 rounded-full mix-blend-screen animate-blob animation-delay-4000" />
-                    <div className="absolute bottom-1/3 right-1/3 w-[40%] h-[40%] bg-cyan-400/20 dark:bg-cyan-500/10 rounded-full mix-blend-screen animate-blob" />
-                </div>
-
-                {/* High-end subtle dot grid replacing the matrix rain */}
-                <div
-                    className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] mix-blend-overlay"
-                    style={{
-                        backgroundImage: `radial-gradient(circle at center, rgba(139, 92, 246, 0.8) 1px, transparent 1px)`,
-                        backgroundSize: "32px 32px",
-                    }}
-                />
-
-                {/* Vignette to focus center */}
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,var(--background)_100%)] opacity-80" />
-
-                {/* Film noise for texture */}
-                <div className="noise-overlay absolute inset-0 opacity-40" />
-            </div>
+            {/* ── Hardware-Accelerated Canvas Background ─────────────────────────────────── */}
+            <ParticleNetwork />
 
             {/* ── Content ──────────────────────────────────────────────────────── */}
             <div
-                className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
+                className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pointer-events-none"
             >
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                    className="space-y-6 md:space-y-8"
-                >
-                    {/* Greeting badge with Autoplay Toast */}
-                    <div className="relative inline-flex flex-col items-center">
-                        <AnimatePresence>
-                            {autoplayStatus && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                    exit={{ opacity: 0, y: 10, scale: 0.95, filter: "blur(4px)" }}
-                                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                                    className="absolute bottom-full mb-8 z-50 pointer-events-none w-max max-w-[90vw]"
-                                >
-                                    {autoplayStatus === "blocked" ? (
-                                        <div className="flex items-center justify-center gap-3 px-5 py-3.5 rounded-2xl bg-black/70 dark:bg-black/50 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] text-white relative overflow-hidden group">
-                                            <div className="absolute inset-0 bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 opacity-50" />
-                                            <div className="absolute inset-px rounded-2xl border border-white/5" />
-                                            <motion.div
-                                                animate={{ scale: [1, 1.2, 1] }}
-                                                transition={{ duration: 2, repeat: Infinity }}
-                                                className="relative z-10 text-violet-300 flex-shrink-0"
-                                            >
-                                                <MousePointerClick size={20} />
-                                            </motion.div>
-                                            <span className="text-sm font-medium relative z-10 tracking-wide text-center">
-                                                Click anywhere to play music
-                                            </span>
-                                        </div>
-                                    ) : (
-                                        <div className="flex items-center justify-center gap-3 px-5 py-3.5 rounded-2xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-neutral-200 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.1)] text-neutral-800 dark:text-white relative overflow-hidden">
-                                            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 opacity-50" />
-                                            <motion.div
-                                                initial={{ rotate: -45, scale: 0 }}
-                                                animate={{ rotate: 0, scale: 1 }}
-                                                transition={{ type: "spring", delay: 0.2 }}
-                                                className="relative z-10 text-emerald-600 dark:text-emerald-400 flex-shrink-0"
-                                            >
-                                                <Music size={20} />
-                                            </motion.div>
-                                            <span className="text-sm font-medium relative z-10 tracking-wide text-center">
-                                                Music playing. Mute anytime.
-                                            </span>
-                                        </div>
-                                    )}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-
-                        <motion.div variants={itemVariants} className="inline-block">
-                            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-violet-500/20 bg-violet-500/5 text-violet-600 dark:text-violet-400 text-sm font-medium backdrop-blur-sm">
-                                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                                Available for opportunities
-                            </span>
-                        </motion.div>
-                    </div>
-
-                    {/* ── Scramble Text — all lines visible at once ── */}
-                    <motion.div variants={itemVariants}>
-                        <ScrambleText />
-                    </motion.div>
-
-                    {/* Title */}
-                    <motion.p
-                        variants={itemVariants}
-                        className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-medium"
-                    >
-                        Full Stack Developer{" "}
-                        <span className="text-violet-500 dark:text-violet-400">|</span>{" "}
-                        BS Information Technology
-                    </motion.p>
-
-                    {/* Bio */}
-                    <motion.p
-                        variants={itemVariants}
-                        className="max-w-2xl mx-auto text-base md:text-lg text-muted-foreground/80 leading-relaxed"
-                    >
-                        Building high-performance, type-safe web and mobile applications
-                        with modern architectures. Bridging complex backend systems with
-                        intuitive frontend design.
-                    </motion.p>
-
-                    {/* CTA Buttons */}
+                <div className="pointer-events-auto">
                     <motion.div
-                        variants={itemVariants}
-                        className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 mb-16"
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="visible"
+                        className="space-y-6 md:space-y-8"
                     >
-                        <MagneticButton
-                            onClick={() => handleNavClick("#projects")}
-                            className="group flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-semibold shadow-xl shadow-violet-500/20 hover:shadow-violet-500/40 transition-all"
-                        >
-                            View My Work
-                            <FiArrowDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
-                        </MagneticButton>
+                        {/* Greeting badge with Autoplay Toast */}
+                        <div className="relative inline-flex flex-col items-center">
+                            <AnimatePresence>
+                                {autoplayStatus && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        exit={{ opacity: 0, y: 10, scale: 0.95, filter: "blur(4px)" }}
+                                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                                        className="absolute bottom-full mb-8 z-50 pointer-events-none w-max max-w-[90vw]"
+                                    >
+                                        {autoplayStatus === "blocked" ? (
+                                            <div className="flex items-center justify-center gap-3 px-5 py-3.5 rounded-2xl bg-black/70 dark:bg-black/50 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] text-white relative overflow-hidden group">
+                                                <div className="absolute inset-0 bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 opacity-50" />
+                                                <div className="absolute inset-px rounded-2xl border border-white/5" />
+                                                <motion.div
+                                                    animate={{ scale: [1, 1.2, 1] }}
+                                                    transition={{ duration: 2, repeat: Infinity }}
+                                                    className="relative z-10 text-violet-300 flex-shrink-0"
+                                                >
+                                                    <MousePointerClick size={20} />
+                                                </motion.div>
+                                                <span className="text-sm font-medium relative z-10 tracking-wide text-center">
+                                                    Click anywhere to play music
+                                                </span>
+                                            </div>
+                                        ) : (
+                                            <div className="flex items-center justify-center gap-3 px-5 py-3.5 rounded-2xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-neutral-200 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.1)] text-neutral-800 dark:text-white relative overflow-hidden">
+                                                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 opacity-50" />
+                                                <motion.div
+                                                    initial={{ rotate: -45, scale: 0 }}
+                                                    animate={{ rotate: 0, scale: 1 }}
+                                                    transition={{ type: "spring", delay: 0.2 }}
+                                                    className="relative z-10 text-emerald-600 dark:text-emerald-400 flex-shrink-0"
+                                                >
+                                                    <Music size={20} />
+                                                </motion.div>
+                                                <span className="text-sm font-medium relative z-10 tracking-wide text-center">
+                                                    Music playing. Mute anytime.
+                                                </span>
+                                            </div>
+                                        )}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
 
-                        <MagneticButton
-                            onClick={() => handleNavClick("#contact")}
-                            className="group flex items-center gap-2 px-8 py-4 rounded-2xl border-2 border-border hover:border-violet-500/50 text-foreground font-semibold hover:bg-accent/50 transition-all"
+                            <motion.div variants={itemVariants} className="inline-block">
+                                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-violet-500/20 bg-violet-500/5 text-violet-600 dark:text-violet-400 text-sm font-medium backdrop-blur-sm">
+                                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                                    Available for opportunities
+                                </span>
+                            </motion.div>
+                        </div>
+
+                        {/* ── Scramble Text — all lines visible at once ── */}
+                        <motion.div variants={itemVariants}>
+                            <ScrambleText />
+                        </motion.div>
+
+                        {/* Title */}
+                        <motion.p
+                            variants={itemVariants}
+                            className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-medium"
                         >
-                            <FiMail className="w-4 h-4" />
-                            Contact Me
-                        </MagneticButton>
+                            Full Stack Developer{" "}
+                            <span className="text-violet-500 dark:text-violet-400">|</span>{" "}
+                            BS Information Technology
+                        </motion.p>
+
+                        {/* Bio */}
+                        <motion.p
+                            variants={itemVariants}
+                            className="max-w-2xl mx-auto text-base md:text-lg text-muted-foreground/80 leading-relaxed"
+                        >
+                            Building high-performance, type-safe web and mobile applications
+                            with modern architectures. Bridging complex backend systems with
+                            intuitive frontend design.
+                        </motion.p>
+
+                        {/* CTA Buttons */}
+                        <motion.div
+                            variants={itemVariants}
+                            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 mb-16"
+                        >
+                            <MagneticButton
+                                onClick={() => handleNavClick("#projects")}
+                                className="group flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-semibold shadow-xl shadow-violet-500/20 hover:shadow-violet-500/40 transition-all"
+                            >
+                                View My Work
+                                <FiArrowDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
+                            </MagneticButton>
+
+                            <MagneticButton
+                                onClick={() => handleNavClick("#contact")}
+                                className="group flex items-center gap-2 px-8 py-4 rounded-2xl border-2 border-border hover:border-violet-500/50 text-foreground font-semibold hover:bg-accent/50 transition-all"
+                            >
+                                <FiMail className="w-4 h-4" />
+                                Contact Me
+                            </MagneticButton>
+                        </motion.div>
                     </motion.div>
-                </motion.div>
+                </div>
             </div>
 
             {/* ── Scroll indicator ─────────────────────────────────────────────── */}

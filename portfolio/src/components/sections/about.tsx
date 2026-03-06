@@ -8,16 +8,14 @@ import { SiNextdotjs, SiTailwindcss, SiTypescript, SiNodedotjs, SiReact } from "
 import SectionTitle from "@/components/animations/section-title";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
 
-// ─── Bento Box Card Wrapper ──────────────────────────────────────────────────
-// Uses pure CSS for hover states instead of heavy JS tracking
 function BentoCard({ children, className = "", delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
     return (
-        <ScrollReveal variant="slideScale" delay={delay} className="h-full">
+        <ScrollReveal variant="slideScale" delay={delay} className="h-full" viewportMargin="-10%">
             <div
-                className={`group relative overflow-hidden rounded-[2rem] border border-white/10 dark:border-white/5 bg-white/40 dark:bg-black/40 backdrop-blur-xl shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 ${className}`}
+                className={`group relative overflow-hidden rounded-[2rem] border border-neutral-200/60 dark:border-white/[0.08] bg-white dark:bg-[#111113] shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1 will-change-transform ${className}`}
             >
-                {/* Premium Glassmorphism Shine */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-white/0 dark:from-white/10 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] pointer-events-none" />
+                {/* Subtle Hover Glow Line */}
+                <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                 <div className="relative z-10 h-full">{children}</div>
             </div>
         </ScrollReveal>
@@ -50,7 +48,7 @@ function StaggeredText({ text, className }: { text: string; className?: string }
         >
             {words.map((word, index) => (
                 <div key={index} className="overflow-hidden pb-2 mr-2 md:mr-3 last:mr-0 inline-flex">
-                    <motion.span className="inline-block" variants={revealVariants}>
+                    <motion.span className="inline-block" variants={revealVariants} viewport={{ once: true }}>
                         {word}
                     </motion.span>
                 </div>
@@ -62,10 +60,8 @@ function StaggeredText({ text, className }: { text: string; className?: string }
 // ─── Main Component ──────────────────────────────────────────────────────────
 export default function About() {
     return (
-        <section id="about" className="py-20 md:py-32 relative overflow-hidden">
-            {/* Ambient Base Backgrounds */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-violet-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/4 pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-72 h-72 bg-indigo-500/10 rounded-full blur-[80px] translate-y-1/4 -translate-x-1/4 pointer-events-none" />
+        <section id="about" className="py-20 md:py-32 relative overflow-hidden bg-neutral-50/50 dark:bg-transparent">
+            {/* The heavy background blurs have been completely removed to solve the scrolling crash */}
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <SectionTitle
@@ -109,26 +105,26 @@ export default function About() {
                                 </div>
                             </div>
 
-                            {/* Decorative Tech Mesh Background inside the card */}
-                            <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.1)_0%,transparent_70%)] rounded-full blur-2xl pointer-events-none group-hover:bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.15)_0%,transparent_70%)] transition-colors duration-700" />
+                            {/* Decorative Tech Mesh Background (Non-animated gradient for performance) */}
+                            <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.15)_0%,transparent_70%)] rounded-full pointer-events-none" />
                         </BentoCard>
                     </div>
 
                     {/* 2. Photo Card (Spans 5 cols) */}
                     <div className="md:col-span-4 lg:col-span-5 lg:row-span-2 h-full">
                         <BentoCard delay={0.2} className="relative h-[400px] lg:h-full w-full p-0">
-                            <div className="absolute inset-0 w-full h-full">
+                            <div className="absolute inset-0 w-full h-full overflow-hidden rounded-[2rem]">
                                 <Image
                                     src="/profile.jpg"
                                     alt="Mike Cedrick"
                                     fill
-                                    className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
+                                    className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105 will-change-transform"
                                     priority
                                     sizes="(max-width: 768px) 100vw, 50vw"
                                 />
-                                {/* Elegant Inner Shadow & Gradient */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-700 ease-out opacity-80 group-hover:opacity-60" />
-                                <div className="absolute inset-0 ring-1 ring-inset ring-white/20 rounded-[2rem]" />
+                                {/* Elegant Inner Shadow & Gradient (Optimized Opacity) */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+                                <div className="absolute inset-0 ring-1 ring-inset ring-white/20 rounded-[2rem] pointer-events-none" />
                             </div>
 
                             <div className="absolute bottom-0 left-0 right-0 p-8 z-20">

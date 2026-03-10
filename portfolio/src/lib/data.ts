@@ -18,6 +18,15 @@ export interface TimelineItem {
     type: "work" | "education" | "certification";
 }
 
+export interface Certificate {
+    title: string;
+    issuer: string;
+    date: string;
+    description: string;
+    imageUrl?: string;
+    credentialUrl?: string;
+}
+
 // ─── Project Data ─────────────────────────────────────────────────────────────
 
 export const PROJECT_DATA: Project[] = [
@@ -70,4 +79,30 @@ export const EXPERIENCE_DATA: TimelineItem[] = [
             "Fourth-year student specializing in full-stack systems development, database management, and interactive applications.",
         type: "education",
     },
+];
+
+// ─── Certificates Data ───────────────────────────────────────────────────────
+
+export const CERTIFICATES_DATA: Certificate[] = [
+    {
+        title: "AWS Certified Solutions Architect - Associate",
+        issuer: "Amazon Web Services (AWS)",
+        date: "Jan 2025",
+        description: "Validated expertise in designing distributed systems on AWS, encompassing compute, networking, storage, and database services.",
+        credentialUrl: "#",
+    },
+    {
+        title: "React Native Specialist",
+        issuer: "Meta (Coursera)",
+        date: "Nov 2024",
+        description: "Demonstrated proficiency in building cross-platform mobile applications using React Native, including navigation, state management, and API integration.",
+        credentialUrl: "#",
+    },
+    {
+        title: "Full-Stack Web Development Boot-camp",
+        issuer: "Udemy",
+        date: "Aug 2024",
+        description: "Intensive training covering the MERN stack (MongoDB, Express, React, Node.js), encompassing frontend UI creation, backend RESTful APIs, and database management.",
+        credentialUrl: "#",
+    }
 ];

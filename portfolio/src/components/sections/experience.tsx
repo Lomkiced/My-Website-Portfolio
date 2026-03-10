@@ -23,31 +23,31 @@ const getColorConfig = (type: string) => {
     switch (type) {
         case "work":
             return {
-                gradient: "from-primary to-accent",
-                border: "border-primary/20 group-hover:border-primary/40",
-                text: "text-primary dark:text-primary",
-                shadow: "shadow-primary/20",
-                bg: "bg-primary/10 lg:bg-primary/5",
+                gradient: "from-violet-600 to-indigo-600 dark:from-violet-500 dark:to-indigo-500",
+                border: "border-violet-500/20 group-hover:border-violet-500/40",
+                text: "text-violet-600 dark:text-violet-400",
+                shadow: "shadow-violet-500/20",
+                bg: "bg-violet-500/10 lg:bg-violet-500/5",
             };
         case "education":
             return {
-                gradient: "from-accent to-primary",
-                border: "border-accent/20 group-hover:border-accent/40",
-                text: "text-accent dark:text-accent",
-                shadow: "shadow-accent/20",
-                bg: "bg-accent/10 lg:bg-accent/5",
+                gradient: "from-fuchsia-600 to-purple-600 dark:from-fuchsia-500 dark:to-purple-500",
+                border: "border-fuchsia-500/20 group-hover:border-fuchsia-500/40",
+                text: "text-fuchsia-600 dark:text-fuchsia-400",
+                shadow: "shadow-fuchsia-500/20",
+                bg: "bg-fuchsia-500/10 lg:bg-fuchsia-500/5",
             };
         case "certification":
             return {
-                gradient: "from-primary via-accent to-primary",
-                border: "border-primary/20 group-hover:border-primary/40",
-                text: "text-foreground dark:text-foreground",
-                shadow: "shadow-primary/20",
-                bg: "bg-primary/10 lg:bg-primary/5",
+                gradient: "from-purple-600 to-violet-600 dark:from-purple-500 dark:to-violet-500",
+                border: "border-purple-500/20 group-hover:border-purple-500/40",
+                text: "text-purple-600 dark:text-purple-400",
+                shadow: "shadow-purple-500/20",
+                bg: "bg-purple-500/10 lg:bg-purple-500/5",
             };
         default:
             return {
-                gradient: "from-primary to-accent",
+                gradient: "from-primary to-primary/80",
                 border: "border-primary/20 group-hover:border-primary/40",
                 text: "text-primary dark:text-primary",
                 shadow: "shadow-primary/20",
@@ -113,7 +113,7 @@ const ExperienceCard = ({ item, isLeft, index }: { item: TimelineItem; isLeft: b
                         {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
                     </div>
 
-                    <h3 className={`text-xl sm:text-2xl font-bold font-display text-foreground mb-2 transition-colors duration-300 w-full truncate text-left`}>
+                    <h3 className={`text-xl sm:text-2xl font-bold font-display text-foreground mb-3 leading-tight transition-colors duration-300 w-full text-left`}>
                         {item.title}
                     </h3>
 
@@ -158,8 +158,8 @@ export default function Experience() {
     return (
         <section id="experience" className="py-24 md:py-32 relative overflow-hidden" ref={containerRef}>
             {/* Background Effects */}
-            <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -translate-x-1/2 pointer-events-none" />
-            <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[120px] translate-x-1/2 pointer-events-none" />
+            <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-violet-600/10 rounded-full blur-[120px] -translate-x-1/2 pointer-events-none" />
+            <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-fuchsia-600/10 rounded-full blur-[120px] translate-x-1/2 pointer-events-none" />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
@@ -177,14 +177,14 @@ export default function Experience() {
                     {/* The Fill Track for Timeline */}
                     <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-1.5 rounded-full -translate-x-1/2 overflow-hidden z-10">
                         <motion.div
-                            className="absolute top-0 left-0 right-0 w-full bg-gradient-to-b from-primary via-accent to-primary origin-top"
+                            className="absolute top-0 left-0 right-0 w-full bg-gradient-to-b from-violet-500 via-fuchsia-500 to-purple-500 origin-top"
                             style={{ scaleY }}
                         />
                     </div>
 
                     {/* Glow effect for line */}
                     <motion.div
-                        className="absolute left-4 md:left-1/2 top-0 w-6 rounded-full -translate-x-1/2 blur-md bg-gradient-to-b from-primary/50 via-accent/50 to-primary/50 pointer-events-none mix-blend-screen z-0"
+                        className="absolute left-4 md:left-1/2 top-0 w-6 rounded-full -translate-x-1/2 blur-md bg-gradient-to-b from-violet-500/50 via-fuchsia-500/50 to-purple-500/50 pointer-events-none mix-blend-screen z-0"
                         style={{ height: timelineHeight }}
                     />
 

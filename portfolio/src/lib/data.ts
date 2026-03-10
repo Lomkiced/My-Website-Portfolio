@@ -90,6 +90,7 @@ export const CERTIFICATES_DATA: Certificate[] = [
         date: "Jan 2025",
         description: "Validated expertise in designing distributed systems on AWS, encompassing compute, networking, storage, and database services.",
         credentialUrl: "#",
+        imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop"
     },
     {
         title: "React Native Specialist",
@@ -97,6 +98,7 @@ export const CERTIFICATES_DATA: Certificate[] = [
         date: "Nov 2024",
         description: "Demonstrated proficiency in building cross-platform mobile applications using React Native, including navigation, state management, and API integration.",
         credentialUrl: "#",
+        imageUrl: "https://images.unsplash.com/photo-1551650975-87deedd944c3?q=80&w=800&auto=format&fit=crop"
     },
     {
         title: "Full-Stack Web Development Boot-camp",
@@ -104,5 +106,6 @@ export const CERTIFICATES_DATA: Certificate[] = [
         date: "Aug 2024",
         description: "Intensive training covering the MERN stack (MongoDB, Express, React, Node.js), encompassing frontend UI creation, backend RESTful APIs, and database management.",
         credentialUrl: "#",
+        imageUrl: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800&auto=format&fit=crop"
     }
 ];

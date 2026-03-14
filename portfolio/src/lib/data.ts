@@ -38,7 +38,7 @@ export const PROJECT_DATA: Project[] = [
         liveUrl: "https://ecash.dost1.ph",
         githubUrl: "https://github.com/Lomkiced",
         gradient: "from-violet-600 to-indigo-600",
-        image: "/eCash.png",
+        image: "/ecash.png",
     },
     {
         title: "KIP - Record Management System | Department of Science and Technology Region 1",
@@ -48,7 +48,7 @@ export const PROJECT_DATA: Project[] = [
         liveUrl: "https://kip.dost1.ph",
         githubUrl: "https://github.com/Lomkiced",
         gradient: "from-purple-600 to-pink-600",
-        image: "/placeholder.jpg",
+        image: "/kip.png",
     },
     {
         title: "Institutional Library Management System | Polytechnic College of La Union",
@@ -58,7 +58,7 @@ export const PROJECT_DATA: Project[] = [
         liveUrl: "#",
         githubUrl: "https://github.com/Lomkiced",
         gradient: "from-blue-600 to-cyan-600",
-        image: "/placeholder.jpg",
+        image: "/lms.png",
     },
 ];
 

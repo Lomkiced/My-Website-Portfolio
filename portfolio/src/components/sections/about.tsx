@@ -212,7 +212,7 @@ export default function About() {
 
                     {/* 2. Stunning Photo Card - Redesigned */}
                     <div className="md:col-span-6 lg:col-span-4 lg:row-span-2 relative h-full">
-                        <SpotlightCard delay={0.2} className="relative w-full h-[400px] lg:h-full p-0 flex flex-col overflow-hidden group/photo">
+                        <SpotlightCard delay={0.2} className="relative w-full aspect-[4/5] max-h-[500px] md:max-h-none md:min-h-[400px] lg:h-full lg:aspect-auto p-0 flex flex-col overflow-hidden group/photo">
                             {/* Elegant Frame Outline */}
                             <div className="absolute inset-2 border border-neutral-200/40 dark:border-white/10 rounded-[2rem] z-20 pointer-events-none transition-colors duration-500 group-hover/photo:border-violet-500/30" />
 
@@ -221,7 +221,7 @@ export default function About() {
                                     src="/profile.jpg"
                                     alt="Mike Cedrick"
                                     fill
-                                    className="object-cover object-center transition-all duration-700 ease-[0.2,0.65,0.3,0.9] group-hover/photo:scale-[1.05] group-hover/photo:grayscale-0 grayscale-[20%] will-change-transform"
+                                    className="object-cover object-top transition-all duration-700 ease-[0.2,0.65,0.3,0.9] group-hover/photo:scale-[1.05] group-hover/photo:grayscale-0 grayscale-[20%] will-change-transform"
                                     priority
                                     sizes="(max-width: 768px) 100vw, 33vw"
                                 />
@@ -235,7 +235,7 @@ export default function About() {
                                 whileInView={{ y: 0, opacity: 1 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: 0.4, duration: 0.5 }}
-                                className="absolute bottom-6 left-6 right-6 z-30 transform transition-transform duration-500 group-hover/photo:-translate-y-2"
+                                className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 z-30 transform transition-transform duration-500 group-hover/photo:-translate-y-2"
                             >
                                 <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-3 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold text-white shadow-lg overflow-hidden group/status">
                                     <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-emerald-500/10 to-emerald-500/0 translate-x-[-100%] group-hover/status:translate-x-[100%] transition-transform duration-1000" />

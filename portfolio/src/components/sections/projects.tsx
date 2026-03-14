@@ -23,18 +23,11 @@ export default function Projects() {
     useEffect(() => {
         if (selectedProject) {
             document.body.style.overflow = "hidden";
-            // Optional: prevent scroll bounce on iOS
-            document.body.style.position = "fixed";
-            document.body.style.width = "100%";
         } else {
             document.body.style.overflow = "";
-            document.body.style.position = "";
-            document.body.style.width = "";
         }
         return () => {
             document.body.style.overflow = "";
-            document.body.style.position = "";
-            document.body.style.width = "";
         };
     }, [selectedProject]);
 
@@ -54,80 +47,102 @@ export default function Projects() {
                         className="mb-20 md:mb-32"
                     />
 
-                    {/* Vertical List of Projects */}
-                    <div className="flex flex-col relative w-full group/list">
-                        {PROJECT_DATA.map((project, index) => (
-                            <motion.div
-                                key={project.title}
-                                className="group/row relative border-b border-black/5 dark:border-white/5 first:border-t flex flex-col md:flex-row md:items-center justify-between py-8 md:py-12 cursor-pointer transition-colors hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    setSelectedProject(project);
-                                }}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true, margin: "-50px" }}
-                                transition={{ duration: 0.5, delay: index * 0.1 }}
-                            >
-                                {/* Background morph element */}
+                    {/* Asymmetric Bento Grid of Projects */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 relative w-full">
+                        {PROJECT_DATA.map((project, index) => {
+                            const isFeatured = index === 0;
+                            return (
                                 <motion.div
-                                    layoutId={`card-bg-${project.title}`}
-                                    className="absolute inset-x-0 -inset-y-0 rounded-3xl bg-transparent z-0 pointer-events-none"
-                                />
+                                    key={project.title}
+                                    className={`group/card relative rounded-[2.5rem] overflow-hidden cursor-pointer border border-black/5 dark:border-white/5 bg-neutral-100 dark:bg-neutral-900 ${
+                                        isFeatured ? "md:col-span-2 aspect-[4/3] md:aspect-[21/10]" : "md:col-span-1 aspect-[4/3] md:aspect-square"
+                                    }`}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setSelectedProject(project);
+                                    }}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true, margin: "-50px" }}
+                                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                                >
+                                    {/* Shared background morph element */}
+                                    <motion.div
+                                        layoutId={`project-bg-${project.title}`}
+                                        className="absolute inset-0 bg-neutral-100 dark:bg-[#0a0a0a] z-0 pointer-events-none rounded-[2.5rem]"
+                                    />
 
-                                <div className="relative z-10 flex-1 md:pr-12">
-                                    <motion.h3
-                                        layoutId={`title-${project.title}`}
-                                        className="text-2xl md:text-5xl font-display font-bold text-neutral-900 dark:text-white tracking-tight group-hover/row:text-violet-600 dark:group-hover/row:text-violet-400 transition-colors duration-500"
-                                    >
-                                        {project.title.split(" | ")[0]} {/* Show only the main title in list for elegance */}
-                                    </motion.h3>
-                                    <p className="text-sm md:text-lg text-neutral-500 dark:text-neutral-400 mt-2 font-medium">
-                                        {project.title.split(" | ")[1] || "Project Overview"}
-                                    </p>
-                                </div>
+                                    {/* Image / Background Layer */}
+                                    <div className="absolute inset-0 z-0 overflow-hidden rounded-[2.5rem]">
+                                        {project.image && project.image !== "/placeholder.jpg" ? (
+                                            <img
+                                                src={project.image}
+                                                alt={project.title}
+                                                className="w-full h-full object-cover object-center transform group-hover/card:scale-105 transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)]"
+                                            />
+                                        ) : (
+                                            <div
+                                                className={`w-full h-full bg-gradient-to-br ${project.gradient} transform group-hover/card:scale-105 transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] opacity-80`}
+                                            />
+                                        )}
+                                        {/* Gradient Overlay for text readability (Dark-mode styled) */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent pointer-events-none" />
+                                    </div>
 
-                                <div className="relative z-10 flex items-center justify-between md:justify-end w-full md:w-auto mt-6 md:mt-0 gap-6">
-                                    <motion.div layoutId={`links-${project.title}`} className="flex items-center gap-3">
-                                        <a
-                                            href={project.liveUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="w-12 h-12 flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 dark:text-neutral-300 hover:text-white hover:bg-violet-600 hover:border-violet-600 dark:hover:text-white dark:hover:bg-violet-600 transition-all duration-300"
-                                            onClick={(e) => e.stopPropagation()}
-                                            aria-label="View Live Demo"
-                                        >
-                                            <FiExternalLink className="w-5 h-5" />
-                                        </a>
-                                        <a
-                                            href={project.githubUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="w-12 h-12 flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 dark:text-neutral-300 hover:text-white hover:bg-neutral-900 hover:border-neutral-900 dark:hover:text-neutral-900 dark:hover:bg-white transition-all duration-300"
-                                            onClick={(e) => e.stopPropagation()}
-                                            aria-label="View Source Code"
-                                        >
-                                            <FiGithub className="w-5 h-5" />
-                                        </a>
-                                    </motion.div>
-                                    <motion.div layoutId={`view-btn-${project.title}`}>
-                                        <button
-                                            type="button"
-                                            className="flex items-center justify-center w-12 h-12 md:w-auto md:h-auto md:px-8 md:py-3.5 rounded-full bg-neutral-900 border-2 border-transparent text-white dark:bg-white dark:text-neutral-900 text-sm font-bold hover:scale-105 active:scale-95 transition-all shadow-xl shadow-neutral-900/20 dark:shadow-white/20 hover:shadow-violet-500/30 ring-0 outline-none"
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                setSelectedProject(project);
-                                            }}
-                                            aria-label={`View Details for ${project.title}`}
-                                        >
-                                            <span className="hidden md:block mr-3">View Details</span>
-                                            <FiArrowRight className="w-5 h-5 md:-rotate-45 group-hover/row:rotate-0 transition-transform duration-500 ease-out" />
-                                        </button>
-                                    </motion.div>
-                                </div>
-                            </motion.div>
-                        ))}
+                                    {/* Content Layer */}
+                                    <div className="absolute inset-0 z-10 p-6 md:p-10 flex flex-col justify-end pointer-events-none">
+                                        <div className="flex flex-col gap-3 transform translate-y-4 group-hover/card:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]">
+                                            {/* Tech Stack */}
+                                            <div className="flex flex-wrap gap-2 mb-2">
+                                                {project.techStack.slice(0, 3).map((tech) => (
+                                                    <span
+                                                        key={tech}
+                                                        className="px-3 py-1 text-xs font-semibold rounded-full bg-white/10 backdrop-blur-md text-white border border-white/20"
+                                                    >
+                                                        {tech}
+                                                    </span>
+                                                ))}
+                                                {project.techStack.length > 3 && (
+                                                    <span className="px-3 py-1 text-xs font-semibold rounded-full bg-white/10 backdrop-blur-md text-white border border-white/20">
+                                                        +{project.techStack.length - 3}
+                                                    </span>
+                                                )}
+                                            </div>
+
+                                            <motion.h3
+                                                layoutId={`project-title-${project.title}`}
+                                                className={`font-display font-bold text-white tracking-tight ${
+                                                    isFeatured ? "text-3xl md:text-5xl" : "text-2xl md:text-3xl"
+                                                }`}
+                                            >
+                                                {project.title.split(" | ")[0]}
+                                            </motion.h3>
+
+                                            <div className="grid grid-rows-[0fr] group-hover/card:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]">
+                                                <div className="overflow-hidden">
+                                                    <p
+                                                        className={`text-white/70 line-clamp-2 md:line-clamp-3 mt-2 ${
+                                                            isFeatured ? "text-base md:text-lg" : "text-sm"
+                                                        }`}
+                                                    >
+                                                        {project.description}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            {/* Hidden links layout container to snap Modal seamlessly */}
+                                            <motion.div layoutId={`project-links-${project.title}`} className="hidden" />
+                                            <motion.div layoutId={`project-view-btn-${project.title}`} className="hidden" />
+                                        </div>
+
+                                        {/* Hover Circular Arrow Button */}
+                                        <div className="absolute top-6 right-6 md:top-8 md:right-8 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white opacity-0 -translate-y-4 group-hover/card:opacity-100 group-hover/card:translate-y-0 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]">
+                                            <FiArrowRight className="w-5 h-5 -rotate-45" />
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
@@ -135,133 +150,113 @@ export default function Projects() {
             {/* Modal Overlay rendered OUTSIDE the section to prevent content-visibility clipping */}
             <AnimatePresence>
                 {selectedProject && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none p-4 sm:p-6 md:p-12 h-[100dvh]">
-                        {/* Backdrop */}
-                        <motion.div
-                            initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
-                            animate={{ opacity: 1, backdropFilter: "blur(20px)" }}
-                            exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
-                            transition={{ duration: 0.5, ease: "easeInOut" }}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="fixed inset-0 z-[999] flex items-center justify-center p-4 sm:p-6 md:p-12 pointer-events-auto"
+                    >
+                        {/* Backdrop background */}
+                        <div 
+                            className="absolute inset-0 bg-white/60 dark:bg-black/80 backdrop-blur-xl"
                             onClick={() => setSelectedProject(null)}
-                            className="absolute inset-0 bg-white/60 dark:bg-black/60 pointer-events-auto"
                         />
 
-                        {/* Modal Content */}
+                        {/* Modal Content - Text Only Glass Card */}
                         <motion.div
-                            layoutId={`card-bg-${selectedProject.title}`}
-                            className="relative w-full max-w-4xl max-h-[90dvh] flex flex-col bg-white dark:bg-[#0a0a0a] rounded-[2rem] shadow-2xl overflow-hidden pointer-events-auto border border-black/5 dark:border-white/10"
+                            layoutId={`project-bg-${selectedProject.title}`}
+                            className="relative w-full max-w-2xl bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-3xl rounded-[2.5rem] p-8 md:p-14 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)] dark:shadow-[0_40px_120px_-20px_rgba(139,92,246,0.15)] border border-black/5 dark:border-white/10 overflow-y-auto max-h-[90vh] no-scrollbar flex flex-col gap-8"
+                            onClick={(e) => e.stopPropagation()} // Prevent clicking inner card from closing
                         >
                             {/* Close Button */}
                             <motion.button
                                 initial={{ opacity: 0, scale: 0.5 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.5 }}
-                                transition={{ delay: 0.2 }}
+                                transition={{ delay: 0.1 }}
                                 onClick={() => setSelectedProject(null)}
-                                className="absolute top-4 right-4 md:top-6 md:right-6 z-50 p-3 bg-white/50 backdrop-blur-md hover:bg-white/80 dark:bg-black/50 dark:hover:bg-black/80 rounded-full text-neutral-900 dark:text-white transition-all shadow-sm"
+                                className="absolute top-6 right-6 md:top-8 md:right-8 z-50 p-3 bg-neutral-100 hover:bg-neutral-200 dark:bg-white/10 dark:hover:bg-white/20 rounded-full text-neutral-900 dark:text-white transition-all shadow-sm"
                                 aria-label="Close modal"
                             >
-                                <FiX className="w-6 h-6" />
+                                <FiX className="w-5 h-5 md:w-6 md:h-6" />
                             </motion.button>
 
-                            <div className="overflow-y-auto no-scrollbar w-full h-full flex flex-col">
-                                {/* Image Header */}
-                                <motion.div
-                                    initial={{ opacity: 0, y: -20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.4, delay: 0.1 }}
-                                    className={`relative w-full h-[30vh] sm:h-[40vh] flex-shrink-0 ${selectedProject.image ? "bg-neutral-100 dark:bg-neutral-900" : "bg-gradient-to-br " + selectedProject.gradient}`}
+                            {/* Content Block */}
+                            <div className="flex flex-col gap-2 mt-4 md:mt-2">
+                                <motion.h3
+                                    layoutId={`project-title-${selectedProject.title}`}
+                                    className="text-3xl md:text-5xl font-display font-bold text-neutral-900 dark:text-white leading-tight"
                                 >
-                                    {selectedProject.image && selectedProject.image !== "/placeholder.jpg" ? (
-                                        <img
-                                            src={selectedProject.image}
-                                            alt={selectedProject.title}
-                                            className="w-full h-full object-cover object-center"
-                                        />
-                                    ) : (
-                                        <div className="absolute inset-0 flex items-center justify-center opacity-30">
-                                            {/* Beautiful animated mesh gradient placeholder */}
-                                            <div className="w-full h-full bg-[radial-gradient(circle_at_50%_0%,_var(--tw-gradient-stops))] from-white/20 via-transparent to-transparent opacity-80" />
-                                        </div>
-                                    )}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#0a0a0a] via-transparent to-transparent opacity-100 h-full" />
-                                </motion.div>
-
-                                {/* Content Body */}
-                                <div className="p-6 md:p-12 flex flex-col gap-6 md:gap-8 -mt-20 md:-mt-24 relative z-10 flex-1">
-                                    <div className="flex flex-col">
-                                        <motion.h3
-                                            layoutId={`title-${selectedProject.title}`}
-                                            className="text-3xl md:text-5xl font-display font-bold text-neutral-900 dark:text-white leading-tight"
-                                        >
-                                            {selectedProject.title.split(" | ")[0]}
-                                        </motion.h3>
-                                        {selectedProject.title.split(" | ")[1] && (
-                                            <motion.p
-                                                initial={{ opacity: 0, y: 10 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                exit={{ opacity: 0 }}
-                                                transition={{ duration: 0.3, delay: 0.2 }}
-                                                className="text-lg md:text-2xl text-violet-600 dark:text-violet-400 mt-2 font-medium"
-                                            >
-                                                {selectedProject.title.split(" | ")[1]}
-                                            </motion.p>
-                                        )}
-                                    </div>
-
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: 10 }}
-                                        transition={{ duration: 0.4, delay: 0.15 }}
-                                        className="flex flex-wrap gap-2"
-                                    >
-                                        {selectedProject.techStack.map((tech) => (
-                                            <span
-                                                key={tech}
-                                                className="px-4 py-1.5 text-sm font-medium rounded-full bg-neutral-100 dark:bg-white/5 text-neutral-800 dark:text-neutral-200 border border-black/5 dark:border-white/10"
-                                            >
-                                                {tech}
-                                            </span>
-                                        ))}
-                                    </motion.div>
-
+                                    {selectedProject.title.split(" | ")[0]}
+                                </motion.h3>
+                                
+                                {selectedProject.title.split(" | ")[1] && (
                                     <motion.p
-                                        initial={{ opacity: 0, y: 20 }}
+                                        initial={{ opacity: 0, y: 10 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: 10 }}
-                                        transition={{ duration: 0.4, delay: 0.2 }}
-                                        className="text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed whitespace-pre-wrap max-w-3xl"
+                                        exit={{ opacity: 0 }}
+                                        transition={{ duration: 0.3, delay: 0.1 }}
+                                        className="text-lg md:text-xl text-violet-600 dark:text-violet-500 font-semibold mt-1"
                                     >
-                                        {selectedProject.description}
+                                        {selectedProject.title.split(" | ")[1]}
                                     </motion.p>
-
-                                    {/* Action Buttons */}
-                                    <motion.div
-                                        layoutId={`links-${selectedProject.title}`}
-                                        className="flex flex-wrap items-center gap-4 pt-8 mt-auto border-t border-black/5 dark:border-white/10"
-                                    >
-                                        <MagneticButton
-                                            href={selectedProject.liveUrl}
-                                            className="flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-violet-600 text-white text-base font-semibold shadow-[0_0_40px_-10px_rgba(124,58,237,0.5)] hover:shadow-[0_0_60px_-15px_rgba(124,58,237,0.7)] transition-all"
-                                        >
-                                            <FiExternalLink className="w-5 h-5" />
-                                            Visit Live Site
-                                        </MagneticButton>
-
-                                        <MagneticButton
-                                            href={selectedProject.githubUrl}
-                                            className="flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-neutral-100 dark:bg-white/5 text-neutral-900 dark:text-white text-base font-semibold border border-black/5 dark:border-white/10 hover:bg-neutral-200 dark:hover:bg-white/10 transition-all"
-                                        >
-                                            <FiGithub className="w-5 h-5" />
-                                            Source Code
-                                        </MagneticButton>
-                                    </motion.div>
-                                </div>
+                                )}
                             </div>
+
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 10 }}
+                                transition={{ duration: 0.3, delay: 0.15 }}
+                                className="flex flex-wrap gap-2"
+                            >
+                                {selectedProject.techStack.map((tech) => (
+                                    <span
+                                        key={tech}
+                                        className="px-3 py-1.5 text-xs md:text-sm font-semibold tracking-wide rounded-full bg-neutral-100 dark:bg-white/5 text-neutral-800 dark:text-neutral-200 border border-black/5 dark:border-white/10 shadow-sm"
+                                    >
+                                        {tech}
+                                    </span>
+                                ))}
+                            </motion.div>
+
+                            <motion.p
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 10 }}
+                                transition={{ duration: 0.3, delay: 0.2 }}
+                                className="w-full text-base md:text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed whitespace-pre-wrap"
+                            >
+                                {selectedProject.description}
+                            </motion.p>
+
+                            {/* Action Buttons */}
+                            <motion.div
+                                layoutId={`project-links-${selectedProject.title}`}
+                                className="flex flex-col sm:flex-row items-center gap-4 pt-4 mt-2 border-t border-black/5 dark:border-white/10"
+                            >
+                                <MagneticButton
+                                    href={selectedProject.liveUrl}
+                                    className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 rounded-xl bg-violet-600 dark:bg-white text-white dark:text-neutral-900 text-sm md:text-base font-bold shadow-[0_10px_20px_-10px_rgba(124,58,237,0.5)] dark:shadow-[0_10px_20px_-10px_rgba(255,255,255,0.2)] hover:-translate-y-0.5 hover:shadow-[0_15px_30px_-5px_rgba(124,58,237,0.6)] dark:hover:shadow-[0_15px_30px_-5px_rgba(255,255,255,0.4)] transition-all"
+                                >
+                                    <FiExternalLink className="w-5 h-5" />
+                                    Visit Live Site
+                                </MagneticButton>
+
+                                <MagneticButton
+                                    href={selectedProject.githubUrl}
+                                    className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 rounded-xl bg-neutral-100 dark:bg-white/5 text-neutral-900 dark:text-white text-sm md:text-base font-bold border border-black/5 dark:border-white/10 hover:bg-neutral-200 dark:hover:bg-white/10 hover:-translate-y-0.5 transition-all"
+                                >
+                                    <FiGithub className="w-5 h-5" />
+                                    Source Code
+                                </MagneticButton>
+                            </motion.div>
+                            
+                            {/* Empty layout id sink to fulfill framer motion snap demands natively */}
+                            <motion.div layoutId={`project-view-btn-${selectedProject.title}`} className="hidden" />
                         </motion.div>
-                    </div>
+                    </motion.div>
                 )}
             </AnimatePresence>
         </>

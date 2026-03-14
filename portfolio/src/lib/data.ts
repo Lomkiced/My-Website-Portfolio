@@ -87,6 +87,22 @@ export const EXPERIENCE_DATA: TimelineItem[] = [
 
 export const CERTIFICATES_DATA: Certificate[] = [
     {
+        title: "Top 1 Dean's Lister - BS Information Technology",
+        issuer: "Polytechnic College of La Union",
+        date: "1st Sem, AY 2024-2025",
+        description: "Awarded for exemplary academic performance and outstanding achievement, ranking Top 1 in the Bachelor of Science in Information Technology program with a General Average of 93%.",
+        credentialUrl: "#",
+        imageUrl: "/DN1.jpg"
+    },
+    {
+        title: "Certificate of Completion - IT Internship",
+        issuer: "Department of Science and Technology (DOST) Region 1",
+        date: "March 2026",
+        description: "Awarded for the successful completion of the Information Technology internship program. Recognized for significant technical contributions to the engineering and deployment of the regional Disbursement Monitoring System and Record Management System using the PERN stack.",
+        credentialUrl: "#",
+        imageUrl: "/dostc1.jpg"
+    },
+    {
         title: "AWS Certified Solutions Architect - Associate",
         issuer: "Amazon Web Services (AWS)",
         date: "Jan 2025",

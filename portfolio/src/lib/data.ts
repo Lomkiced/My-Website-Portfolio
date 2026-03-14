@@ -38,7 +38,7 @@ export const PROJECT_DATA: Project[] = [
         liveUrl: "https://ecash.dost1.ph",
         githubUrl: "https://github.com/Lomkiced",
         gradient: "from-violet-600 to-indigo-600",
-        image: "/ecash.png",
+        image: "/eCash.png",
     },
     {
         title: "KIP - Record Management System | Department of Science and Technology Region 1",

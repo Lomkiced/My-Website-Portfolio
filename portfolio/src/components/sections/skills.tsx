@@ -123,7 +123,7 @@ function SkillBadge({ skill }: { skill: Skill }) {
     return (
         <motion.div
             variants={badgeVariants}
-            className="group relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl cursor-default border border-white/10 dark:border-white/5 bg-white/20 dark:bg-white/[0.03] backdrop-blur-md shadow-[0_4px_24px_-8px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.2)] dark:shadow-[0_4px_24px_-8px_rgba(0,0,0,0.5)] dark:hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.6)] transition-all duration-300 hover:-translate-y-1 will-change-transform"
+            className="group relative flex items-center gap-2.5 px-3.5 py-2 rounded-xl cursor-default border border-white/10 dark:border-white/5 bg-white/20 dark:bg-white/[0.03] backdrop-blur-md shadow-[0_4px_24px_-8px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.2)] dark:shadow-[0_4px_24px_-8px_rgba(0,0,0,0.5)] dark:hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.6)] transition-all duration-300 hover:-translate-y-1 will-change-transform"
         >
             {/* Spotlight Glow (Static) */}
             <div
@@ -165,32 +165,35 @@ export default function Skills() {
                 />
 
                 {/* Skill categories */}
-                <div className="space-y-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
                     {skillCategories.map((category, catIndex) => (
                         <ScrollReveal
                             key={category.title}
                             variant="fadeUp"
                             delay={catIndex * 0.08}
                             viewportMargin="-100px"
+                            className={catIndex === 0 ? "lg:col-span-2 h-full" : "col-span-1 h-full"}
                         >
-                            <div className="flex items-center gap-4 mb-8">
-                                <h3 className="text-2xl font-semibold font-display tracking-wide text-foreground">
+                            <div className="relative flex flex-col h-full p-6 sm:p-8 rounded-[2rem] bg-white/40 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/5 backdrop-blur-xl overflow-hidden group/bento hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
+                                {/* Top-border gradient line that fades in on hover */}
+                                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-indigo-500/50 dark:via-white/30 to-transparent opacity-0 group-hover/bento:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                                
+                                <h3 className="mb-6 text-xl font-bold font-display text-neutral-900 dark:text-white">
                                     {category.title}
                                 </h3>
-                                <div className="h-px flex-1 bg-gradient-to-r from-violet-500/20 via-indigo-500/20 to-transparent" />
-                            </div>
 
-                            <motion.div
-                                className="flex flex-wrap gap-4 [perspective:1000px]"
-                                variants={containerVariants}
-                                initial="hidden"
-                                whileInView="visible"
-                                viewport={{ once: true, margin: "-50px" }}
-                            >
-                                {category.skills.map((skill) => (
-                                    <SkillBadge key={skill.name} skill={skill} />
-                                ))}
-                            </motion.div>
+                                <motion.div
+                                    className="flex flex-wrap gap-4 [perspective:1000px]"
+                                    variants={containerVariants}
+                                    initial="hidden"
+                                    whileInView="visible"
+                                    viewport={{ once: true, margin: "-50px" }}
+                                >
+                                    {category.skills.map((skill) => (
+                                        <SkillBadge key={skill.name} skill={skill} />
+                                    ))}
+                                </motion.div>
+                            </div>
                         </ScrollReveal>
                     ))}
                 </div>

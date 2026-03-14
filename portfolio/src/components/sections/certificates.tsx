@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { FiAward, FiExternalLink, FiX } from "react-icons/fi";
+import { FiAward, FiExternalLink, FiX, FiCalendar } from "react-icons/fi";
 import { CERTIFICATES_DATA, type Certificate } from "@/lib/data";
 import SectionTitle from "@/components/animations/section-title";
 
@@ -39,10 +39,10 @@ export default function Certificates() {
         if (selectedCert) {
             document.body.style.overflow = "hidden";
         } else {
-            document.body.style.overflow = "unset";
+            document.body.style.overflow = "";
         }
         return () => {
-            document.body.style.overflow = "unset";
+            document.body.style.overflow = "";
         };
     }, [selectedCert]);
 
@@ -113,105 +113,111 @@ export default function Certificates() {
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.3 }}
                         onClick={() => setSelectedCert(null)}
-                        className="fixed inset-0 z-[100] bg-white/40 dark:bg-[#030303]/70 backdrop-blur-md cursor-pointer"
+                        className="fixed inset-0 z-[100] bg-black/30 dark:bg-black/60 backdrop-blur-xl cursor-pointer"
                     />
                 )}
                 
                 {selectedCert && (
-                    <div 
-                        key="modal-wrapper" 
+                    <motion.div 
+                        key="modal-wrapper"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
                         className="fixed inset-0 z-[101] overflow-y-auto w-full min-h-full pointer-events-none no-scrollbar"
                     >
                         <div className="flex min-h-screen items-center justify-center p-4 sm:p-6 md:p-12 pb-20">
                             <motion.div
                                 layoutId={`cert-card-${selectedCert.title}`}
-                                className="relative w-full max-w-3xl h-auto bg-white dark:bg-[#0a0a0a] rounded-[2rem] sm:rounded-[2.5rem] border border-neutral-200/60 dark:border-white/10 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)] dark:shadow-[0_40px_120px_-20px_rgba(139,92,246,0.15)] flex flex-col pointer-events-auto"
+                                className="relative w-full max-w-5xl bg-white/70 dark:bg-neutral-900/70 backdrop-blur-2xl rounded-[2rem] sm:rounded-[2.5rem] border border-white/20 dark:border-white/10 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.25)] dark:shadow-[0_40px_120px_-20px_rgba(139,92,246,0.2)] flex flex-col md:flex-row pointer-events-auto overflow-hidden"
                             >
-                                {/* Close Button - Floating over image */}
+                                {/* Close Button — Floating, accessible on all sizes */}
                                 <button
                                     onClick={() => setSelectedCert(null)}
-                                    className="absolute top-4 sm:top-6 right-4 sm:right-6 p-3 rounded-full bg-white/50 dark:bg-black/50 backdrop-blur-md hover:bg-white/80 dark:hover:bg-black/80 text-neutral-900 dark:text-white transition-all shadow-lg z-20 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 dark:focus:ring-offset-[#0a0a0a]"
+                                    className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2.5 rounded-full bg-white/60 dark:bg-black/40 backdrop-blur-md hover:bg-white/90 dark:hover:bg-black/70 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-all shadow-lg z-20 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
                                     aria-label="Close modal"
                                 >
-                                    <FiX size={20} />
+                                    <FiX size={18} />
                                 </button>
 
-                                {/* Image Header (Cinematic) */}
-                                <div className="relative w-full h-56 sm:h-72 md:h-80 bg-neutral-100/50 dark:bg-white/5 flex-shrink-0 flex items-center justify-center p-6 group/img overflow-hidden">
-                                    <Image
-                                        src={selectedCert.imageUrl || "/eCash.png"}
-                                        fill
-                                        className="object-contain p-6 sm:p-8 drop-shadow-2xl transition-transform duration-700 ease-out md:group-hover/img:scale-105"
-                                        alt={selectedCert.title}
-                                        sizes="(max-width: 1024px) 100vw, 800px"
-                                        priority
-                                    />
-                                    {/* Bottom fade gradient linking the image smoothly to the content */}
-                                    <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white dark:from-[#0a0a0a] to-transparent pointer-events-none" />
+                                {/* ─── Left Pane: Interactive Image ─────────────── */}
+                                <div className="relative w-full md:w-1/2 min-h-[240px] sm:min-h-[280px] md:min-h-[420px] bg-gradient-to-br from-violet-100/60 via-indigo-50/40 to-purple-100/60 dark:from-violet-950/40 dark:via-indigo-950/30 dark:to-purple-950/40 flex items-center justify-center p-6 sm:p-8 md:p-10 group/img overflow-hidden flex-shrink-0">
+                                    {/* Decorative glow behind image */}
+                                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                        <div className="w-3/4 h-3/4 rounded-full bg-violet-400/15 dark:bg-violet-500/10 blur-[60px]" />
+                                    </div>
+
+                                    <div className="relative w-full h-full min-h-[200px] sm:min-h-[240px] md:min-h-[360px]">
+                                        <Image
+                                            src={selectedCert.imageUrl || "/eCash.png"}
+                                            fill
+                                            className="object-contain drop-shadow-2xl transition-transform duration-700 ease-out group-hover/img:scale-105"
+                                            alt={selectedCert.title}
+                                            sizes="(max-width: 768px) 100vw, 50vw"
+                                            priority
+                                        />
+                                    </div>
                                 </div>
 
-                                {/* Text Details Section - Scroll-free fluid container */}
-                                <div className="relative w-full px-6 sm:px-10 pb-10 sm:pb-12 pt-2 -mt-10 sm:-mt-12 flex flex-col bg-transparent z-10">
-                                    <div className="flex flex-col items-center text-center">
-                                        <div className="flex flex-wrap justify-center items-center gap-3 mb-6">
-                                            <motion.span 
-                                                initial={{ opacity: 0, scale: 0.9 }}
-                                                animate={{ opacity: 1, scale: 1 }}
-                                                transition={{ delay: 0.1 }}
-                                                className="inline-flex px-4 py-1.5 text-xs sm:text-sm font-bold tracking-wide rounded-full bg-violet-100 dark:bg-violet-500/10 text-violet-700 dark:text-violet-300 border border-violet-200/60 dark:border-violet-500/20 shadow-sm"
-                                            >
-                                                {selectedCert.date}
-                                            </motion.span>
-                                            <motion.div 
-                                                initial={{ opacity: 0, x: -10 }}
-                                                animate={{ opacity: 1, x: 0 }}
-                                                transition={{ delay: 0.15 }}
-                                                className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs sm:text-sm font-bold tracking-wide rounded-full bg-neutral-100 dark:bg-white/5 text-neutral-600 dark:text-neutral-400 border border-neutral-200/60 dark:border-white/10"
-                                            >
-                                                <FiAward size={16} />
-                                                Issued by {selectedCert.issuer}
-                                            </motion.div>
-                                        </div>
+                                {/* ─── Right Pane: Typography & Content ─────────── */}
+                                <div className="relative w-full md:w-1/2 px-6 sm:px-8 md:px-10 py-8 sm:py-10 md:py-12 flex flex-col justify-center">
+                                    {/* Glowing Badges */}
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 8 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.1, duration: 0.4 }}
+                                        className="flex flex-wrap items-center gap-2.5 mb-6"
+                                    >
+                                        <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold tracking-wide rounded-full bg-violet-100/80 dark:bg-violet-500/15 text-violet-700 dark:text-violet-300 border border-violet-200/70 dark:border-violet-500/25 shadow-[0_0_12px_rgba(139,92,246,0.15)] dark:shadow-[0_0_12px_rgba(139,92,246,0.25)]">
+                                            <FiCalendar size={13} />
+                                            {selectedCert.date}
+                                        </span>
+                                        <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold tracking-wide rounded-full bg-indigo-100/80 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border border-indigo-200/70 dark:border-indigo-500/25 shadow-[0_0_12px_rgba(99,102,241,0.15)] dark:shadow-[0_0_12px_rgba(99,102,241,0.25)]">
+                                            <FiAward size={13} />
+                                            {selectedCert.issuer}
+                                        </span>
+                                    </motion.div>
 
-                                        <motion.h2 
-                                            layoutId={`cert-title-${selectedCert.title}`}
-                                            className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 dark:text-white font-display tracking-tight leading-tight mb-6 max-w-2xl"
-                                        >
-                                            {selectedCert.title}
-                                        </motion.h2>
+                                    {/* Title */}
+                                    <motion.h2 
+                                        layoutId={`cert-title-${selectedCert.title}`}
+                                        className="text-2xl sm:text-3xl md:text-[2rem] font-bold text-neutral-900 dark:text-white font-display tracking-tight leading-tight mb-5"
+                                    >
+                                        {selectedCert.title}
+                                    </motion.h2>
 
-                                        <motion.p 
-                                            initial={{ opacity: 0, y: 10 }}
+                                    {/* Description */}
+                                    <motion.p 
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.2, duration: 0.4 }}
+                                        className="text-sm sm:text-[0.95rem] text-neutral-600 dark:text-neutral-400 leading-relaxed mb-8"
+                                    >
+                                        {selectedCert.description}
+                                    </motion.p>
+
+                                    {/* Verify Button */}
+                                    {selectedCert.credentialUrl && selectedCert.credentialUrl !== "#" && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 15 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: 0.2 }}
-                                            className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed mb-8 sm:mb-10 max-w-xl mx-auto"
+                                            transition={{ delay: 0.3, duration: 0.4 }}
                                         >
-                                            {selectedCert.description}
-                                        </motion.p>
-
-                                        {selectedCert.credentialUrl && selectedCert.credentialUrl !== "#" && (
-                                            <motion.div
-                                                initial={{ opacity: 0, y: 15 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ delay: 0.3 }}
-                                                className="w-full sm:auto"
+                                            <a
+                                                href={selectedCert.credentialUrl}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className="group/btn inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-2xl bg-neutral-900 dark:bg-white/10 border border-transparent dark:border-white/15 text-white font-bold text-sm tracking-wide transition-all duration-300 shadow-[0_10px_25px_-8px_rgba(0,0,0,0.4)] dark:shadow-[0_10px_25px_-8px_rgba(255,255,255,0.08)] hover:bg-neutral-800 dark:hover:bg-white dark:hover:text-black hover:shadow-[0_15px_35px_-8px_rgba(139,92,246,0.35)] hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
                                             >
-                                                <a
-                                                    href={selectedCert.credentialUrl}
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                    className="group/btn inline-flex w-full sm:w-auto items-center justify-center gap-3 px-8 py-4 sm:px-12 rounded-2xl bg-neutral-900 border border-transparent dark:bg-transparent dark:border-white/20 text-white dark:text-white font-bold transition-all shadow-[0_15px_30px_-10px_rgba(0,0,0,0.5)] dark:shadow-[0_15px_30px_-10px_rgba(255,255,255,0.1)] hover:bg-neutral-800 dark:hover:bg-white dark:hover:text-black hover:shadow-[0_20px_40px_-10px_rgba(139,92,246,0.4)] hover:-translate-y-1 focus:outline-none"
-                                                >
-                                                    <span className="text-base tracking-wide">Verify Credential</span>
-                                                    <FiExternalLink size={20} className="transition-transform group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1" />
-                                                </a>
-                                            </motion.div>
-                                        )}
-                                    </div>
+                                                <span>Verify Credential</span>
+                                                <FiExternalLink size={16} className="transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+                                            </a>
+                                        </motion.div>
+                                    )}
                                 </div>
                             </motion.div>
                         </div>
-                    </div>
+                    </motion.div>
                 )}
             </AnimatePresence>
         </section>

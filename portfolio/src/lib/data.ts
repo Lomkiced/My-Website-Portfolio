@@ -48,6 +48,7 @@ export const PROJECT_DATA: Project[] = [
         liveUrl: "https://kip.dost1.ph",
         githubUrl: "https://github.com/Lomkiced",
         gradient: "from-purple-600 to-pink-600",
+        image: "/placeholder.jpg",
     },
     {
         title: "Institutional Library Management System | Polytechnic College of La Union",
@@ -57,6 +58,7 @@ export const PROJECT_DATA: Project[] = [
         liveUrl: "#",
         githubUrl: "https://github.com/Lomkiced",
         gradient: "from-blue-600 to-cyan-600",
+        image: "/placeholder.jpg",
     },
 ];
 

@@ -330,7 +330,7 @@ export default function About() {
 
                             <div className="relative z-10">
                                 <h4 className="font-bold text-foreground text-xl font-display tracking-tight leading-tight">BS in Information Technology</h4>
-                                <p className="text-sm font-medium text-foreground/60 mt-1">Don Mariano Marcos Memorial State University</p>
+                                <p className="text-sm font-medium text-foreground/60 mt-1">Polytechnic College of La Union</p>
                             </div>
 
                             {/* Decorative Grid */}

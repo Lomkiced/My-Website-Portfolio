@@ -16,6 +16,7 @@ export interface TimelineItem {
     period: string;
     description: string;
     type: "work" | "education" | "certification";
+    awards?: string[];
 }
 
 export interface Certificate {
@@ -66,8 +67,8 @@ export const PROJECT_DATA: Project[] = [
 
 export const EXPERIENCE_DATA: TimelineItem[] = [
     {
-        title: "Information Technology Intern",
-        organization: "DOST Region 1",
+        title: "Technical Intern",
+        organization: "Department of Science and Technology Ilocos Region",
         period: "2025 – 2026",
         description:
             "Developed the Record Management System and Disbursement Monitoring System using the PERN stack. Managed hardware troubleshooting and STARBOOKS installations across multiple devices.",
@@ -76,10 +77,18 @@ export const EXPERIENCE_DATA: TimelineItem[] = [
     {
         title: "BS Information Technology",
         organization: "Polytechnic College of La Union",
-        period: "2022 – 2026",
+        period: "Graduated March 28, 2026",
         description:
-            "Fourth-year student specializing in full-stack systems development, database management, and interactive applications.",
+            "Completed the degree with honors, demonstrating excellence in capstone projects, academic performance, and technical proficiency.",
         type: "education",
+        awards: [
+            "Best in Thesis",
+            "Best in Oral Defense",
+            "Best in Programming",
+            "Creative Media Award",
+            "Most Innovative Capstone Project Award",
+            "Excellence Awardee as Intern in Information Technology"
+        ]
     },
 ];
 
@@ -103,27 +112,51 @@ export const CERTIFICATES_DATA: Certificate[] = [
         imageUrl: "/dostc1.jpg"
     },
     {
-        title: "AWS Certified Solutions Architect - Associate",
-        issuer: "Amazon Web Services (AWS)",
-        date: "Jan 2025",
-        description: "Validated expertise in designing distributed systems on AWS, encompassing compute, networking, storage, and database services.",
+        title: "Best in Oral Defense",
+        issuer: "Polytechnic College of La Union",
+        date: "April 10, 2026",
+        description: "Awarded for the capstone project titled 'SUNERGY HUB: An Arduio-Based Smart Solar Charging Station for Polytechnic College of La Union'.",
         credentialUrl: "#",
-        imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop"
+        imageUrl: "/BOD.jpg"
     },
     {
-        title: "React Native Specialist",
-        issuer: "Meta (Coursera)",
-        date: "Nov 2024",
-        description: "Demonstrated proficiency in building cross-platform mobile applications using React Native, including navigation, state management, and API integration.",
+        title: "Creative Media Award",
+        issuer: "Polytechnic College of La Union",
+        date: "April 10, 2026",
+        description: "Awarded in recognition of outstanding creativity and dedication in the fields of multimedia design, video editing, and event organization, enhancing BSIT departmental activities.",
         credentialUrl: "#",
-        imageUrl: "https://images.unsplash.com/photo-1551650975-87deedd944c3?q=80&w=800&auto=format&fit=crop"
+        imageUrl: "/CMA.jpg"
     },
     {
-        title: "Full-Stack Web Development Boot-camp",
-        issuer: "Udemy",
-        date: "Aug 2024",
-        description: "Intensive training covering the MERN stack (MongoDB, Express, React, Node.js), encompassing frontend UI creation, backend RESTful APIs, and database management.",
+        title: "Most Innovative Capstone Project Award",
+        issuer: "Polytechnic College of La Union",
+        date: "April 10, 2026",
+        description: "Awarded for the capstone project titled 'SUNERGY HUB: An Arduio-Based Smart Solar Charging Station for Polytechnic College of La Union'.",
         credentialUrl: "#",
-        imageUrl: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800&auto=format&fit=crop"
+        imageUrl: "/BOC.jpg"
+    },
+    {
+        title: "Excellence Awardee as Intern in Information Technology",
+        issuer: "Polytechnic College of La Union",
+        date: "April 10, 2026",
+        description: "Awarded for exemplary performance of assigned tasks as an Intern in a government agency.",
+        credentialUrl: "#",
+        imageUrl: "/BII.jpg"
+    },
+    {
+        title: "Best in Programming",
+        issuer: "Polytechnic College of La Union",
+        date: "April 10, 2026",
+        description: "Awarded for exemplary programming skills, discipline, technical skills, and creative outputs proving worth as a promising programmer in the IT industry.",
+        credentialUrl: "#",
+        imageUrl: "/BIP.jpg"
+    },
+    {
+        title: "Best in Thesis",
+        issuer: "Polytechnic College of La Union",
+        date: "April 10, 2026",
+        description: "Awarded for the capstone project titled 'SUNERGY HUB: An Arduio-Based Smart Solar Charging Station for Polytechnic College of La Union'.",
+        credentialUrl: "#",
+        imageUrl: "/BIT.jpg"
     }
 ];

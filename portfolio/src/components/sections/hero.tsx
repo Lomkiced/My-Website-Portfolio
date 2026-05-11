@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
-import { FiArrowDown, FiMail } from "react-icons/fi";
+import { FiArrowDown, FiMail, FiGithub, FiLinkedin } from "react-icons/fi";
 import { Music, MousePointerClick } from "lucide-react";
 import { useThemeStore } from "@/lib/store";
 import { ParticleNetwork } from "@/components/animations/particle-network";
@@ -314,7 +314,7 @@ export default function Hero() {
                         {/* CTA Buttons */}
                         <motion.div
                             variants={itemVariants}
-                            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 mb-16"
+                            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
                         >
                             <MagneticButton
                                 onClick={() => handleNavClick("#projects")}
@@ -331,6 +331,30 @@ export default function Hero() {
                                 <FiMail className="w-4 h-4" />
                                 Contact Me
                             </MagneticButton>
+                        </motion.div>
+
+                        {/* Social Links */}
+                        <motion.div
+                            variants={itemVariants}
+                            className="flex items-center justify-center gap-4 sm:gap-6 pt-6 sm:pt-8 mb-16"
+                        >
+                            {[
+                                { icon: FiGithub, href: "https://github.com/Lomkiced", label: "GitHub" },
+                                { icon: FiLinkedin, href: "https://linkedin.com/in/lomki-ced-446652393", label: "LinkedIn" },
+                                { icon: FiMail, href: "mailto:xanthosis122@gmail.com", label: "Email" },
+                            ].map((social, index) => (
+                                <MagneticButton
+                                    key={index}
+                                    href={social.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label={social.label}
+                                    className="group relative flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 backdrop-blur-xl hover:bg-violet-500/10 hover:border-violet-500/30 transition-all duration-300 shadow-sm hover:shadow-[0_0_24px_rgba(139,92,246,0.2)] hover:-translate-y-1"
+                                >
+                                    <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-violet-500/0 via-violet-500/0 to-violet-500/0 group-hover:from-violet-500/20 group-hover:via-fuchsia-500/20 group-hover:to-violet-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                                    <social.icon className="w-5 h-5 sm:w-6 sm:h-6 text-foreground/70 group-hover:text-violet-600 dark:group-hover:text-violet-400 relative z-10 transition-colors duration-300" />
+                                </MagneticButton>
+                            ))}
                         </motion.div>
                     </motion.div>
                 </div>

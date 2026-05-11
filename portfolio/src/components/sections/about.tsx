@@ -221,7 +221,7 @@ export default function About() {
                                     src="/profile.jpg"
                                     alt="Mike Cedrick"
                                     fill
-                                    className="object-cover object-top transition-all duration-700 ease-[0.2,0.65,0.3,0.9] group-hover/photo:scale-[1.05] group-hover/photo:grayscale-0 grayscale-[20%] will-change-transform"
+                                    className="object-cover object-top transition-all duration-700 ease-[cubic-bezier(0.2,0.65,0.3,0.9)] group-hover/photo:scale-[1.05] group-hover/photo:grayscale-0 grayscale-[20%] will-change-transform"
                                     priority
                                     sizes="(max-width: 768px) 100vw, 33vw"
                                 />
@@ -292,7 +292,7 @@ export default function About() {
                                 <div className="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center shadow-inner border border-blue-500/20">
                                     <FiGlobe size={24} />
                                 </div>
-                                <a href="mailto:mikecedrickdanocup@gmail.com" className="text-sm font-semibold text-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-2 group-hover/social:translate-x-1 duration-300">
+                                <a href="mailto:xanthosis122@gmail.com" className="text-sm font-semibold text-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-2 group-hover/social:translate-x-1 duration-300">
                                     Drop a message <FiMail className="transition-transform group-hover/social:translate-x-1" />
                                 </a>
                             </div>
@@ -302,8 +302,8 @@ export default function About() {
 
                             <div className="flex gap-4 w-full">
                                 {[
-                                    { icon: FiGithub, href: "https://github.com/mcdanocup", label: "GitHub" },
-                                    { icon: FiLinkedin, href: "https://linkedin.com/in/mcdanocup", label: "LinkedIn" },
+                                    { icon: FiGithub, href: "https://github.com/Lomkiced", label: "GitHub" },
+                                    { icon: FiLinkedin, href: "https://linkedin.com/in/lomki-ced-446652393", label: "LinkedIn" },
                                 ].map((Social, idx) => (
                                     <a
                                         key={idx}

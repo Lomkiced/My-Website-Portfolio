@@ -8,7 +8,7 @@ const footerLinks = [
     {
         name: "LinkedIn",
         icon: FiLinkedin,
-        href: "https://linkedin.com/in/Ced%20Rick",
+        href: "https://linkedin.com/in/lomki-ced-446652393",
     },
     { name: "Email", icon: FiMail, href: "mailto:xanthosis122@gmail.com" },
 ];

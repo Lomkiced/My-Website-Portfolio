@@ -6,6 +6,7 @@ import Navbar from "@/components/sections/navbar";
 import Hero from "@/components/sections/hero";
 import About from "@/components/sections/about";
 import Skills from "@/components/sections/skills";
+import Approach from "@/components/sections/approach";
 import Projects from "@/components/sections/projects";
 import Certificates from "@/components/sections/certificates";
 import Experience from "@/components/sections/experience";
@@ -21,6 +22,7 @@ export default function Home() {
         <Hero />
         <About />
         <Skills />
+        <Approach />
         <Projects />
         <Certificates />
         <Experience />

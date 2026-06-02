@@ -17,18 +17,17 @@ const navLinks = [
     { name: "Home", href: "#home" },
     { name: "About", href: "#about" },
     { name: "Skills", href: "#skills" },
-    { name: "My Approach", href: "#approach" },
+    { name: "Approach", href: "#approach" },
     { name: "Projects", href: "#projects" },
     { name: "Experience", href: "#experience" },
     { name: "Contact", href: "#contact" },
 ];
 
 export default function Navbar() {
-    const [mobileOpen, setMobileOpen] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
     const [activeSection, setActiveSection] = useState("Home");
-    const [hoveredSection, setHoveredSection] = useState<string | null>(null);
 
     useEffect(() => {
         setMounted(true);
@@ -50,7 +49,7 @@ export default function Navbar() {
                     }
                 });
             },
-            { rootMargin: "-30% 0px -70% 0px" } // Trigger when element is slightly above center
+            { rootMargin: "-30% 0px -70% 0px" } 
         );
 
         navLinks.forEach((link) => {
@@ -62,248 +61,162 @@ export default function Navbar() {
     }, []);
 
     const handleNavClick = (href: string) => {
-        setMobileOpen(false);
+        setMenuOpen(false);
         const el = document.querySelector(href);
         if (el) el.scrollIntoView({ behavior: "smooth" });
     };
 
-
-
     return (
         <>
-            {/* Desktop Navigation */}
-            <div className="fixed top-0 left-0 right-0 z-50 flex justify-center hidden md:flex pointer-events-none px-4 pt-6">
-                <nav
-                    className="pointer-events-auto w-full max-w-6xl rounded-[2.5rem] bg-background/60 dark:bg-zinc-950/60 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] border border-white/20 dark:border-white/10 dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
-                >
-                    <div className="flex items-center justify-between px-6 h-[72px]">
-                        {/* Logo */}
-                        <motion.button
-                            onClick={(e) => {
-                                e.preventDefault();
-                                handleNavClick("#home");
-                            }}
-                            className="flex items-center gap-2 group flex-shrink-0"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                        >
-                            <div className="bg-foreground rounded-full flex items-center justify-center transition-transform group-hover:rotate-12 w-11 h-11 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)]">
-                                <Image
-                                    src="/DEALWITHIT.png"
-                                    alt="Logo"
-                                    width={32}
-                                    height={32}
-                                    className="w-8 h-8 object-contain drop-shadow-md"
-                                />
-                            </div>
-                            <span className="hidden xl:block text-lg font-bold font-display text-foreground whitespace-nowrap overflow-hidden">
-                                Mike<span className="text-gradient"> Cedrick</span>
-                            </span>
-                        </motion.button>
+            {/* Ultra-Minimalist Agency Navbar (Universal for Desktop & Mobile) */}
+            <div className="fixed top-0 left-0 right-0 z-50 flex justify-center pointer-events-none px-4 sm:px-6 pt-4 sm:pt-6">
+                <nav className="pointer-events-auto w-full max-w-7xl rounded-full bg-background/40 dark:bg-zinc-950/40 backdrop-blur-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/20 dark:border-white/10 flex items-center justify-between px-2 sm:px-4 h-[60px] sm:h-[72px]">
+                    
+                    {/* Left: Logo */}
+                    <MagneticButton
+                        onClick={(e: React.MouseEvent) => {
+                            e.preventDefault();
+                            handleNavClick("#home");
+                        }}
+                        className="flex items-center gap-3 group px-2 sm:px-4 h-full"
+                    >
+                        <div className="bg-foreground rounded-full flex items-center justify-center transition-transform group-hover:rotate-12 w-9 h-9 sm:w-11 sm:h-11 shadow-md">
+                            <Image
+                                src="/DEALWITHIT.png"
+                                alt="Logo"
+                                width={32}
+                                height={32}
+                                className="w-6 h-6 sm:w-8 sm:h-8 object-contain drop-shadow-md"
+                            />
+                        </div>
+                        <span className="text-base sm:text-lg font-bold font-display tracking-tight text-foreground whitespace-nowrap">
+                            Mike<span className="text-violet-500"> Cedrick</span>
+                        </span>
+                    </MagneticButton>
 
-                        {/* Navigation Links */}
-                        <div className="flex items-center gap-1 relative" onMouseLeave={() => setHoveredSection(null)}>
-                            {navLinks.map((link) => {
-                                const isActive = activeSection === link.name;
-                                const isHovered = hoveredSection === link.name;
-
-                                return (
-                                    <div
-                                        key={link.name}
-                                        className="relative"
-                                        onMouseEnter={() => setHoveredSection(link.name)}
+                    {/* Right: Actions & Menu Button */}
+                    <div className="flex items-center gap-1 sm:gap-2 pr-1 sm:pr-2">
+                        <AudioPlayer />
+                        
+                        {mounted && (
+                            <MagneticButton
+                                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                                className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-muted-foreground hover:text-foreground"
+                                aria-label="Toggle theme"
+                            >
+                                <AnimatePresence mode="wait">
+                                    <motion.div
+                                        key={theme}
+                                        initial={{ rotate: -90, opacity: 0, scale: 0.5 }}
+                                        animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                                        exit={{ rotate: 90, opacity: 0, scale: 0.5 }}
+                                        transition={{ duration: 0.2 }}
                                     >
-                                        <MagneticButton
-                                            onClick={(e: React.MouseEvent) => {
+                                        {theme === "dark" ? (
+                                            <FiSun className="w-4 h-4 sm:w-5 sm:h-5" />
+                                        ) : (
+                                            <FiMoon className="w-4 h-4 sm:w-5 sm:h-5" />
+                                        )}
+                                    </motion.div>
+                                </AnimatePresence>
+                            </MagneticButton>
+                        )}
+
+                        <div className="w-px h-6 bg-border mx-1 sm:mx-2" />
+
+                        <MagneticButton
+                            onClick={() => setMenuOpen(true)}
+                            className="group flex items-center gap-2 px-4 sm:px-6 h-10 sm:h-12 rounded-full bg-foreground text-background hover:opacity-90 transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] dark:shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+                        >
+                            <span className="hidden sm:block text-sm font-bold uppercase tracking-widest">Menu</span>
+                            <FiMenu className="w-4 h-4 sm:w-5 sm:h-5" />
+                        </MagneticButton>
+                    </div>
+                </nav>
+            </div>
+
+            {/* Premium Full-Screen Slide Menu Overlay */}
+            <AnimatePresence>
+                {menuOpen && (
+                    <motion.div
+                        initial={{ y: "-100%" }}
+                        animate={{ y: "0%" }}
+                        exit={{ y: "-100%" }}
+                        transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
+                        className="fixed inset-0 z-[100] bg-background dark:bg-zinc-950 flex flex-col"
+                    >
+                        {/* Overlay Header */}
+                        <div className="flex items-center justify-between px-6 sm:px-12 pt-6 sm:pt-10 flex-shrink-0">
+                            <span className="text-xl font-bold font-display tracking-tight text-foreground">
+                                Navigation<span className="text-violet-500">.</span>
+                            </span>
+                            <MagneticButton
+                                onClick={() => setMenuOpen(false)}
+                                className="w-12 h-12 flex items-center justify-center rounded-full bg-accent hover:bg-accent/80 transition-all hover:scale-105"
+                            >
+                                <FiX className="w-6 h-6 text-foreground" />
+                            </MagneticButton>
+                        </div>
+
+                        {/* Centered Typography Links */}
+                        <div className="flex-1 flex flex-col justify-center items-center gap-4 sm:gap-6 w-full max-w-4xl mx-auto px-6">
+                            {navLinks.map((link, i) => {
+                                const isActive = activeSection === link.name;
+                                return (
+                                    <div key={link.name} className="overflow-hidden w-full text-center">
+                                        <motion.a
+                                            href={link.href}
+                                            onClick={(e) => {
                                                 e.preventDefault();
                                                 handleNavClick(link.href);
                                             }}
-                                            className={`relative z-10 px-4 py-2 text-sm font-semibold transition-colors duration-300 ${isActive || isHovered
-                                                ? "text-foreground"
-                                                : "text-muted-foreground hover:text-foreground"
-                                                }`}
+                                            initial={{ y: "100%", opacity: 0 }}
+                                            animate={{ y: "0%", opacity: 1 }}
+                                            exit={{ y: "100%", opacity: 0 }}
+                                            transition={{ 
+                                                duration: 0.6, 
+                                                delay: 0.2 + i * 0.05, 
+                                                ease: [0.76, 0, 0.24, 1] 
+                                            }}
+                                            className="group relative inline-block"
                                         >
-                                            {link.name}
-                                        </MagneticButton>
-
-                                        {/* Hover Indicator */}
-                                        {isHovered && (
-                                            <motion.div
-                                                layoutId="nav-hover"
-                                                className="absolute inset-0 bg-accent/40 rounded-full -z-10"
-                                                transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                                            />
-                                        )}
-
-                                        {/* Active Indicator (Dot) */}
-                                        {isActive && (
-                                            <motion.div
-                                                layoutId="nav-active"
-                                                className="absolute -bottom-2 left-1/2 w-1 h-1 bg-violet-500 rounded-full"
-                                                transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                                                style={{ x: "-50%" }}
-                                            />
-                                        )}
+                                            <span className={`text-4xl sm:text-5xl lg:text-7xl font-black tracking-tight transition-colors duration-300 ${
+                                                isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                                            }`}>
+                                                {link.name}
+                                            </span>
+                                            {isActive && (
+                                                <motion.div
+                                                    layoutId="menu-active"
+                                                    className="absolute -bottom-2 left-0 right-0 h-1 bg-violet-500"
+                                                />
+                                            )}
+                                        </motion.a>
                                     </div>
                                 );
                             })}
                         </div>
 
-                        {/* Actions */}
-                        <div className="flex items-center gap-3 flex-shrink-0">
-                            {mounted && (
-                                <motion.button
-                                    onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                                    className="relative flex items-center justify-center w-10 h-10 rounded-full bg-accent/30 hover:bg-accent/60 transition-colors text-muted-foreground hover:text-foreground border border-border/20"
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    aria-label="Toggle theme"
-                                >
-                                    <AnimatePresence mode="wait">
-                                        <motion.div
-                                            key={theme}
-                                            initial={{ rotate: -90, opacity: 0, scale: 0.5 }}
-                                            animate={{ rotate: 0, opacity: 1, scale: 1 }}
-                                            exit={{ rotate: 90, opacity: 0, scale: 0.5 }}
-                                            transition={{ duration: 0.2 }}
-                                        >
-                                            {theme === "dark" ? (
-                                                <FiSun className="w-4 h-4" />
-                                            ) : (
-                                                <FiMoon className="w-4 h-4" />
-                                            )}
-                                        </motion.div>
-                                    </AnimatePresence>
-                                </motion.button>
-                            )}
-
-                            <div className="hidden lg:block h-6 w-px bg-border/50 mx-1" />
-
-                            <AudioPlayer />
-
-                            <MagneticButton
-                                onClick={() => { }}
-                                className="hidden lg:flex items-center gap-2 px-5 py-2.5 rounded-full bg-foreground text-background text-sm font-semibold hover:opacity-90 transition-opacity shadow-[0_0_20px_rgba(255,255,255,0.1)] dark:shadow-[0_0_20px_rgba(0,0,0,0.5)]"
-                            >
-                                <FiDownload className="w-4 h-4" />
-                                <span>Resume</span>
-                            </MagneticButton>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-
-            {/* Mobile Header */}
-            <nav
-                className="fixed top-0 left-0 right-0 z-[60] flex md:hidden items-center justify-between px-6 h-20 bg-background/70 dark:bg-zinc-950/70 backdrop-blur-xl border-b border-white/10 shadow-sm"
-            >
-                <div className="flex items-center gap-3">
-                    <div className="bg-foreground rounded-full flex items-center justify-center w-10 h-10 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)]">
-                        <Image
-                            src="/DEALWITHIT.png"
-                            alt="Logo"
-                            width={28}
-                            height={28}
-                            className="w-7 h-7 object-contain"
-                        />
-                    </div>
-                    <span className="text-lg font-bold font-display tracking-tight text-foreground whitespace-nowrap">
-                        Mike<span className="text-gradient"> Cedrick</span>
-                    </span>
-                </div>
-
-                <div className="flex items-center gap-4">
-                    <AudioPlayer />
-                    <button
-                        onClick={() => setMobileOpen(true)}
-                        className="w-10 h-10 flex items-center justify-center rounded-full bg-accent hover:bg-accent/80 transition-colors"
-                        aria-label="Open menu"
-                    >
-                        <FiMenu className="w-5 h-5 text-foreground" />
-                    </button>
-                </div>
-            </nav>
-
-            {/* Premium Mobile Menu Overlay */}
-            <AnimatePresence>
-                {mobileOpen && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.4, ease: "easeOut" }}
-                        className="fixed inset-0 z-[70] bg-background/95 backdrop-blur-3xl md:hidden overflow-hidden flex flex-col"
-                    >
-                        {/* Overlay Header */}
-                        <div className="flex items-center justify-between px-6 h-20 flex-shrink-0">
-                            <span className="text-lg font-bold font-display tracking-tight text-foreground">
-                                Navigation<span className="text-violet-500">.</span>
-                            </span>
-                            <div className="flex items-center gap-4">
-                                {mounted && (
-                                    <button
-                                        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                                        className="w-10 h-10 flex items-center justify-center rounded-full bg-accent hover:bg-accent/80 transition-colors text-foreground"
-                                    >
-                                        {theme === "dark" ? <FiSun className="w-5 h-5" /> : <FiMoon className="w-5 h-5" />}
-                                    </button>
-                                )}
-                                <button
-                                    onClick={() => setMobileOpen(false)}
-                                    className="w-10 h-10 flex items-center justify-center rounded-full bg-foreground hover:bg-foreground/90 transition-colors"
-                                >
-                                    <FiX className="w-5 h-5 text-background" />
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Huge Typography Links */}
-                        <div className="flex-1 px-6 py-8 flex flex-col justify-center gap-4">
-                            {navLinks.map((link, i) => {
-                                const isActive = activeSection === link.name;
-                                return (
-                                    <motion.a
-                                        key={link.name}
-                                        href={link.href}
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            handleNavClick(link.href);
-                                        }}
-                                        initial={{ opacity: 0, y: 15, rotateX: 10 }}
-                                        animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                                        exit={{ opacity: 0, y: -10, transition: { duration: 0.2 } }}
-                                        transition={{ duration: 0.6, delay: 0.1 + i * 0.08, ease: "easeOut" }}
-                                        className="relative py-2 origin-left flex items-center group"
-                                    >
-                                        <span className={`text-5xl font-extrabold tracking-tighter uppercase transition-colors duration-300 ${isActive ? "text-foreground" : "text-muted-foreground group-hover:text-foreground"}`}>
-                                            {link.name}
-                                        </span>
-                                        {isActive && (
-                                            <motion.span
-                                                layoutId="mobile-active"
-                                                className="ml-4 w-12 h-1 bg-violet-500 rounded-full inline-block"
-                                            />
-                                        )}
-                                    </motion.a>
-                                );
-                            })}
-                        </div>
-
-                        {/* Resume Footer */}
+                        {/* Resume & Socials Footer */}
                         <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            transition={{ duration: 0.6, delay: 0.6 }}
-                            className="p-6 border-t border-border/50 pb-12"
+                            transition={{ duration: 0.6, delay: 0.4 }}
+                            className="px-6 sm:px-12 pb-10 flex flex-col sm:flex-row items-center justify-between gap-6"
                         >
-                            <a
-                                href="#"
-                                className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-lg font-bold hover:shadow-lg hover:shadow-violet-500/25 transition-shadow"
+                            <div className="flex gap-6">
+                                <a href="https://github.com/Lomkiced" target="_blank" className="text-sm font-semibold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">GitHub</a>
+                                <a href="https://linkedin.com/in/lomki-ced-446652393" target="_blank" className="text-sm font-semibold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">LinkedIn</a>
+                            </div>
+                            
+                            <MagneticButton
+                                onClick={() => {}}
+                                className="group flex items-center gap-2 px-8 py-4 rounded-full bg-foreground text-background font-bold hover:opacity-90 transition-all"
                             >
-                                <FiDownload className="w-5 h-5" />
+                                <FiDownload className="w-5 h-5 group-hover:-translate-y-1 transition-transform" />
                                 Download Resume
-                            </a>
+                            </MagneticButton>
                         </motion.div>
                     </motion.div>
                 )}

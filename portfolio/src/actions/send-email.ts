@@ -28,7 +28,7 @@ export async function sendEmail(formData: FormData): Promise<SendEmailResult> {
 
     // ── Send via Resend ─────────────────────────────────────────────────────────
     try {
-        await resend.emails.send({
+        const { data, error } = await resend.emails.send({
             from: "Portfolio Contact <onboarding@resend.dev>",
             to: "xanthosis122@gmail.com",
             subject: `Portfolio Message from ${senderEmail}`,
@@ -36,12 +36,18 @@ export async function sendEmail(formData: FormData): Promise<SendEmailResult> {
             text: `From: ${senderEmail}\n\n${message}`,
         });
 
-        return { success: true, message: "Message sent successfully!" };
-    } catch (error) {
-        console.error("Resend error:", error);
+        // CRITICAL FIX: Resend SDK returns an error object on failure instead of throwing
+        if (error) {
+            console.error("Resend API error:", error);
+            return { success: false, message: error.message };
+        }
+
+        return { success: true, message: "Message sent successfully! I will get back to you soon." };
+    } catch (error: any) {
+        console.error("Resend execution error:", error);
         return {
             success: false,
-            message: "Failed to send message. Please try again later.",
+            message: "Failed to connect to the email server. Please try again later.",
         };
     }
 }

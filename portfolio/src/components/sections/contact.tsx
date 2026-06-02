@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
 import { FiAlertCircle, FiCheck, FiGithub, FiLinkedin, FiMail, FiSend } from "react-icons/fi";
 
@@ -103,25 +103,44 @@ export default function Contact() {
                         whileInView="visible"
                         viewport={{ once: true }}
                     >
-                        {/* Toast notification */}
-                        {toast && (
-                            <motion.div
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -10 }}
-                                className={`mb-6 flex items-center gap-3 p-4 rounded-xl border text-sm font-medium ${toast.type === "success"
-                                    ? "bg-green-500/10 border-green-500/20 text-green-600 dark:text-green-400"
-                                    : "bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400"
+                        {/* Professional Floating Toast Notification */}
+                        <AnimatePresence>
+                            {toast && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: 20, scale: 0.9 }}
+                                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                                    className={`fixed bottom-6 right-6 sm:bottom-10 sm:right-10 z-[100] flex items-center gap-4 px-6 py-4 rounded-2xl border shadow-2xl backdrop-blur-2xl ${
+                                        toast.type === "success"
+                                            ? "bg-green-500/10 border-green-500/20 text-green-600 dark:text-green-400"
+                                            : "bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400"
                                     }`}
-                            >
-                                {toast.type === "success" ? (
-                                    <FiCheck className="w-4 h-4 shrink-0" />
-                                ) : (
-                                    <FiAlertCircle className="w-4 h-4 shrink-0" />
-                                )}
-                                {toast.message}
-                            </motion.div>
-                        )}
+                                >
+                                    <div
+                                        className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
+                                            toast.type === "success"
+                                                ? "bg-green-500/20"
+                                                : "bg-red-500/20"
+                                        }`}
+                                    >
+                                        {toast.type === "success" ? (
+                                            <FiCheck className="w-5 h-5" />
+                                        ) : (
+                                            <FiAlertCircle className="w-5 h-5" />
+                                        )}
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-sm font-bold tracking-wide uppercase">
+                                            {toast.type === "success" ? "Success" : "Error"}
+                                        </span>
+                                        <span className="text-sm opacity-90 max-w-[250px] leading-snug">
+                                            {toast.message}
+                                        </span>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
 
                         <motion.form
                             ref={formRef}

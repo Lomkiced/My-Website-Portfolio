@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
-import { FiArrowDown, FiMail, FiGithub, FiLinkedin } from "react-icons/fi";
+import { useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FiArrowDown } from "react-icons/fi";
 import { Music, MousePointerClick } from "lucide-react";
 import { useThemeStore } from "@/lib/store";
 import { ParticleNetwork } from "@/components/animations/particle-network";

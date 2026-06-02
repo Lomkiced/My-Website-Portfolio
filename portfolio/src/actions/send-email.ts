@@ -28,7 +28,7 @@ export async function sendEmail(formData: FormData): Promise<SendEmailResult> {
 
     // ── Send via Resend ─────────────────────────────────────────────────────────
     try {
-        const { data, error } = await resend.emails.send({
+        const { error } = await resend.emails.send({
             from: "Portfolio Contact <onboarding@resend.dev>",
             to: "xanthosis122@gmail.com",
             subject: `Portfolio Message from ${senderEmail}`,
@@ -43,7 +43,7 @@ export async function sendEmail(formData: FormData): Promise<SendEmailResult> {
         }
 
         return { success: true, message: "Message sent successfully! I will get back to you soon." };
-    } catch (error: any) {
+    } catch (error) {
         console.error("Resend execution error:", error);
         return {
             success: false,

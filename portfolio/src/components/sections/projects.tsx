@@ -25,7 +25,7 @@ const PROJECTS = [
         color: "text-blue-400",
         bgGradient: "from-blue-500/20 via-blue-500/5 to-transparent",
         glow: "hover:shadow-[0_0_40px_-10px_rgba(59,130,246,0.3)]",
-        techStack: ["Next.js", "Supabase", "Tailwind CSS"],
+        techStack: ["PERN Stack", "Docker", "Cloudflare"],
         link: "#",
     },
     {
@@ -36,7 +36,7 @@ const PROJECTS = [
         color: "text-fuchsia-400",
         bgGradient: "from-fuchsia-500/20 via-fuchsia-500/5 to-transparent",
         glow: "hover:shadow-[0_0_40px_-10px_rgba(217,70,239,0.3)]",
-        techStack: ["Next.js", "Supabase", "Tailwind CSS"],
+        techStack: ["PERN Stack", "Docker", "Cloudflare"],
         link: "#",
     },
     {

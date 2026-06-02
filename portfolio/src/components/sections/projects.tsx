@@ -2,14 +2,14 @@
 
 import { motion, Variants } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
-import { 
-    Briefcase, 
-    HeartHandshake, 
-    Sprout, 
-    BookOpen, 
-    Wrench, 
-    Award, 
-    QrCode, 
+import {
+    Briefcase,
+    HeartHandshake,
+    Sprout,
+    BookOpen,
+    Wrench,
+    Award,
+    QrCode,
     Stethoscope,
     Wallet,
     Archive
@@ -26,7 +26,7 @@ const PROJECTS = [
         bgGradient: "from-blue-500/20 via-blue-500/5 to-transparent",
         glow: "hover:shadow-[0_0_40px_-10px_rgba(59,130,246,0.3)]",
         techStack: ["PERN Stack", "Docker", "Cloudflare"],
-        link: "#",
+        link: "https://ecash.dost1.ph/login",
     },
     {
         id: "ojt-2",
@@ -37,7 +37,7 @@ const PROJECTS = [
         bgGradient: "from-fuchsia-500/20 via-fuchsia-500/5 to-transparent",
         glow: "hover:shadow-[0_0_40px_-10px_rgba(217,70,239,0.3)]",
         techStack: ["PERN Stack", "Docker", "Cloudflare"],
-        link: "#",
+        link: "https://kip.dost1.ph/",
     },
     {
         id: "1",
@@ -48,7 +48,7 @@ const PROJECTS = [
         bgGradient: "from-indigo-500/20 via-indigo-500/5 to-transparent",
         glow: "hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.3)]",
         techStack: ["Next.js", "Supabase", "Tailwind CSS"],
-        link: "#",
+        link: "https://alumni-information-career-tracking.vercel.app/login",
     },
     {
         id: "2",
@@ -70,7 +70,7 @@ const PROJECTS = [
         bgGradient: "from-emerald-500/20 via-emerald-500/5 to-transparent",
         glow: "hover:shadow-[0_0_40px_-10px_rgba(16,185,129,0.3)]",
         techStack: ["Next.js", "Supabase", "Tailwind CSS"],
-        link: "#",
+        link: "https://farm-flow-agoo.vercel.app/",
     },
     {
         id: "4",
@@ -81,7 +81,7 @@ const PROJECTS = [
         bgGradient: "from-violet-500/20 via-violet-500/5 to-transparent",
         glow: "hover:shadow-[0_0_40px_-10px_rgba(139,92,246,0.3)]",
         techStack: ["Next.js", "Supabase", "Tailwind CSS"],
-        link: "#",
+        link: "https://edu-share-delta.vercel.app/login",
     },
     {
         id: "5",
@@ -103,7 +103,7 @@ const PROJECTS = [
         bgGradient: "from-yellow-500/20 via-yellow-500/5 to-transparent",
         glow: "hover:shadow-[0_0_40px_-10px_rgba(250,204,21,0.3)]",
         techStack: ["Next.js", "Supabase", "Tailwind CSS"],
-        link: "#",
+        link: "https://accreditation-record-management-sys.vercel.app/",
     },
     {
         id: "7",
@@ -196,7 +196,7 @@ export default function Projects() {
                             >
                                 {/* Minimalist Abstract Background Gradient */}
                                 <div className={`absolute inset-0 z-0 bg-gradient-to-br ${project.bgGradient} opacity-60 group-hover:opacity-100 transition-opacity duration-700`} />
-                                
+
                                 {/* Subtle radial noise/mesh effect */}
                                 <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.03)_0%,transparent_100%)] pointer-events-none" />
 
@@ -229,7 +229,7 @@ export default function Projects() {
                                             <p className="text-sm md:text-base text-white/70 line-clamp-2 md:line-clamp-3">
                                                 {project.description}
                                             </p>
-                                            
+
                                             <div className="flex flex-wrap gap-2">
                                                 {project.techStack.map((tech) => (
                                                     <span

@@ -96,6 +96,14 @@ export const EXPERIENCE_DATA: TimelineItem[] = [
 
 export const CERTIFICATES_DATA: Certificate[] = [
     {
+        title: "Technical Intern Certification",
+        issuer: "micro1",
+        date: "March 20, 2026",
+        description: "Successfully passed micro1's AI Interview and officially certified as a Technical Intern.",
+        credentialUrl: "https://micro1.ai/apply-as-talent",
+        imageUrl: "/micro1.jpg"
+    },
+    {
         title: "Top 1 Dean's Lister - BS Information Technology",
         issuer: "Polytechnic College of La Union",
         date: "1st Sem, AY 2024-2025",

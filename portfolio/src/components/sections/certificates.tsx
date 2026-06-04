@@ -251,19 +251,54 @@ export default function Certificates() {
                                 {/* Verify Button */}
                                 {selectedCert.credentialUrl &&
                                     selectedCert.credentialUrl !== "#" && (
-                                        <motion.div variants={fadeUp}>
-                                            <a
-                                                href={selectedCert.credentialUrl}
-                                                target="_blank"
-                                                rel="noreferrer"
-                                                className="group/btn inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-2xl bg-violet-600 dark:bg-white border border-transparent text-white dark:text-neutral-900 font-bold text-sm tracking-wide transition-all duration-300 shadow-[0_10px_20px_-10px_rgba(124,58,237,0.5)] dark:shadow-[0_10px_20px_-10px_rgba(255,255,255,0.2)] hover:-translate-y-0.5 hover:shadow-[0_15px_30px_-5px_rgba(124,58,237,0.6)] dark:hover:shadow-[0_15px_30px_-5px_rgba(255,255,255,0.4)] focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 dark:focus:ring-offset-[#0a0a0a]"
-                                            >
-                                                <span>Verify Credential</span>
-                                                <FiExternalLink
-                                                    size={16}
-                                                    className="transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
-                                                />
-                                            </a>
+                                        <motion.div variants={fadeUp} className="mt-4">
+                                            {selectedCert.issuer.toLowerCase() === "micro1" ? (
+                                                <a
+                                                    href={selectedCert.credentialUrl}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className="group/btn relative inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-black dark:bg-[#0A0A0A] border border-white/10 dark:border-white/5 overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:border-[#6366f1]/40 shadow-[0_0_20px_rgba(0,0,0,0.2)] dark:shadow-[0_0_30px_rgba(0,0,0,0.5)] hover:shadow-[0_10px_40px_-10px_rgba(99,102,241,0.4)]"
+                                                >
+                                                    {/* Animated background glow */}
+                                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#6366f1]/10 to-transparent translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
+                                                    
+                                                    {/* Glowing ring on hover */}
+                                                    <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/0 group-hover/btn:ring-[#6366f1]/50 transition-all duration-500" />
+
+                                                    {/* Micro1 Branding Simulation */}
+                                                    <div className="relative z-10 flex items-center">
+                                                        <span className="font-extrabold text-white text-base tracking-tight">micro</span>
+                                                        <span className="font-extrabold text-[#6366f1] text-base tracking-tight">1</span>
+                                                    </div>
+                                                    
+                                                    <div className="relative z-10 w-[1px] h-4 bg-white/20 mx-1" />
+                                                    
+                                                    <span className="relative z-10 font-bold text-white/90 text-sm tracking-wide">
+                                                        Verify Credential
+                                                    </span>
+                                                    
+                                                    <FiExternalLink
+                                                        size={16}
+                                                        className="relative z-10 text-[#6366f1] transition-transform duration-300 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1"
+                                                    />
+                                                </a>
+                                            ) : (
+                                                <a
+                                                    href={selectedCert.credentialUrl}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className="group/btn relative inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-neutral-900 dark:bg-white/10 border border-transparent dark:border-white/10 overflow-hidden transition-all duration-300 hover:scale-[1.02] shadow-[0_10px_20px_-10px_rgba(0,0,0,0.3)] dark:shadow-[0_10px_20px_-10px_rgba(255,255,255,0.05)] hover:shadow-[0_15px_30px_-5px_rgba(0,0,0,0.4)] dark:hover:shadow-[0_15px_30px_-5px_rgba(255,255,255,0.15)] dark:hover:bg-white/15"
+                                                >
+                                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 dark:via-white/5 to-transparent translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700 ease-in-out" />
+                                                    <span className="relative z-10 text-white font-bold text-sm tracking-wide">
+                                                        Verify Credential
+                                                    </span>
+                                                    <FiExternalLink
+                                                        size={16}
+                                                        className="relative z-10 text-white/80 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 group-hover/btn:text-white"
+                                                    />
+                                                </a>
+                                            )}
                                         </motion.div>
                                     )}
                             </motion.div>

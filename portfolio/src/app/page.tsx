@@ -1,4 +1,4 @@
-"use client";
+// React Server Component
 
 import LoadingScreen from "@/components/loading-screen";
 import ScrollToTop from "@/components/scroll-to-top";

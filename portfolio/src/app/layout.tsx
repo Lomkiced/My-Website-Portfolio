@@ -15,7 +15,10 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Mike Cedrick Dañocup | Full Stack Developer",
+  title: {
+    default: "Mike Cedrick Dañocup | Full Stack Developer",
+    template: "%s | Mike Cedrick Dañocup",
+  },
   description:
     "Full Stack Developer specializing in Next.js, NestJS, Prisma, React Native. Building high-performance, type-safe web and mobile applications.",
   keywords: [
@@ -28,11 +31,40 @@ export const metadata: Metadata = {
     "Software Engineer",
   ],
   authors: [{ name: "Mike Cedrick Dañocup" }],
+  creator: "Mike Cedrick Dañocup",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://mikecedrick.com"),
   openGraph: {
     title: "Mike Cedrick Dañocup | Full Stack Developer",
     description:
       "Full Stack Developer specializing in building high-performance web and mobile applications.",
     type: "website",
+    url: "/",
+    siteName: "Mike Cedrick Dañocup",
+    images: [
+      {
+        url: "/profile.jpg",
+        width: 800,
+        height: 1000,
+        alt: "Mike Cedrick Dañocup",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Mike Cedrick Dañocup | Full Stack Developer",
+    description: "Full Stack Developer specializing in building high-performance web and mobile applications.",
+    images: ["/profile.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 

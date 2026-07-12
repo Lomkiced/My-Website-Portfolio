@@ -68,24 +68,25 @@ export default function PrintManifesto() {
 
                 {/* Experience & Education */}
                 <section style={{ pageBreakBefore: 'always' }}>
-                    <h2 className="text-2xl font-bold uppercase tracking-widest mb-6 font-sans border-b border-neutral-300 pb-2 text-black mt-10">Experience & Education</h2>
-                    <div className="space-y-8">
+                    <h2 className="text-2xl font-bold uppercase tracking-widest mb-8 font-sans border-b border-neutral-300 pb-2 text-black mt-10">Experience & Education</h2>
+                    <div className="space-y-10">
                         {EXPERIENCE_DATA.map((item, idx) => (
-                            <div key={idx} className="break-inside-avoid">
-                                <h3 className="text-xl font-bold font-sans text-black">{item.title}</h3>
-                                <div className="flex items-center gap-2 text-sm text-neutral-600 mt-1 font-sans">
-                                    <span className="font-semibold uppercase tracking-wider">{item.organization}</span>
-                                    <span>•</span>
-                                    <span>{item.period}</span>
+                            <div key={idx} className="break-inside-avoid flex flex-col md:flex-row gap-4 md:gap-8">
+                                <div className="md:w-1/3 flex-shrink-0">
+                                    <div className="font-sans font-bold text-black uppercase tracking-wider text-sm">{item.period}</div>
+                                    <div className="font-sans text-neutral-600 font-semibold mt-1">{item.organization}</div>
                                 </div>
-                                <p className="mt-3 text-neutral-800">{item.description}</p>
-                                {item.awards && (
-                                    <ul className="list-disc pl-6 mt-3 text-neutral-700 text-[0.95rem] font-sans space-y-1">
-                                        {item.awards.map((award, i) => (
-                                            <li key={i}>{award}</li>
-                                        ))}
-                                    </ul>
-                                )}
+                                <div className="md:w-2/3">
+                                    <h3 className="text-xl font-bold font-sans text-black">{item.title}</h3>
+                                    <p className="mt-2 text-neutral-800 text-base">{item.description}</p>
+                                    {item.awards && (
+                                        <ul className="list-disc pl-5 mt-3 text-neutral-700 text-sm font-sans space-y-1">
+                                            {item.awards.map((award, i) => (
+                                                <li key={i}>{award}</li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -93,17 +94,22 @@ export default function PrintManifesto() {
 
                 {/* Featured Work */}
                 <section style={{ pageBreakBefore: 'always' }}>
-                    <h2 className="text-2xl font-bold uppercase tracking-widest mb-6 font-sans border-b border-neutral-300 pb-2 text-black mt-10">Featured Work</h2>
+                    <h2 className="text-2xl font-bold uppercase tracking-widest mb-8 font-sans border-b border-neutral-300 pb-2 text-black mt-10">Featured Work</h2>
                     <div className="space-y-10">
                         {PROJECT_DATA.map((project, idx) => (
-                            <div key={idx} className="break-inside-avoid">
-                                <h3 className="text-xl font-bold font-sans text-black">{project.title}</h3>
-                                <div className="mt-1 text-[0.9rem] font-sans text-neutral-600 font-bold mb-3 uppercase tracking-wider">
-                                    Stack: {project.techStack.join(" • ")}
+                            <div key={idx} className="break-inside-avoid flex flex-col md:flex-row gap-4 md:gap-8">
+                                <div className="md:w-1/3 flex-shrink-0">
+                                    <h3 className="text-xl font-bold font-sans text-black leading-tight">{project.title}</h3>
+                                    <div className="mt-3 text-xs font-sans text-neutral-600 font-bold uppercase tracking-widest leading-relaxed">
+                                        {project.techStack.join(" • ")}
+                                    </div>
                                 </div>
-                                <p className="text-neutral-800 whitespace-pre-line">{project.description}</p>
-                                <div className="mt-3 text-[0.9rem] font-sans text-neutral-500 font-medium">
-                                    <span>Live URL: {project.liveUrl}</span> <span className="mx-2">|</span> <span>Repository: {project.githubUrl}</span>
+                                <div className="md:w-2/3">
+                                    <p className="text-neutral-800 text-base whitespace-pre-line">{project.description}</p>
+                                    <div className="mt-4 text-xs font-sans text-neutral-600 font-medium space-y-1">
+                                        <div><span className="font-bold text-neutral-900">LIVE URL:</span> {project.liveUrl}</div>
+                                        <div><span className="font-bold text-neutral-900">REPOSITORY:</span> {project.githubUrl}</div>
+                                    </div>
                                 </div>
                             </div>
                         ))}
@@ -112,17 +118,22 @@ export default function PrintManifesto() {
 
                 {/* Certifications */}
                 <section style={{ pageBreakBefore: 'always' }}>
-                    <h2 className="text-2xl font-bold uppercase tracking-widest mb-6 font-sans border-b border-neutral-300 pb-2 text-black mt-10">Certifications</h2>
-                    <div className="space-y-8">
+                    <h2 className="text-2xl font-bold uppercase tracking-widest mb-8 font-sans border-b border-neutral-300 pb-2 text-black mt-10">Certifications</h2>
+                    <div className="grid grid-cols-2 gap-8">
                         {CERTIFICATES_DATA.map((cert) => (
-                            <div key={cert.title} className="break-inside-avoid">
-                                <h3 className="text-xl font-bold font-sans text-black">{cert.title}</h3>
-                                <div className="flex items-center gap-2 text-sm text-neutral-600 mt-1 font-sans">
-                                    <span className="font-semibold uppercase tracking-wider">{cert.issuer}</span>
-                                    <span>•</span>
+                            <div key={cert.title} className="break-inside-avoid border border-neutral-200 p-6 rounded-xl bg-neutral-50">
+                                {cert.imageUrl && (
+                                    <div className="mb-4 rounded-lg border border-neutral-200 overflow-hidden bg-white">
+                                        {/* Using standard img ensures aggressive browsers will print the image accurately */}
+                                        <img src={cert.imageUrl} alt={cert.title} className="w-full h-auto object-contain max-h-48" />
+                                    </div>
+                                )}
+                                <h3 className="text-lg font-bold font-sans text-black leading-tight">{cert.title}</h3>
+                                <div className="flex flex-col gap-1 text-xs text-neutral-600 mt-2 font-sans">
+                                    <span className="font-bold uppercase tracking-wider text-black">{cert.issuer}</span>
                                     <span>{cert.date}</span>
                                 </div>
-                                <p className="mt-3 text-neutral-800">{cert.description}</p>
+                                <p className="mt-3 text-neutral-800 text-sm leading-relaxed">{cert.description}</p>
                             </div>
                         ))}
                     </div>

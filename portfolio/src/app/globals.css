@@ -509,40 +509,59 @@ section {
     margin: 1.5cm;
   }
   
-  /* Reset colors to save ink */
+  /* NUCLEAR RESET: Disable Framer Motion, flex/grid heights, and overflow clipping */
   * {
     color: #000 !important;
     background: transparent !important;
     box-shadow: none !important;
     text-shadow: none !important;
     border-color: #ddd !important;
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    animation: none !important;
+    transition: none !important;
   }
 
-  body {
+  html, body {
     background: #fff !important;
     color: #000 !important;
     overflow: visible !important;
+    height: auto !important;
+    min-height: auto !important;
+    width: auto !important;
+  }
+
+  /* Force everything to visible overflow */
+  div, section, main, article, aside, header, footer {
+    overflow: visible !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
   }
 
   /* Hide digital-only elements */
   .pointer-events-auto.absolute.top-4, /* Autoplay toast */
   nav, /* Main Navbar */
-  .fixed.inset-0.z-\\[100\\], /* Menu overlay (if open) */
-  .fixed.bottom-8, /* Scroll to top */
+  .fixed, /* Any fixed elements including menu overlays and scroll to top */
   #contact, /* Usually contact forms are not printable */
   canvas, /* ParticleNetwork or ThreeJS */
-  video {
+  video,
+  button,
+  a[href^="#"] {
     display: none !important;
   }
   
-  /* Strip out glassmorphism and animations */
-  .glass, .glass-card {
+  /* Strip out glassmorphism */
+  .glass, .glass-card, .backdrop-blur-xl, .backdrop-blur-2xl, .backdrop-blur-3xl, .bg-white\/40, .bg-white\/60, .bg-neutral-900\/60, .bg-\[\#0a0a0a\] {
     background: transparent !important;
     backdrop-filter: none !important;
     border: 1px solid #ccc !important;
-    break-inside: avoid;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
   }
   
+  /* Gradients and hero text */
   .text-gradient,
   .text-fill-hero::before,
   .text-fill-purple::before {
@@ -550,36 +569,43 @@ section {
     background: transparent !important;
     color: #000 !important;
     -webkit-text-stroke: 0 !important;
-    animation: none !important;
-    filter: none !important;
   }
 
-  /* Fix scramble text */
+  /* Scramble text fix */
   .scramble-glyph {
     color: #000 !important;
-    text-shadow: none !important;
   }
   .scramble-cursor {
     display: none !important;
   }
 
-  /* Expand layout to fit paper */
+  /* Section Layouts - User requested: Always start on a brand new page */
   section {
-    min-height: auto !important;
-    height: auto !important;
-    padding-top: 1rem !important;
-    padding-bottom: 1rem !important;
+    padding: 2rem 0 !important;
+    margin: 0 !important;
     content-visibility: visible !important;
     contain-intrinsic-size: auto !important;
   }
-  
-  /* Prevent awkward page breaks */
-  h1, h2, h3, h4, h5, h6 {
-    page-break-after: avoid;
-    break-after: avoid;
+
+  section:not(#home) {
+    page-break-before: always !important;
+    break-before: page !important;
   }
-  p {
-    page-break-inside: avoid;
-    break-inside: avoid;
+  
+  /* Prevent awkward card slicing */
+  .group, .rounded-3xl, .rounded-\[2rem\], .rounded-\[2\.5rem\] {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  p, span, li {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 }

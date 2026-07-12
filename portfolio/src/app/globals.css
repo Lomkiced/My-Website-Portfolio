@@ -500,3 +500,86 @@ section {
   content-visibility: auto;
   contain-intrinsic-size: auto 800px;
 }
+
+/* ─── Print Styles ────────────────────────────────────────────────────────
+   Optimized for a clean, resume-like layout on paper.
+*/
+@media print {
+  @page {
+    margin: 1.5cm;
+  }
+  
+  /* Reset colors to save ink */
+  * {
+    color: #000 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    border-color: #ddd !important;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    overflow: visible !important;
+  }
+
+  /* Hide digital-only elements */
+  .pointer-events-auto.absolute.top-4, /* Autoplay toast */
+  nav, /* Main Navbar */
+  .fixed.inset-0.z-\\[100\\], /* Menu overlay (if open) */
+  .fixed.bottom-8, /* Scroll to top */
+  #contact, /* Usually contact forms are not printable */
+  canvas, /* ParticleNetwork or ThreeJS */
+  video {
+    display: none !important;
+  }
+  
+  /* Strip out glassmorphism and animations */
+  .glass, .glass-card {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    border: 1px solid #ccc !important;
+    break-inside: avoid;
+  }
+  
+  .text-gradient,
+  .text-fill-hero::before,
+  .text-fill-purple::before {
+    -webkit-text-fill-color: #000 !important;
+    background: transparent !important;
+    color: #000 !important;
+    -webkit-text-stroke: 0 !important;
+    animation: none !important;
+    filter: none !important;
+  }
+
+  /* Fix scramble text */
+  .scramble-glyph {
+    color: #000 !important;
+    text-shadow: none !important;
+  }
+  .scramble-cursor {
+    display: none !important;
+  }
+
+  /* Expand layout to fit paper */
+  section {
+    min-height: auto !important;
+    height: auto !important;
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+    content-visibility: visible !important;
+    contain-intrinsic-size: auto !important;
+  }
+  
+  /* Prevent awkward page breaks */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+  p {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}

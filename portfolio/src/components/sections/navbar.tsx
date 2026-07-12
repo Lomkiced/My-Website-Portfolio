@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { FiDownload, FiMenu, FiMoon, FiSun, FiX } from "react-icons/fi";
+import { FiDownload, FiMenu, FiMoon, FiSun, FiX, FiPrinter } from "react-icons/fi";
 
 const AudioPlayer = dynamic(() => import("@/components/ui/audio-player"), {
     ssr: false,
@@ -210,13 +210,27 @@ export default function Navbar() {
                                 <a href="https://linkedin.com/in/lomki-ced-446652393" target="_blank" className="text-sm font-semibold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">LinkedIn</a>
                             </div>
                             
-                            <MagneticButton
-                                onClick={() => {}}
-                                className="group flex items-center gap-2 px-8 py-4 rounded-full bg-foreground text-background font-bold hover:opacity-90 transition-all"
-                            >
-                                <FiDownload className="w-5 h-5 group-hover:-translate-y-1 transition-transform" />
-                                Download Resume
-                            </MagneticButton>
+                            <div className="flex items-center gap-4">
+                                <MagneticButton
+                                    onClick={(e: React.MouseEvent) => {
+                                        e.preventDefault();
+                                        setMenuOpen(false);
+                                        setTimeout(() => window.print(), 300);
+                                    }}
+                                    className="group flex items-center gap-2 px-6 py-4 rounded-full bg-accent/50 text-foreground font-bold hover:bg-accent transition-all border border-border"
+                                >
+                                    <FiPrinter className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                                    Print
+                                </MagneticButton>
+
+                                <MagneticButton
+                                    onClick={() => {}}
+                                    className="group flex items-center gap-2 px-8 py-4 rounded-full bg-foreground text-background font-bold hover:opacity-90 transition-all"
+                                >
+                                    <FiDownload className="w-5 h-5 group-hover:-translate-y-1 transition-transform" />
+                                    Download Resume
+                                </MagneticButton>
+                            </div>
                         </motion.div>
                     </motion.div>
                 )}

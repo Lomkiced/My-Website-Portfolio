@@ -3,7 +3,7 @@
 import LoadingScreen from "@/components/loading-screen";
 import ScrollToTop from "@/components/scroll-to-top";
 import Navbar from "@/components/sections/navbar";
-import Hero from "@/components/sections/hero";
+import HeroScrollVideo from "@/components/sections/HeroScrollVideo";
 import About from "@/components/sections/about";
 import Skills from "@/components/sections/skills";
 import Approach from "@/components/sections/approach";
@@ -19,7 +19,7 @@ export default function Home() {
       <LoadingScreen />
       <Navbar />
       <main>
-        <Hero />
+        <HeroScrollVideo />
         <About />
         <Skills />
         <Approach />

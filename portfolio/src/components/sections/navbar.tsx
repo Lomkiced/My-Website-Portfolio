@@ -2,14 +2,12 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useTheme } from "next-themes";
-import dynamic from "next/dynamic";
+
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { FiDownload, FiMenu, FiMoon, FiSun, FiX, FiPrinter } from "react-icons/fi";
 
-const AudioPlayer = dynamic(() => import("@/components/ui/audio-player"), {
-    ssr: false,
-});
+
 
 import { MagneticButton } from "@/components/ui/magnetic-button";
 
@@ -96,7 +94,7 @@ export default function Navbar() {
 
                     {/* Right: Actions & Menu Button */}
                     <div className="flex items-center gap-1 sm:gap-2 pr-1 sm:pr-2">
-                        <AudioPlayer />
+
                         
                         {mounted && (
                             <MagneticButton

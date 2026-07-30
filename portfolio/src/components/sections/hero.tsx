@@ -1,10 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { FiArrowDown } from "react-icons/fi";
-import { Music, MousePointerClick } from "lucide-react";
-import { useThemeStore } from "@/lib/store";
 import { ParticleNetwork } from "@/components/animations/particle-network";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 
@@ -34,7 +32,7 @@ const itemVariants = {
 
 export default function Hero() {
     const sectionRef = useRef<HTMLElement>(null);
-    const autoplayStatus = useThemeStore((s) => s.autoplayStatus);
+
 
     const handleNavClick = (href: string) => {
         const el = document.querySelector(href);
@@ -53,31 +51,7 @@ export default function Hero() {
             {/* ── Content ──────────────────────────────────────────────────────── */}
             <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center items-center h-screen pointer-events-none">
 
-                {/* Autoplay Toast Overlay (Fixed Position) */}
-                <div className="pointer-events-auto absolute top-4 left-1/2 -translate-x-1/2 z-50">
-                    <AnimatePresence>
-                        {autoplayStatus && (
-                            <motion.div
-                                initial={{ opacity: 0, y: -20, scale: 0.95 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: -10, scale: 0.95, filter: "blur(4px)" }}
-                                transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                            >
-                                {autoplayStatus === "blocked" ? (
-                                    <div className="flex items-center justify-center gap-3 px-5 py-3.5 rounded-full bg-black/70 dark:bg-black/50 backdrop-blur-xl border border-white/10 shadow-lg text-white">
-                                        <MousePointerClick size={16} className="text-violet-300" />
-                                        <span className="text-xs font-medium tracking-wide">Click anywhere to play music</span>
-                                    </div>
-                                ) : (
-                                    <div className="flex items-center justify-center gap-3 px-5 py-3.5 rounded-full bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-neutral-200 dark:border-white/10 shadow-lg text-neutral-800 dark:text-white">
-                                        <Music size={16} className="text-emerald-500" />
-                                        <span className="text-xs font-medium tracking-wide">Music playing</span>
-                                    </div>
-                                )}
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
+
 
                 {/* Center Content: Ultra-Clean Typography & Actions */}
                 <div className="flex flex-col items-center justify-center text-center pointer-events-auto w-full">

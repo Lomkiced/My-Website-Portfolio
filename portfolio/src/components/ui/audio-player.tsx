@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Volume2, VolumeX } from "lucide-react";
-import { useThemeStore } from "@/lib/store";
+
 
 let globalAudio: HTMLAudioElement | null = null;
 const subscribers = new Set<(playing: boolean) => void>();
@@ -28,7 +28,7 @@ function getAudio() {
 
 export default function AudioPlayer() {
     const [isPlaying, setIsPlaying] = useState(false);
-    const setAutoplayStatus = useThemeStore((s) => s.setAutoplayStatus);
+
 
     useEffect(() => {
         const audio = getAudio();
@@ -45,11 +45,7 @@ export default function AudioPlayer() {
             if (!globalAudio) return;
             try {
                 await globalAudio.play();
-                setAutoplayStatus("playing");
                 removeListeners();
-
-                // Auto dismiss success toast after 5s
-                setTimeout(() => setAutoplayStatus(null), 5000);
             } catch (err) {
                 console.warn("Audio interaction play prevented", err);
             }
@@ -66,13 +62,7 @@ export default function AudioPlayer() {
             const attemptPlay = async () => {
                 try {
                     await audio.play();
-                    setAutoplayStatus("playing");
-
-                    // Auto dismiss success toast after 5s
-                    setTimeout(() => setAutoplayStatus(null), 5000);
                 } catch {
-                    // Autoplay policy prevented playing without interaction
-                    setAutoplayStatus("blocked");
                     document.addEventListener("click", playOnInteraction);
                     document.addEventListener("keydown", playOnInteraction);
                 }
@@ -84,7 +74,7 @@ export default function AudioPlayer() {
             subscribers.delete(handleStateChange);
             removeListeners();
         };
-    }, [setAutoplayStatus]);
+    }, []);
 
     const togglePlay = () => {
         const audio = getAudio();

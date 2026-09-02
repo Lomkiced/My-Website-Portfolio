@@ -189,7 +189,7 @@ export default function HeroScrollVideo() {
             className={`relative ${isMobile ? "h-screen" : "h-[300vh]"}`}
         >
             {/* ── Sticky Viewport Wrapper ───────────────────────────────── */}
-            <div className="sticky top-0 h-screen w-full overflow-hidden bg-black">
+            <div className="sticky top-0 h-screen w-full overflow-hidden bg-background">
                 {/* ── Hidden Video Source (decoded off-screen on desktop) ── */}
                 <video
                     ref={videoRef}
@@ -241,7 +241,7 @@ export default function HeroScrollVideo() {
                             }}
                         >
                             <span className="inline-flex items-center gap-2 text-[10px] sm:text-xs font-bold uppercase tracking-[0.35em] text-white/70">
-                                <span className="w-8 h-px bg-violet-400" />
+                                <span className="w-8 h-px bg-pink-400" />
                                 Portfolio Presentation
                             </span>
                         </motion.div>
@@ -278,7 +278,7 @@ export default function HeroScrollVideo() {
                             <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black tracking-tighter leading-[0.9] text-white">
                                 Mike Cedrick
                                 <br />
-                                <span className="text-violet-400">
+                                <span className="text-pink-400">
                                     Danocup
                                 </span>
                             </h1>
@@ -312,7 +312,7 @@ export default function HeroScrollVideo() {
                             >
                                 <span>View Projects</span>
                                 <span className="relative w-10 h-px bg-white/30 group-hover:w-16 transition-all duration-500 overflow-hidden">
-                                    <span className="absolute inset-0 bg-violet-400 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
+                                    <span className="absolute inset-0 bg-pink-400 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
                                 </span>
                             </a>
                         </motion.div>
@@ -339,7 +339,7 @@ export default function HeroScrollVideo() {
                                     repeat: Infinity,
                                     ease: "easeInOut",
                                 }}
-                                className="absolute top-2 left-1/2 -translate-x-1/2 w-1 h-2 rounded-full bg-violet-400"
+                                className="absolute top-2 left-1/2 -translate-x-1/2 w-1 h-2 rounded-full bg-pink-400"
                             />
                         </div>
                     </motion.div>

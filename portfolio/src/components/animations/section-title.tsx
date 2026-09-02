@@ -82,7 +82,7 @@ export default function SectionTitle({
                 >
                     {decorativeLines && (
                         <motion.span
-                            className="w-8 h-px bg-violet-500/50 mr-3"
+                            className="w-8 h-px bg-pink-500/50 mr-3"
                             initial={{ scaleX: 0 }}
                             whileInView={{ scaleX: 1 }}
                             viewport={{ once: true, margin: "-80px" }}
@@ -92,21 +92,21 @@ export default function SectionTitle({
                     )}
 
                     {labelStyle === "badge" ? (
-                        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 shadow-sm">
-                            <span className="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
-                            <span className="text-xs font-semibold text-violet-600 dark:text-violet-400 uppercase tracking-widest">
+                        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-500/10 border border-pink-500/20 shadow-sm">
+                            <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse" />
+                            <span className="text-xs font-semibold text-pink-600 dark:text-pink-400 uppercase tracking-widest">
                                 {label}
                             </span>
                         </span>
                     ) : (
-                        <span className="text-sm font-semibold text-violet-500 dark:text-violet-400 uppercase tracking-widest">
+                        <span className="text-sm font-semibold text-pink-500 dark:text-pink-400 uppercase tracking-widest">
                             {label}
                         </span>
                     )}
 
                     {decorativeLines && (
                         <motion.span
-                            className="w-8 h-px bg-violet-500/50 ml-3"
+                            className="w-8 h-px bg-pink-500/50 ml-3"
                             initial={{ scaleX: 0 }}
                             whileInView={{ scaleX: 1 }}
                             viewport={{ once: true, margin: "-80px" }}
@@ -143,7 +143,7 @@ export default function SectionTitle({
                 {/* Gradient underline */}
                 {gradientUnderline && (
                     <motion.span
-                        className="absolute -bottom-2 left-0 right-0 h-[3px] bg-gradient-to-r from-violet-600 via-purple-500 to-indigo-600 rounded-full"
+                        className="absolute -bottom-2 left-0 right-0 h-[3px] bg-gradient-to-r from-pink-600 via-pink-400 to-rose-400 rounded-full"
                         initial={{ scaleX: 0 }}
                         whileInView={{ scaleX: 1 }}
                         viewport={{ once: true, margin: "-80px" }}

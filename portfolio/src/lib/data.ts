@@ -67,6 +67,14 @@ export const PROJECT_DATA: Project[] = [
 
 export const EXPERIENCE_DATA: TimelineItem[] = [
     {
+        title: "Freelance Full Stack Developer",
+        organization: "Self-Employed",
+        period: "Present",
+        description:
+            "Developing websites, web applications, software systems, and mobile applications for various clients.",
+        type: "work",
+    },
+    {
         title: "Technical Intern",
         organization: "Department of Science and Technology Ilocos Region",
         period: "2025 – 2026",

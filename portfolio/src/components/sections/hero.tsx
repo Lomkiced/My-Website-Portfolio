@@ -69,7 +69,7 @@ export default function Hero() {
                         <motion.div variants={itemVariants} className="w-full">
                             <h1 className="text-5xl sm:text-7xl lg:text-[7.5rem] font-black tracking-tighter leading-[0.9] uppercase text-transparent bg-clip-text bg-gradient-to-br from-foreground via-foreground/90 to-muted-foreground/50 drop-shadow-sm">
                                 Engineering <br className="hidden sm:block" />
-                                <span className="text-violet-600 dark:text-violet-500">Digital</span> Experiences.
+                                <span className="text-pink-600 dark:text-pink-500">Digital</span> Experiences.
                             </h1>
                         </motion.div>
 
@@ -77,7 +77,7 @@ export default function Hero() {
                             variants={itemVariants}
                             className="text-base sm:text-lg lg:text-xl text-muted-foreground font-semibold uppercase tracking-[0.2em] mt-4"
                         >
-                            Full Stack Developer <span className="text-violet-500 mx-3">|</span> IT Graduate
+                            Full Stack Developer <span className="text-pink-500 mx-3">|</span> IT Graduate
                         </motion.p>
 
                         {/* Ultra-Clean CTA Row */}

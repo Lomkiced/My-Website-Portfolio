@@ -33,8 +33,8 @@ const PROJECTS = [
         title: "KIP - DOST-1",
         description: "Key Indicator Performance & Record Management System built for DOST-1 to maintain organized, compliant government records.",
         icon: Archive,
-        color: "text-fuchsia-400",
-        bgGradient: "from-fuchsia-500/20 via-fuchsia-500/5 to-transparent",
+        color: "text-pink-400",
+        bgGradient: "from-pink-500/20 via-pink-500/5 to-transparent",
         glow: "hover:shadow-[0_0_40px_-10px_rgba(217,70,239,0.3)]",
         techStack: ["PERN Stack", "Docker", "Cloudflare"],
         link: "https://kip.dost1.ph/",
@@ -44,8 +44,8 @@ const PROJECTS = [
         title: "Alumni Information Career Tracking",
         description: "A comprehensive platform to track alumni career paths, outcomes, and maintain active engagement with graduates.",
         icon: Briefcase,
-        color: "text-indigo-400",
-        bgGradient: "from-indigo-500/20 via-indigo-500/5 to-transparent",
+        color: "text-rose-400",
+        bgGradient: "from-rose-500/20 via-rose-500/5 to-transparent",
         glow: "hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.3)]",
         techStack: ["Next.js", "Supabase", "Tailwind CSS"],
         link: "https://alumni-information-career-tracking.vercel.app/login",
@@ -77,8 +77,8 @@ const PROJECTS = [
         title: "EduShare",
         description: "A Collaborative Learning Resource Exchange Platform enabling students and educators to share materials seamlessly.",
         icon: BookOpen,
-        color: "text-violet-400",
-        bgGradient: "from-violet-500/20 via-violet-500/5 to-transparent",
+        color: "text-pink-400",
+        bgGradient: "from-pink-500/20 via-pink-500/5 to-transparent",
         glow: "hover:shadow-[0_0_40px_-10px_rgba(139,92,246,0.3)]",
         techStack: ["Next.js", "Supabase", "Tailwind CSS"],
         link: "https://edu-share-delta.vercel.app/login",
@@ -164,8 +164,8 @@ export default function Projects() {
     return (
         <section id="projects" className="py-24 md:py-40 relative z-10 transition-colors">
             {/* Ambient Background Glows */}
-            <div className="absolute top-0 right-0 w-[50vh] h-[50vh] bg-violet-400/10 dark:bg-violet-500/10 rounded-full blur-3xl md:blur-[120px] pointer-events-none translate-x-1/3 -translate-y-1/3 transition-colors" />
-            <div className="absolute bottom-0 left-0 w-[40vh] h-[40vh] bg-indigo-400/10 dark:bg-indigo-500/10 rounded-full blur-3xl md:blur-[100px] pointer-events-none -translate-x-1/3 translate-y-1/4 transition-colors" />
+            <div className="absolute top-0 right-0 w-[50vh] h-[50vh] bg-pink-400/10 dark:bg-pink-500/10 rounded-full blur-3xl md:blur-[120px] pointer-events-none translate-x-1/3 -translate-y-1/3 transition-colors" />
+            <div className="absolute bottom-0 left-0 w-[40vh] h-[40vh] bg-rose-400/10 dark:bg-rose-500/10 rounded-full blur-3xl md:blur-[100px] pointer-events-none -translate-x-1/3 translate-y-1/4 transition-colors" />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <SectionTitle

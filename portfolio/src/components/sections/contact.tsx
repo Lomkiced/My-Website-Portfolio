@@ -83,8 +83,8 @@ export default function Contact() {
     return (
         <section id="contact" className="py-20 md:py-32 relative overflow-hidden">
             {/* Background accent */}
-            <div className="absolute bottom-0 right-0 w-96 h-96 bg-violet-500/5 rounded-full blur-3xl translate-y-1/2 translate-x-1/2" />
-            <div className="absolute top-0 left-1/4 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-0 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl translate-y-1/2 translate-x-1/2" />
+            <div className="absolute top-0 left-1/4 w-64 h-64 bg-rose-500/5 rounded-full blur-3xl" />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Section header */}
@@ -161,7 +161,7 @@ export default function Contact() {
                                     type="email"
                                     required
                                     placeholder="your@email.com"
-                                    className="h-12 rounded-xl bg-card/50 border-border/50 focus:border-violet-500/50 focus:ring-violet-500/20 transition-all"
+                                    className="h-12 rounded-xl bg-card/50 border-border/50 focus:border-pink-500/50 focus:ring-pink-500/20 transition-all"
                                 />
                             </motion.div>
 
@@ -178,7 +178,7 @@ export default function Contact() {
                                     required
                                     placeholder="Tell me about your project..."
                                     rows={5}
-                                    className="rounded-xl bg-card/50 border-border/50 focus:border-violet-500/50 focus:ring-violet-500/20 transition-all resize-none"
+                                    className="rounded-xl bg-card/50 border-border/50 focus:border-pink-500/50 focus:ring-pink-500/20 transition-all resize-none"
                                 />
                             </motion.div>
 
@@ -186,7 +186,7 @@ export default function Contact() {
                                 <Button
                                     type="submit"
                                     disabled={pending}
-                                    className="w-full h-12 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-semibold shadow-lg shadow-violet-500/20 hover:shadow-violet-500/30 transition-all disabled:opacity-60"
+                                    className="w-full h-12 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white font-semibold shadow-lg shadow-pink-500/20 hover:shadow-pink-500/30 transition-all disabled:opacity-60"
                                 >
                                     {pending ? (
                                         <>
@@ -252,12 +252,12 @@ export default function Contact() {
                                     rel={
                                         link.name !== "Email" ? "noopener noreferrer" : undefined
                                     }
-                                    className="group flex items-center gap-4 p-4 rounded-2xl glass-card hover:border-violet-500/30 hover:shadow-lg transition-all"
+                                    className="group flex items-center gap-4 p-4 rounded-2xl glass-card hover:border-pink-500/30 hover:shadow-lg transition-all"
                                     variants={itemVariants}
                                     whileHover={{ x: 4 }}
                                 >
-                                    <div className="w-12 h-12 rounded-xl bg-violet-500/10 dark:bg-violet-500/20 flex items-center justify-center group-hover:bg-violet-500/20 dark:group-hover:bg-violet-500/30 transition-colors">
-                                        <link.icon className="w-5 h-5 text-violet-600 dark:text-violet-400" />
+                                    <div className="w-12 h-12 rounded-xl bg-pink-500/10 dark:bg-pink-500/20 flex items-center justify-center group-hover:bg-pink-500/20 dark:group-hover:bg-pink-500/30 transition-colors">
+                                        <link.icon className="w-5 h-5 text-pink-600 dark:text-pink-400" />
                                     </div>
                                     <div>
                                         <p className="font-semibold text-foreground text-sm">
@@ -274,7 +274,7 @@ export default function Contact() {
                         {/* Decorative card */}
                         <motion.div
                             variants={itemVariants}
-                            className="p-6 rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-600 text-white"
+                            className="p-6 rounded-2xl bg-gradient-to-br from-pink-600 to-rose-600 text-white"
                         >
                             <h4 className="font-bold font-display text-lg mb-2">
                                 Open to Work

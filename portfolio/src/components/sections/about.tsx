@@ -23,7 +23,7 @@ function SpotlightCard({ children, className = "", delay = 0 }: { children: Reac
         <ScrollReveal variant="slideScale" delay={delay} className="h-full" viewportMargin="-10%">
             <div
                 onMouseMove={handleMouseMove}
-                className={`group relative h-full overflow-hidden rounded-[2.5rem] border border-neutral-200/50 dark:border-white/[0.05] bg-white/50 dark:bg-[#0a0a0c]/80 backdrop-blur-3xl transition-transform duration-500 hover:-translate-y-2 will-change-transform shadow-sm hover:shadow-2xl ${className}`}
+                className={`group relative h-full overflow-hidden rounded-[2.5rem] border border-neutral-200/50 dark:border-white/[0.05] bg-background/50 dark:bg-background/80 backdrop-blur-3xl transition-transform duration-500 hover:-translate-y-2 will-change-transform shadow-sm hover:shadow-2xl ${className}`}
             >
                 {/* Spotlight Holographic Effect */}
                 <motion.div
@@ -40,7 +40,7 @@ function SpotlightCard({ children, className = "", delay = 0 }: { children: Reac
                 />
 
                 {/* Ambient glow */}
-                <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 via-transparent to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 via-transparent to-rose-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
                 <div className="relative z-10 h-full">{children}</div>
             </div>
@@ -92,7 +92,7 @@ function AnimatedText({ text, className }: { text: string; className?: string })
 function TechRing({ delay }: { delay: number }) {
     const techs = [
         { Icon: SiReact, color: "text-[#61DAFB]", bg: "bg-[#61DAFB]/10", border: "border-[#61DAFB]/20" },
-        { Icon: SiNextdotjs, color: "text-neutral-900 dark:text-white", bg: "bg-black/5 dark:bg-white/10", border: "border-black/10 dark:border-white/20" },
+        { Icon: SiNextdotjs, color: "text-neutral-900 dark:text-white", bg: "bg-foreground/5 dark:bg-foreground/10", border: "border-black/10 dark:border-white/20" },
         { Icon: SiTypescript, color: "text-[#3178C6]", bg: "bg-[#3178C6]/10", border: "border-[#3178C6]/20" },
         { Icon: SiTailwindcss, color: "text-[#06B6D4]", bg: "bg-[#06B6D4]/10", border: "border-[#06B6D4]/20" },
         { Icon: SiNodedotjs, color: "text-[#339933]", bg: "bg-[#339933]/10", border: "border-[#339933]/20" },
@@ -107,7 +107,7 @@ function TechRing({ delay }: { delay: number }) {
                 whileInView={{ scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ type: "spring", delay, bounce: 0.5 }}
-                className="absolute z-20 w-20 h-20 rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-500/30"
+                className="absolute z-20 w-20 h-20 rounded-2xl bg-gradient-to-tr from-pink-600 to-rose-600 flex items-center justify-center shadow-lg shadow-pink-500/30"
             >
                 <FiCode size={32} className="text-white" />
             </motion.div>
@@ -116,7 +116,7 @@ function TechRing({ delay }: { delay: number }) {
             <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-                className="absolute w-[220px] h-[220px] md:w-[260px] md:h-[260px] border border-dashed border-violet-500/20 dark:border-white/10 rounded-full"
+                className="absolute w-[220px] h-[220px] md:w-[260px] md:h-[260px] border border-dashed border-pink-500/20 dark:border-white/10 rounded-full"
             >
                 {techs.map((tech, i) => {
                     const angle = (i * 360) / techs.length;
@@ -149,11 +149,11 @@ function TechRing({ delay }: { delay: number }) {
 // ─── Main Component ──────────────────────────────────────────────────────────
 export default function About() {
     return (
-        <section id="about" className="py-24 md:py-32 relative overflow-hidden bg-neutral-50/50 dark:bg-[#050505]">
+        <section id="about" className="py-24 md:py-32 relative overflow-hidden bg-background dark:bg-background">
 
             {/* Ambient Background Glows */}
-            <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-[800px] h-[600px] bg-violet-500/10 dark:bg-violet-600/10 blur-[120px] rounded-full pointer-events-none animate-pulse-slow" />
-            <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 w-[600px] h-[600px] bg-fuchsia-500/10 dark:bg-fuchsia-600/10 blur-[120px] rounded-full pointer-events-none animate-blob" />
+            <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-[800px] h-[600px] bg-pink-500/10 dark:bg-pink-600/10 blur-[120px] rounded-full pointer-events-none animate-pulse-slow" />
+            <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 w-[600px] h-[600px] bg-pink-500/10 dark:bg-pink-600/10 blur-[120px] rounded-full pointer-events-none animate-blob" />
 
             <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <SectionTitle
@@ -179,13 +179,13 @@ export default function About() {
                                             whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                                             viewport={{ once: true }}
                                             transition={{ duration: 0.8, delay: 0.6, type: "spring", bounce: 0.4 }}
-                                            className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-fuchsia-600 to-indigo-600 dark:from-violet-400 dark:via-fuchsia-400 dark:to-indigo-400 inline-block animate-gradient-x"
+                                            className="text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-pink-600 to-rose-600 dark:from-pink-400 dark:via-pink-400 dark:to-rose-400 inline-block animate-gradient-x"
                                         >
                                             Experiences
                                         </motion.span>
                                     </h3>
-                                    <div className="flex items-center gap-3 text-sm font-medium text-violet-600 dark:text-violet-400 tracking-wider uppercase">
-                                        <span className="w-8 h-[2px] bg-violet-600/50 dark:bg-violet-400/50 rounded-full" />
+                                    <div className="flex items-center gap-3 text-sm font-medium text-pink-600 dark:text-pink-400 tracking-wider uppercase">
+                                        <span className="w-8 h-[2px] bg-pink-600/50 dark:bg-pink-400/50 rounded-full" />
                                         Full Stack Developer
                                     </div>
                                 </div>
@@ -214,7 +214,7 @@ export default function About() {
                     <div className="md:col-span-6 lg:col-span-4 lg:row-span-2 relative h-full">
                         <SpotlightCard delay={0.2} className="relative w-full aspect-[4/5] max-h-[500px] md:max-h-none md:min-h-[400px] lg:h-full lg:aspect-auto p-0 flex flex-col overflow-hidden group/photo">
                             {/* Elegant Frame Outline */}
-                            <div className="absolute inset-2 border border-neutral-200/40 dark:border-white/10 rounded-[2rem] z-20 pointer-events-none transition-colors duration-500 group-hover/photo:border-violet-500/30" />
+                            <div className="absolute inset-2 border border-neutral-200/40 dark:border-white/10 rounded-[2rem] z-20 pointer-events-none transition-colors duration-500 group-hover/photo:border-pink-500/30" />
 
                             <div className="absolute inset-2 overflow-hidden rounded-[2rem] z-10 bg-neutral-100 dark:bg-[#111113]">
                                 <Image
@@ -247,7 +247,7 @@ export default function About() {
                                 </div>
                                 <h3 className="text-2xl lg:text-3xl font-bold font-display text-white mb-1 tracking-tight">Mike Cedrick</h3>
                                 <p className="text-white/70 font-medium text-sm flex items-center gap-1.5">
-                                    <FiMapPin className="text-violet-400" />
+                                    <FiMapPin className="text-pink-400" />
                                     La Union, PH
                                 </p>
                             </motion.div>
@@ -268,9 +268,9 @@ export default function About() {
                                     <p className="text-foreground/60 leading-relaxed font-medium mb-6">
                                         Architecting modern digital solutions using a curated stack of cutting-edge technologies.
                                     </p>
-                                    <div className="inline-flex items-center justify-center p-[2px] rounded-full bg-gradient-to-r from-violet-500 to-indigo-500">
-                                        <div className="px-5 py-2 rounded-full bg-white dark:bg-[#0a0a0c] text-sm font-semibold tracking-wide flex items-center gap-2">
-                                            <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
+                                    <div className="inline-flex items-center justify-center p-[2px] rounded-full bg-gradient-to-r from-pink-500 to-rose-500">
+                                        <div className="px-5 py-2 rounded-full bg-background text-sm font-semibold tracking-wide flex items-center gap-2">
+                                            <div className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
                                             Full Stack Ready
                                         </div>
                                     </div>
@@ -278,7 +278,7 @@ export default function About() {
 
                                 {/* Tech Ring Visuals */}
                                 <div className="lg:w-2/3 w-full flex justify-center items-center h-[280px] lg:h-[340px] relative">
-                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-indigo-500/10 dark:bg-indigo-500/20 blur-[80px] rounded-full pointer-events-none" />
+                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-rose-500/10 dark:bg-rose-500/20 blur-[80px] rounded-full pointer-events-none" />
                                     <TechRing delay={0.5} />
                                 </div>
                             </div>
@@ -324,7 +324,7 @@ export default function About() {
                         <SpotlightCard delay={0.5} className="p-8 flex flex-col justify-center text-left relative overflow-hidden h-full group/edu">
                             <div className="absolute right-0 top-0 -translate-y-12 translate-x-12 w-48 h-48 bg-[radial-gradient(circle_at_center,rgba(217,70,239,0.15)_0%,transparent_70%)] rounded-full transition-transform duration-1000 group-hover/edu:scale-150" />
 
-                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-fuchsia-500 to-pink-500 text-white flex items-center justify-center mb-6 relative z-10 shadow-lg shadow-pink-500/25">
+                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-500 to-pink-500 text-white flex items-center justify-center mb-6 relative z-10 shadow-lg shadow-pink-500/25">
                                 <FiAward size={24} />
                             </div>
 

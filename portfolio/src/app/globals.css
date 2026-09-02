@@ -5,24 +5,24 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    --foreground: 0 0% 9%;
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --card-foreground: 0 0% 9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 262.1 83.3% 57.8%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    --popover-foreground: 0 0% 9%;
+    --primary: 330 80% 70%;
+    --primary-foreground: 0 0% 10%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 330 80% 96%;
+    --accent-foreground: 330 80% 30%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 262.1 83.3% 57.8%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 330 80% 70%;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -32,25 +32,25 @@
   }
 
   .dark {
-    --background: 240 10% 3.9%;
+    --background: 0 0% 0%;
     --foreground: 0 0% 98%;
-    --card: 240 10% 6%;
+    --card: 0 0% 4%;
     --card-foreground: 0 0% 98%;
-    --popover: 240 10% 6%;
+    --popover: 0 0% 4%;
     --popover-foreground: 0 0% 98%;
-    --primary: 263.4 70% 50.4%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 240 3.7% 15.9%;
+    --primary: 330 80% 70%;
+    --primary-foreground: 0 0% 10%;
+    --secondary: 0 0% 10%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 330 30% 15%;
+    --accent-foreground: 330 80% 85%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 263.4 70% 50.4%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 330 80% 70%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
@@ -79,7 +79,7 @@
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-pink-400 via-pink-300 to-rose-300;
   }
 
   .glass {
@@ -164,8 +164,8 @@
 }
 
 .dark .scramble-glyph {
-  color: rgba(168, 85, 247, 0.35);
-  text-shadow: 0 0 12px rgba(168, 85, 247, 0.15);
+  color: rgba(244, 114, 182, 0.35);
+  text-shadow: 0 0 12px rgba(244, 114, 182, 0.15);
 }
 
 /* Resolved character — snaps to display font + foreground */
@@ -182,7 +182,7 @@
 /* Resolved purple variant for "Dañocup" */
 .scramble-resolved-purple {
   font-family: var(--font-display, var(--font-sans, system-ui));
-  background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 50%, #6366f1 100%);
+  background: linear-gradient(135deg, #f472b6 0%, #f9a8d4 50%, #fda4af 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -191,12 +191,12 @@
 /* Resolved accent variant for "Welcome!" */
 .scramble-resolved-accent {
   font-family: var(--font-display, var(--font-sans, system-ui));
-  color: #8b5cf6;
+  color: #f472b6;
 }
 
 .dark .scramble-resolved-accent {
-  color: #a78bfa;
-  text-shadow: 0 0 16px rgba(168, 85, 247, 0.3);
+  color: #f9a8d4;
+  text-shadow: 0 0 16px rgba(244, 114, 182, 0.3);
 }
 
 /* Space char */
@@ -218,7 +218,7 @@
 
 .dark .scramble-cursor {
   background: #e2e8f0;
-  box-shadow: 0 0 12px rgba(168, 85, 247, 0.5), 0 0 4px rgba(255, 255, 255, 0.25);
+  box-shadow: 0 0 12px rgba(244, 114, 182, 0.5), 0 0 4px rgba(255, 255, 255, 0.25);
 }
 
 /* Noise texture overlay */
@@ -273,23 +273,23 @@
 }
 
 .text-fill-purple {
-  -webkit-text-stroke: 1.5px rgba(168, 85, 247, 0.8);
+  -webkit-text-stroke: 1.5px rgba(244, 114, 182, 0.8);
 }
 
 .dark .text-fill-purple {
-  -webkit-text-stroke: 1.5px rgba(168, 85, 247, 0.3);
+  -webkit-text-stroke: 1.5px rgba(244, 114, 182, 0.3);
 }
 
 .text-fill-purple::before {
-  color: #a855f7;
-  border-right: 4px solid #a855f7;
-  filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.4));
+  color: #f472b6;
+  border-right: 4px solid #f472b6;
+  filter: drop-shadow(0 0 15px rgba(244, 114, 182, 0.4));
 }
 
 .dark .text-fill-purple::before {
-  color: #a855f7;
-  border-right-color: #a855f7;
-  filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.4));
+  color: #f472b6;
+  border-right-color: #f472b6;
+  filter: drop-shadow(0 0 15px rgba(244, 114, 182, 0.4));
 }
 
 @keyframes fill-text-animate {

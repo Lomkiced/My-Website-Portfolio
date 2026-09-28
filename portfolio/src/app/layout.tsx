@@ -1,19 +1,14 @@
 import type { Metadata } from "next";
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import "./globals.css";
-import { ThemeProvider } from "@/components/providers/theme-provider";
-import PrintManifesto from "@/components/print-manifesto";
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
 
-const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-plus-jakarta",
-  display: "swap",
-});
+// ─── Typography ─────────────────────────────────────────────────────────────
+// Geist — a modern, geometric font family by Vercel.
+// Geist Sans is used for body copy and UI.
+// Geist Mono is used for technical labels and display highlights.
+
+// ─── Metadata ───────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
   title: {
@@ -21,19 +16,22 @@ export const metadata: Metadata = {
     template: "%s | Mike Cedrick Dañocup",
   },
   description:
-    "Full Stack Developer specializing in Next.js, NestJS, Prisma, React Native. Building high-performance, type-safe web and mobile applications.",
+    "Full Stack Developer specializing in Next.js, TypeScript, Supabase, and Prisma. Building high-performance, type-safe web applications.",
   keywords: [
     "Full Stack Developer",
     "Next.js",
     "React",
-    "NestJS",
+    "TypeScript",
+    "Supabase",
     "Portfolio",
     "Web Developer",
     "Software Engineer",
   ],
   authors: [{ name: "Mike Cedrick Dañocup" }],
   creator: "Mike Cedrick Dañocup",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://mikecedrick.com"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://mikecedrick.com"
+  ),
   openGraph: {
     title: "Mike Cedrick Dañocup | Full Stack Developer",
     description:
@@ -53,7 +51,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Mike Cedrick Dañocup | Full Stack Developer",
-    description: "Full Stack Developer specializing in building high-performance web and mobile applications.",
+    description:
+      "Full Stack Developer specializing in building high-performance web and mobile applications.",
     images: ["/profile.jpg"],
   },
   robots: {
@@ -62,12 +61,14 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
 };
+
+// ─── Root Layout ────────────────────────────────────────────────────────────
 
 export default function RootLayout({
   children,
@@ -75,21 +76,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${inter.variable} ${plusJakarta.variable} font-sans antialiased`}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <div className="print:hidden">
-            {children}
-          </div>
-          <PrintManifesto />
-        </ThemeProvider>
+    <html
+      lang="en"
+      className={`${GeistSans.variable} ${GeistMono.variable}`}
+      suppressHydrationWarning
+    >
+      <body className="font-sans antialiased bg-background text-foreground">
+        {children}
       </body>
     </html>
   );

@@ -1,4 +1,4 @@
-import { CERTIFICATES_DATA, PROJECT_DATA, EXPERIENCE_DATA } from "@/lib/data";
+import { CERTIFICATES_DATA, PORTAL_PROJECTS, EXPERIENCE_DATA } from "@/lib/data";
 
 export default function PrintManifesto() {
     return (
@@ -96,7 +96,7 @@ export default function PrintManifesto() {
                 <section style={{ pageBreakBefore: 'always' }}>
                     <h2 className="text-2xl font-bold uppercase tracking-widest mb-8 font-sans border-b border-neutral-300 pb-2 text-black mt-10">Featured Work</h2>
                     <div className="space-y-10">
-                        {PROJECT_DATA.map((project, idx) => (
+                        {PORTAL_PROJECTS.map((project, idx) => (
                             <div key={idx} className="break-inside-avoid flex flex-col md:flex-row gap-4 md:gap-8">
                                 <div className="md:w-1/3 flex-shrink-0">
                                     <h3 className="text-xl font-bold font-sans text-black leading-tight">{project.title}</h3>
@@ -107,8 +107,8 @@ export default function PrintManifesto() {
                                 <div className="md:w-2/3">
                                     <p className="text-neutral-800 text-base whitespace-pre-line">{project.description}</p>
                                     <div className="mt-4 text-xs font-sans text-neutral-600 font-medium space-y-1">
-                                        <div><span className="font-bold text-neutral-900">LIVE URL:</span> {project.liveUrl}</div>
-                                        <div><span className="font-bold text-neutral-900">REPOSITORY:</span> {project.githubUrl}</div>
+                                        {project.liveUrl && <div><span className="font-bold text-neutral-900">LIVE URL:</span> {project.liveUrl}</div>}
+                                        {project.githubUrl && <div><span className="font-bold text-neutral-900">REPOSITORY:</span> {project.githubUrl}</div>}
                                     </div>
                                 </div>
                             </div>

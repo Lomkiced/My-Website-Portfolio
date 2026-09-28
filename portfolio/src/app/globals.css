@@ -2,60 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Monochrome Design System ───────────────────────────────────────────────
+   True black & white editorial palette. No tinted grays. No accent color.
+   State is expressed through weight, motion, inversion, or opacity.
+*/
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 9%;
-    --primary: 330 80% 70%;
-    --primary-foreground: 0 0% 10%;
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
-    --accent: 330 80% 96%;
-    --accent-foreground: 330 80% 30%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 330 80% 70%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.75rem;
-  }
+    /* Backgrounds */
+    --background: 0 0% 0%;          /* #000000 — true black */
+    --foreground: 0 0% 100%;        /* #FFFFFF — true white */
 
-  .dark {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 4%;
-    --card-foreground: 0 0% 98%;
+    /* Surface elevations */
+    --card: 0 0% 4%;                /* #0A0A0A */
+    --card-foreground: 0 0% 100%;
     --popover: 0 0% 4%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 330 80% 70%;
-    --primary-foreground: 0 0% 10%;
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 65%;
-    --accent: 330 30% 15%;
-    --accent-foreground: 330 80% 85%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 15%;
+    --popover-foreground: 0 0% 100%;
+
+    /* Primary = white (inverted actions) */
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+
+    /* Secondary */
+    --secondary: 0 0% 8%;           /* #141414 */
+    --secondary-foreground: 0 0% 90%; /* #E5E5E5 */
+
+    /* Muted */
+    --muted: 0 0% 8%;
+    --muted-foreground: 0 0% 64%;   /* #A3A3A3 */
+
+    /* Accent */
+    --accent: 0 0% 8%;
+    --accent-foreground: 0 0% 90%;
+
+    /* Destructive (grayscale-only) */
+    --destructive: 0 0% 30%;
+    --destructive-foreground: 0 0% 90%;
+
+    /* Borders & inputs */
+    --border: 0 0% 15%;             /* #262626 */
     --input: 0 0% 15%;
-    --ring: 330 80% 70%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --ring: 0 0% 40%;
+
+    /* Radius */
+    --radius: 0.375rem;
+
+    /* Layout */
+    --sidebar-width: 240px;
   }
 }
 
@@ -64,36 +57,51 @@
     @apply border-border;
   }
 
-  body {
-    @apply bg-background text-foreground;
-  }
-
   html {
     scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+  }
+
+  /* Focus ring — monochrome */
+  :focus-visible {
+    outline: 2px solid hsl(var(--foreground));
+    outline-offset: 2px;
   }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-pink-400 via-pink-300 to-rose-300;
-  }
-
-  .glass {
-    @apply bg-background/80 backdrop-blur-xl border border-border/50;
-  }
-
-  .glass-card {
-    @apply bg-card/50 backdrop-blur-lg border border-border/30 rounded-xl;
-  }
+/* ─── Noise / Grain Overlay ──────────────────────────────────────────────────
+   Applied to large black surfaces for subtle depth.
+*/
+.noise-overlay {
+  position: relative;
 }
 
-/* Custom scrollbar */
+.noise-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: overlay;
+}
+
+/* ─── Custom Scrollbar ───────────────────────────────────────────────────────
+*/
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -101,423 +109,59 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.2);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.4);
+  background: rgba(255, 255, 255, 0.12);
 }
 
-/* ─── Hero Scramble Text Animation ────────────────────────────────────────────
-   Pseudo-randomized keyboard pressing effect.
-   JS handles the scramble logic; these styles handle layout + aesthetics.
+/* ─── Hairline Utility ───────────────────────────────────────────────────────
 */
+@layer utilities {
+  .hairline-t {
+    border-top: 1px solid hsl(var(--border));
+  }
 
-.scramble-text-container {
-  position: relative;
-  width: 100%;
-  min-height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  .hairline-b {
+    border-bottom: 1px solid hsl(var(--border));
+  }
 
-@media (min-width: 640px) {
-  .scramble-text-container {
-    min-height: 72px;
+  .hairline-r {
+    border-right: 1px solid hsl(var(--border));
+  }
+
+  .hairline-l {
+    border-left: 1px solid hsl(var(--border));
   }
 }
 
-@media (min-width: 768px) {
-  .scramble-text-container {
-    min-height: 100px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .scramble-text-container {
-    min-height: 128px;
-  }
-}
-
-/* Individual character cell */
-.scramble-char {
-  font-size: clamp(2rem, 6vw, 5.5rem);
-  font-weight: 900;
-  letter-spacing: -0.01em;
-  line-height: 1;
-  transition: color 0.15s ease, text-shadow 0.3s ease;
-}
-
-/* Smaller variant for greeting line */
-.scramble-char-sm {
-  font-size: clamp(1.2rem, 3vw, 2.5rem);
-  font-weight: 700;
-}
-
-/* Random glyph state — monospace + muted color + slight jitter */
-.scramble-glyph {
-  font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", ui-monospace, monospace;
-  color: hsl(var(--muted-foreground) / 0.45);
-  text-shadow: 0 0 8px hsl(var(--muted-foreground) / 0.1);
-}
-
-.dark .scramble-glyph {
-  color: rgba(244, 114, 182, 0.35);
-  text-shadow: 0 0 12px rgba(244, 114, 182, 0.15);
-}
-
-/* Resolved character — snaps to display font + foreground */
-.scramble-resolved {
-  font-family: var(--font-display, var(--font-sans, system-ui));
-  color: hsl(var(--foreground));
-  text-shadow: none;
-}
-
-.dark .scramble-resolved {
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
-}
-
-/* Resolved purple variant for "Dañocup" */
-.scramble-resolved-purple {
-  font-family: var(--font-display, var(--font-sans, system-ui));
-  background: linear-gradient(135deg, #f472b6 0%, #f9a8d4 50%, #fda4af 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Resolved accent variant for "Welcome!" */
-.scramble-resolved-accent {
-  font-family: var(--font-display, var(--font-sans, system-ui));
-  color: #f472b6;
-}
-
-.dark .scramble-resolved-accent {
-  color: #f9a8d4;
-  text-shadow: 0 0 16px rgba(244, 114, 182, 0.3);
-}
-
-/* Space char */
-.scramble-space {
-  width: 0.3em;
-}
-
-/* Blinking cursor */
-.scramble-cursor {
-  display: inline-block;
-  width: 3px;
-  height: 0.85em;
-  margin-left: 4px;
-  vertical-align: middle;
-  border-radius: 2px;
-  background: hsl(var(--foreground));
-  font-size: clamp(2rem, 6vw, 5.5rem);
-}
-
-.dark .scramble-cursor {
-  background: #e2e8f0;
-  box-shadow: 0 0 12px rgba(244, 114, 182, 0.5), 0 0 4px rgba(255, 255, 255, 0.25);
-}
-
-/* Noise texture overlay */
-.noise-overlay::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.03;
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Advanced Text Fill Animation */
-.text-fill-hero {
-  position: relative;
-  color: transparent;
-  /* Light mode outline */
-  -webkit-text-stroke: 1.5px hsl(var(--foreground) / 0.6);
-  display: inline-block;
-  line-height: normal;
-  padding-right: 0.1em;
-}
-
-.dark .text-fill-hero {
-  /* Dark mode outline */
-  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.3);
-}
-
-.text-fill-hero::before {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 100%;
-  /* Light mode fill */
-  color: hsl(var(--foreground));
-  -webkit-text-stroke: 0px transparent;
-  border-right: 4px solid hsl(var(--foreground));
-  overflow: hidden;
-  animation: fill-text-animate 6s linear infinite;
-  white-space: nowrap;
-  filter: drop-shadow(0 0 12px hsl(var(--foreground) / 0.4));
-}
-
-.dark .text-fill-hero::before {
-  /* Dark mode fill */
-  color: #fff;
-  border-right-color: #fff;
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
-}
-
-.text-fill-purple {
-  -webkit-text-stroke: 1.5px rgba(244, 114, 182, 0.8);
-}
-
-.dark .text-fill-purple {
-  -webkit-text-stroke: 1.5px rgba(244, 114, 182, 0.3);
-}
-
-.text-fill-purple::before {
-  color: #f472b6;
-  border-right: 4px solid #f472b6;
-  filter: drop-shadow(0 0 15px rgba(244, 114, 182, 0.4));
-}
-
-.dark .text-fill-purple::before {
-  color: #f472b6;
-  border-right-color: #f472b6;
-  filter: drop-shadow(0 0 15px rgba(244, 114, 182, 0.4));
-}
-
-@keyframes fill-text-animate {
-
-  0%,
-  10%,
-  100% {
-    width: 0;
-  }
-
-  70%,
-  90% {
-    width: 100%;
-  }
-}
-
-/* ─── Performance: CSS Compositor Animations ─────────────────────────────────
-   These replace JS-driven Framer Motion infinite loops.
-   CSS animations run on the GPU compositor without triggering React re-renders.
+/* ─── Performance ────────────────────────────────────────────────────────────
 */
-
-/* Generic float — used by skill badges, background blurs, etc. */
-@keyframes float-gentle {
-
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
-/* Floating background blur blobs */
-@keyframes float-blob-up {
-
-  0%,
-  100% {
-    transform: translateY(0) scale(1);
-    opacity: 0.5;
-  }
-
-  50% {
-    transform: translateY(-20px) scale(1.05);
-    opacity: 0.8;
-  }
-}
-
-@keyframes float-blob-down {
-
-  0%,
-  100% {
-    transform: translateY(0) scale(1);
-    opacity: 0.3;
-  }
-
-  50% {
-    transform: translateY(20px) scale(1.1);
-    opacity: 0.6;
-  }
-}
-
-/* Orbiting elements (for the "Always Learning" card) */
-@keyframes orbit-slow {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes orbit-reverse {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(-360deg);
-  }
-}
-
-@keyframes pulse-core {
-
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.6;
-  }
-
-  50% {
-    transform: scale(1.3);
-    opacity: 1;
-  }
-}
-
-/* Project card animated orbs */
-@keyframes orb-drift-1 {
-
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-
-  50% {
-    transform: translate(30px, -20px) scale(1.2);
-  }
-}
-
-@keyframes orb-drift-2 {
-
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-
-  50% {
-    transform: translate(-40px, 30px) scale(1.5);
-  }
-}
-
-/* Hero ambient aura pulse */
-@keyframes aura-pulse {
-
-  0%,
-  100% {
-    opacity: 0.15;
-    transform: scale(0.95);
-  }
-
-  50% {
-    opacity: 0.4;
-    transform: scale(1.05);
-  }
-}
-
-/* Location badge float */
-@keyframes float-badge {
-
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-12px);
-  }
-}
-
-/* Utility classes */
-.animate-float-gentle {
-  animation: float-gentle 3s ease-in-out infinite;
-}
-
-.animate-float-blob-up {
-  animation: float-blob-up 6s ease-in-out infinite;
-}
-
-.animate-float-blob-down {
-  animation: float-blob-down 8s ease-in-out infinite 1s;
-}
-
-.animate-aura-pulse {
-  animation: aura-pulse 6s ease-in-out infinite;
-}
-
-.animate-float-badge {
-  animation: float-badge 4s ease-in-out infinite;
-}
-
-/* ─── Performance: Mobile backdrop-blur reduction ────────────────────────────
-   backdrop-blur is one of the most GPU-expensive CSS properties.
-   On mobile/low-power devices, we reduce it. We also limit max blur globally.
-*/
-.blur-3xl {
-  filter: blur(40px);
-}
-
 @media (max-width: 768px) {
-
   .backdrop-blur-md,
   .backdrop-blur-lg,
-  .backdrop-blur-xl,
-  .backdrop-blur-2xl,
-  .backdrop-blur-3xl {
+  .backdrop-blur-xl {
     backdrop-filter: blur(4px) !important;
     -webkit-backdrop-filter: blur(4px) !important;
   }
-
-  /* Reduce filter-blur on decorative backgrounds */
-  .blur-2xl {
-    filter: blur(24px) !important;
-  }
-
-  .blur-3xl {
-    filter: blur(30px) !important;
-  }
 }
 
-/* ─── Performance: Skip rendering off-screen sections ────────────────────────
-   content-visibility: auto allows the browser to skip layout, paint, and
-   compositing for sections not currently in the viewport. This is the most
-   impactful single CSS property for long-page scroll performance.
-*/
-section {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 800px;
-}
-
-/* ─── Print Styles ────────────────────────────────────────────────────────
-   Optimized for printing the Portfolio Manifesto
+/* ─── Print Styles ───────────────────────────────────────────────────────────
 */
 @media print {
   @page {
     margin: 2cm;
   }
-  
-  html, body {
+
+  html,
+  body {
     background: #fff !important;
     color: #000 !important;
     overflow: visible !important;
-    height: auto !important;
-    min-height: auto !important;
   }
 
-  /* Ensure background and text colors are strictly ink-friendly */
   * {
     box-shadow: none !important;
     text-shadow: none !important;

@@ -152,12 +152,8 @@ export default function MobileNav() {
                   <a
                     key={social.label}
                     href={social.href}
-                    target={social.label !== "Contact Form" ? "_blank" : undefined}
-                    rel={
-                      social.label !== "Contact Form"
-                        ? "noopener noreferrer"
-                        : undefined
-                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="p-2 text-muted-foreground hover:text-foreground transition-colors"
                     aria-label={social.label}
                   >

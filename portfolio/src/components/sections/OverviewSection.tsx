@@ -70,10 +70,10 @@ export default function OverviewSection() {
             
             <div data-reveal className="space-y-5 text-muted-foreground text-sm md:text-base leading-relaxed max-w-lg mx-auto md:mx-0">
               <p>
-                I'm a full-stack developer. I build modern web & mobile apps, and these days I'm focused on Next.js, Supabase, and scalable architectures.
+                I&apos;m a full-stack developer. I build modern web & mobile apps, and these days I&apos;m focused on Next.js, Supabase, and scalable architectures.
               </p>
               <p>
-                Right now I'm building cool new stuff every day. I love turning rough ideas into digital products that people actually use.
+                Right now I&apos;m building cool new stuff every day. I love turning rough ideas into digital products that people actually use.
               </p>
             </div>
 
@@ -107,7 +107,7 @@ export default function OverviewSection() {
             <div className="group p-5 md:p-6 md:border-r border-b md:border-b-0 border-border/40 flex items-center gap-4 cursor-default">
               <FiAward className="w-5 h-5 text-foreground/70 shrink-0 transition-all group-hover:text-foreground group-hover:scale-110" />
               <div>
-                <div className="text-sm font-medium text-foreground/80 transition-colors group-hover:text-foreground">Top 1 Dean's Lister</div>
+                <div className="text-sm font-medium text-foreground/80 transition-colors group-hover:text-foreground">Top 1 Dean&apos;s Lister</div>
                 <div className="text-[10px] text-muted-foreground uppercase tracking-widest mt-0.5 transition-colors group-hover:text-foreground/70">BSIT Graduate</div>
               </div>
             </div>

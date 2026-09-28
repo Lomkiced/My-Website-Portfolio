@@ -125,6 +125,7 @@ export default function PrintManifesto() {
                                 {cert.imageUrl && (
                                     <div className="mb-4 rounded-lg border border-neutral-200 overflow-hidden bg-white">
                                         {/* Using standard img ensures aggressive browsers will print the image accurately */}
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
                                         <img src={cert.imageUrl} alt={cert.title} className="w-full h-auto object-contain max-h-48" />
                                     </div>
                                 )}

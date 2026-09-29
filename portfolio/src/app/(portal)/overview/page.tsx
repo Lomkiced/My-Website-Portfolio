@@ -7,7 +7,9 @@ import OverviewCertificationsSection from "@/components/sections/OverviewCertifi
 import OverviewGithubSection from "@/components/sections/OverviewGithubSection";
 
 export const metadata: Metadata = {
-  title: "Overview",
+  title: {
+    absolute: "Ced | Full Stack Developer",
+  },
   description:
     "Mike Cedrick Dañocup — Full-Stack Developer specializing in Next.js, TypeScript, Supabase, and Prisma. BSIT graduate, Top 1 Dean's Lister.",
 };

@@ -57,7 +57,7 @@ export default function Sidebar() {
 
         {/* ── Navigation ───────────────────────────────────────────────── */}
         <nav className="flex flex-col gap-1" aria-label="Section navigation">
-          {NAV_ITEMS.map((item, index) => {
+          {NAV_ITEMS.map((item) => {
             const isActive =
               pathname === item.href || pathname.startsWith(item.href + "/");
 

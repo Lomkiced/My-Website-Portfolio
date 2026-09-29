@@ -70,7 +70,7 @@ export default function OverviewBlogSection() {
 
         {/* List */}
         <div className="w-full flex flex-col border-t border-border/30">
-          {BLOG_POSTS.map((post, idx) => (
+          {BLOG_POSTS.map((post) => (
             <Link 
               key={post.id} 
               href={`/blog/${post.id}`}

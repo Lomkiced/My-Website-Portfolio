@@ -11,23 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 // ─── Overview Experience Section ──────────────────────────────────────────────
 // Ultra-minimalist list of experiences and tech stack modeled after reference.
 
-const experiences = [
-  {
-    year: "Present",
-    role: "Freelance Full-Stack Developer",
-    company: "Self-Employed",
-  },
-  {
-    year: "2026",
-    role: "Mathematics & English Teacher",
-    company: "Pakdeepan Kindergarten School",
-  },
-  {
-    year: "2025",
-    role: "Technical Intern",
-    company: "DOST Region 1",
-  },
-];
+import { EXPERIENCE_DATA } from "@/lib/data";
 
 const stack = [
   "TypeScript",
@@ -99,22 +83,22 @@ export default function OverviewExperienceSection() {
 
           {/* List */}
           <div className="w-full flex flex-col border-t border-border/30">
-            {experiences.map((exp, idx) => (
+            {EXPERIENCE_DATA.filter(item => item.type === "work" || item.type === "teaching").slice(0, 3).map((exp, idx) => (
               <div 
                 key={idx} 
                 data-reveal
                 className="group flex flex-col md:flex-row md:items-center justify-between py-5 border-b border-border/30 hover:bg-foreground/[0.02] transition-colors cursor-default px-2 md:px-4"
               >
                 <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-16">
-                  <span className="font-display text-muted-foreground/60 text-xs w-12">
-                    {exp.year}
+                  <span className="font-display text-muted-foreground/60 text-xs w-[120px] shrink-0">
+                    {exp.period}
                   </span>
-                  <span className="text-foreground font-medium text-base group-hover:text-foreground transition-colors">
-                    {exp.role}
+                  <span className="text-foreground font-medium text-base group-hover:text-foreground transition-colors line-clamp-1">
+                    {exp.title}
                   </span>
                 </div>
-                <span className="text-muted-foreground/80 text-sm mt-2 md:mt-0 md:text-right">
-                  {exp.company}
+                <span className="text-muted-foreground/80 text-sm mt-2 md:mt-0 md:text-right line-clamp-1">
+                  {exp.organization}
                 </span>
               </div>
             ))}

@@ -28,7 +28,7 @@ export default function PortalLayout({
         <div className="lg:hidden h-16 shrink-0" />
 
         {/* Inner content with generous padding */}
-        <div className="px-6 sm:px-10 lg:px-16 xl:px-20 py-8 lg:py-12 max-w-5xl">
+        <div className="mx-auto px-6 sm:px-10 lg:px-16 xl:px-20 py-8 lg:py-12 max-w-5xl">
           {children}
         </div>
       </main>

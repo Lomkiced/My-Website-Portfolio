@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import OverviewSection from "@/components/sections/OverviewSection";
+import OverviewBlogSection from "@/components/sections/OverviewBlogSection";
 import OverviewProjectsSection from "@/components/sections/OverviewProjectsSection";
 import OverviewExperienceSection from "@/components/sections/OverviewExperienceSection";
 import OverviewCertificationsSection from "@/components/sections/OverviewCertificationsSection";
+import OverviewGithubSection from "@/components/sections/OverviewGithubSection";
 
 export const metadata: Metadata = {
   title: "Overview",
@@ -14,9 +16,11 @@ export default function OverviewPage() {
   return (
     <>
       <OverviewSection />
+      <OverviewBlogSection />
       <OverviewProjectsSection />
       <OverviewExperienceSection />
       <OverviewCertificationsSection />
+      <OverviewGithubSection />
     </>
   );
 }

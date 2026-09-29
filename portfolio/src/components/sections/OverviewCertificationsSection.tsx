@@ -102,7 +102,7 @@ export default function OverviewCertificationsSection() {
               className="group relative flex flex-col items-center justify-between p-8 rounded-2xl border border-border/30 bg-[#0a0a0a] hover:bg-foreground/[0.02] transition-colors shadow-lg h-[260px]"
             >
               {/* Logo */}
-              <div className="w-24 h-24 flex items-center justify-center mb-6 relative">
+              <div className="w-full h-14 flex items-center justify-center mb-6 relative px-4">
                 {cert.logoSrc ? (
                   <Image src={cert.logoSrc} alt={cert.issuer} fill className="object-contain" />
                 ) : (

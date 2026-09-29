@@ -8,6 +8,7 @@ import { MdEmail } from "react-icons/md";
 // ─── Navigation Items ───────────────────────────────────────────────────────
 
 const NAV_ITEMS = [
+  { label: "Blog", href: "/blog" },
   { label: "Projects", href: "/projects" },
   { label: "Skills", href: "/skills" },
   { label: "Experience", href: "/experience" },
@@ -46,7 +47,7 @@ export default function Sidebar() {
       {/* ── Top: Identity ──────────────────────────────────────────────── */}
       <div className="px-8 pt-10">
         <Link href="/overview" className="block group" aria-label="Home">
-          <span className="font-display text-3xl text-foreground tracking-tight transition-opacity group-hover:opacity-70">
+          <span className="font-pixel text-4xl text-foreground tracking-tight transition-opacity group-hover:opacity-70">
             CED
           </span>
         </Link>
@@ -66,7 +67,7 @@ export default function Sidebar() {
                 href={item.href}
                 className={`
                   group flex items-center gap-4 py-2.5
-                  text-sm transition-all duration-200
+                  text-xs transition-all duration-200
                   ${
                     isActive
                       ? "text-foreground font-medium"
@@ -74,18 +75,6 @@ export default function Sidebar() {
                   }
                 `}
               >
-                <span
-                  className={`
-                    text-label font-sans tabular-nums transition-colors duration-200
-                    ${
-                      isActive
-                        ? "text-foreground"
-                        : "text-muted-foreground/40 group-hover:text-muted-foreground"
-                    }
-                  `}
-                >
-                  {String(index + 1).padStart(2, "0")}
-                </span>
                 {item.label}
               </Link>
             );

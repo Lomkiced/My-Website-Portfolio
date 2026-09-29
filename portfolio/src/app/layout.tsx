@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
+import { Pixelify_Sans } from "next/font/google";
 import "./globals.css";
+
+const pixelFont = Pixelify_Sans({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-pixel",
+});
 
 // ─── Typography ─────────────────────────────────────────────────────────────
 // Geist — a modern, geometric font family by Vercel.
@@ -78,7 +85,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${GeistSans.variable} ${GeistMono.variable}`}
+      className={`${GeistSans.variable} ${GeistMono.variable} ${pixelFont.variable}`}
       suppressHydrationWarning
     >
       <body className="font-sans antialiased bg-background text-foreground">

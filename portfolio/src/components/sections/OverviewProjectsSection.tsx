@@ -43,14 +43,14 @@ export default function OverviewProjectsSection() {
   }, []);
 
   return (
-    <section className="relative py-12 min-h-[50vh] flex flex-col justify-center border-t border-border/20 overflow-hidden">
+    <section className="relative py-6 md:py-8 flex flex-col justify-center border-t border-border/20 overflow-hidden">
       {/* Background dot grid pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(circle,#ffffff08_1.5px,transparent_1.5px)] bg-[size:32px_32px] pointer-events-none" />
 
-      <div ref={containerRef} className="max-w-5xl mx-auto w-full px-4 md:px-8 relative z-10">
+      <div ref={containerRef} className="max-w-4xl mx-auto w-full px-4 md:px-0 relative z-10">
         
         {/* Header */}
-        <div className="flex items-center justify-between mb-16 md:mb-24">
+        <div className="flex items-center justify-between mb-8 md:mb-12">
           <div className="font-display text-muted-foreground/80 tracking-widest text-sm uppercase flex items-center gap-4">
             <span>02</span>
             <span className="w-8 h-px bg-border/50" />
@@ -66,7 +66,7 @@ export default function OverviewProjectsSection() {
         </div>
 
         {/* 3D Fan-out Cards Container */}
-        <div className="relative w-full max-w-xl mx-auto h-[400px] flex items-center justify-center">
+        <div className="relative w-full max-w-xl mx-auto h-[320px] flex items-center justify-center mb-4">
           
           {/* Left Card (FarmFlow) */}
           <div className="absolute left-[-20%] md:left-[-35%] top-[10%] z-10 w-[300px] md:w-[400px] -rotate-12 scale-90 opacity-40 blur-[1px] hover:blur-none hover:opacity-100 transition-all duration-500 rounded-xl border border-border/30 bg-[#0a0a0a] p-6 md:p-8 shadow-2xl">

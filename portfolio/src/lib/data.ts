@@ -398,5 +398,26 @@ export const BLOG_POSTS: BlogPost[] = [
       "To know many paths, yet have no place that feels like home.",
       "And sometimes, when everyone else seems to have found the one thing they were born to do, I quietly wonder—Will I always be someone who knows a little about everything, but never enough to finally become something?"
     ]
+  },
+  {
+    id: "life-is-tough",
+    title: "Life is tough, but God is good.",
+    date: "Sep 29, 2026",
+    readTime: "3 min",
+    summary: "There are seasons in life when everything feels heavier than it should. When you’re tired, uncertain, disappointed, and quietly fighting battles that nobody else knows about.",
+    imageUrl: "/POST3.jpg",
+    content: [
+      "There are seasons in life when everything feels heavier than it should. When you’re tired, uncertain, disappointed, and quietly fighting battles that nobody else knows about.",
+      "Sometimes, you pray and wonder why things aren’t changing. You ask God for answers, but instead, you receive silence. You wonder if you’re still on the right path, if your struggles have a purpose, or if things will ever get better.",
+      "But I’m slowly learning that faith isn't about having a life without problems. It’s about trusting God even when you don't understand what He is doing.",
+      "Some doors close. Some plans fall apart. Some people leave. Some seasons hurt more than we expected.",
+      "And yet, somehow, God continues to provide the strength to take another step.",
+      "Looking back, there are things I once prayed for that I didn't receive—and now I'm grateful I didn't. There are things I once considered setbacks that eventually became lessons. There were moments I thought would break me, but somehow, they helped shape me into someone stronger.",
+      "I may not understand everything God is doing in my life right now. I may still have questions. I may still struggle.",
+      "But I choose to believe that His goodness doesn't disappear just because life becomes difficult.",
+      "Life may be tough. The road may be uncertain. The waiting may be painful. But God is still good.",
+      "And as long as He gives me another day, I'll keep walking, keep trusting, and keep believing that whatever comes next, I don't have to face it alone. 🤍",
+      "“The Lord is close to the brokenhearted and saves those who are crushed in spirit.” — Psalm 34:18"
+    ]
   }
 ];

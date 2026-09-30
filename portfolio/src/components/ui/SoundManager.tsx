@@ -9,7 +9,9 @@ export default function SoundManager() {
   useEffect(() => {
     const initAudio = () => {
       if (!audioCtxRef.current) {
-        audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+        audioCtxRef.current = new AudioContextClass();
       }
       if (audioCtxRef.current.state === "suspended") {
         audioCtxRef.current.resume();

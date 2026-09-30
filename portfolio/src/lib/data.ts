@@ -419,5 +419,61 @@ export const BLOG_POSTS: BlogPost[] = [
       "And as long as He gives me another day, I'll keep walking, keep trusting, and keep believing that whatever comes next, I don't have to face it alone. 🤍",
       "“The Lord is close to the brokenhearted and saves those who are crushed in spirit.” — Psalm 34:18"
     ]
+  },
+  {
+    id: "young-man-with-a-vision",
+    title: "Just a young man with nothing but a vision and the hunger to make it real.",
+    date: "Sep 30, 2026",
+    readTime: "3 min",
+    summary: "I may not have everything I want right now. I may not have the money, the connections, the perfect circumstances, or a clear map of how everything will unfold. But I have a vision.",
+    imageUrl: "/POST4.jpg",
+    content: [
+      "I may not have everything I want right now. I may not have the money, the connections, the perfect circumstances, or a clear map of how everything will unfold.",
+      "But I have a vision.",
+      "I know there is a life I want to build, places I want to see, things I want to accomplish, and a version of myself I haven't become yet.",
+      "And honestly, that's enough to keep me moving.",
+      "I'm learning to be patient with the process. To work quietly when nobody is watching. To keep going when progress feels invisible. To accept that sometimes the journey will be lonely, uncertain, and much harder than I imagined.",
+      "There will be people who don't understand the things I dream about. There will be moments when I'll question myself. There will be failures, wrong turns, and days when giving up seems easier.",
+      "But I don't want to spend my life wondering **“What if I had tried?”**",
+      "So I'll keep learning.",
+      "I'll keep working.",
+      "I'll keep taking risks.",
+      "I'll keep rebuilding when things fall apart.",
+      "I don't need to have it all figured out today.",
+      "I'm just a young man with a vision, a lot to learn, and an unbelievable hunger to turn that vision into reality.",
+      "**Maybe I don't have much right now. But I know where I want to go—and I'm willing to work for it.**",
+      "One day, I'll look back at this version of myself and hopefully say:",
+      "**“You had no idea how far you were capable of going.”**"
+    ]
+  },
+  {
+    id: "confidence-cheat-code",
+    title: "It took me 23 years to realize that confidence is the real cheat code to life.",
+    date: "Sep 30, 2026",
+    readTime: "4 min",
+    summary: "For the longest time, I thought I needed to become more successful, more attractive, more experienced, or more accomplished before I could truly believe in myself.",
+    imageUrl: "/POST5.jpg",
+    content: [
+      "For the longest time, I thought I needed to become more successful, more attractive, more experienced, or more accomplished before I could truly believe in myself.",
+      "I kept waiting for something outside of me to prove that I was good enough.",
+      "But I've slowly realized that confidence doesn't come from having everything figured out.",
+      "It comes from knowing that even if things don't go according to plan, you'll be okay.",
+      "Confidence is walking into a room without needing everyone to like you.",
+      "It's speaking even when your voice shakes.",
+      "It's pursuing something even when there's a chance you'll fail.",
+      "It's being willing to look stupid while learning something new.",
+      "It's saying no without feeling guilty and saying yes without being afraid of what people might think.",
+      "It's understanding that rejection doesn't define your worth, failure doesn't define your potential, and someone else's opinion doesn't determine who you are.",
+      "The funny thing is, confidence doesn't necessarily make life easier.",
+      "It just makes you less afraid to live it.",
+      "At 23, I'm realizing that I've spent too much time waiting until I felt ready.",
+      "Maybe you never actually feel ready.",
+      "Maybe you just have to believe in yourself enough to take the first step—and trust yourself to figure out the rest along the way.",
+      "Confidence isn't thinking you're better than everyone else.",
+      "It's finally understanding that you don't have to be better than anyone else.",
+      "You just have to believe that you are capable of becoming the person you want to be.",
+      "And honestly?",
+      "That realization might be one of the biggest upgrades I've ever given myself."
+    ]
   }
 ];

@@ -75,6 +75,9 @@ export const metadata: Metadata = {
   },
 };
 
+import SoundManager from "@/components/ui/SoundManager";
+import Preloader from "@/components/ui/Preloader";
+
 // ─── Root Layout ────────────────────────────────────────────────────────────
 
 export default function RootLayout({
@@ -89,6 +92,8 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="font-sans antialiased bg-background text-foreground">
+        <Preloader />
+        <SoundManager />
         {children}
       </body>
     </html>

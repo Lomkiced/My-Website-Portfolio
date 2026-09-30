@@ -50,7 +50,7 @@ export default function BlogContent({ posts }: { posts: BlogPost[] }) {
       {/* ── Blog Posts ─────────────────────────────────────────── */}
       {viewMode === "list" ? (
         <div className="flex flex-col space-y-12 md:space-y-16 max-w-4xl">
-          {posts.map((post) => (
+          {[...posts].reverse().map((post) => (
             <article
               key={post.id}
               className="group flex flex-col md:flex-row gap-6 md:gap-10 items-start border-b border-border/10 pb-12 md:pb-16 last:border-0"
@@ -95,7 +95,7 @@ export default function BlogContent({ posts }: { posts: BlogPost[] }) {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 w-full">
-          {posts.map((post) => (
+          {[...posts].reverse().map((post) => (
             <article key={post.id} className="group flex flex-col">
               {post.imageUrl && (
                 <Link

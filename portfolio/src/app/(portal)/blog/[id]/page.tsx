@@ -91,15 +91,27 @@ export default function BlogPostPage({ params }: Props) {
       {/* ── Content ───────────────────────────────────────────────────── */}
       <div className="prose prose-invert max-w-none font-serif text-lg leading-relaxed text-foreground/80 space-y-8 mb-20">
         {paragraphs.map((p, idx) => {
-          // If paragraph starts and ends with **, render it as bold
-          if (p.startsWith("**") && p.endsWith("**")) {
+          // If the ENTIRE paragraph is bold, style it as a block quote/callout
+          if (p.trim().startsWith("**") && p.trim().endsWith("**") && p.trim().match(/\*\*/g)?.length === 2) {
             return (
-              <p key={idx} className="font-bold text-foreground font-sans text-xl leading-snug">
+              <p key={idx} className="font-bold text-foreground font-sans text-xl md:text-2xl leading-snug my-8 border-l-2 border-foreground/30 pl-6">
                 {p.replace(/\*\*/g, "")}
               </p>
             );
           }
-          return <p key={idx}>{p}</p>;
+          
+          // Inline bold parsing
+          const parts = p.split(/(\*\*.*?\*\*)/g);
+          return (
+            <p key={idx}>
+              {parts.map((part, i) => {
+                if (part.startsWith("**") && part.endsWith("**")) {
+                  return <strong key={i} className="font-bold text-foreground">{part.slice(2, -2)}</strong>;
+                }
+                return part;
+              })}
+            </p>
+          );
         })}
       </div>
 

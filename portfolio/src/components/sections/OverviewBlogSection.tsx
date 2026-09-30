@@ -70,7 +70,7 @@ export default function OverviewBlogSection() {
 
         {/* List */}
         <div className="w-full flex flex-col border-t border-border/30">
-          {BLOG_POSTS.map((post) => (
+          {[...BLOG_POSTS].reverse().slice(0, 3).map((post) => (
             <Link 
               key={post.id} 
               href={`/blog/${post.id}`}
@@ -81,7 +81,7 @@ export default function OverviewBlogSection() {
                 
                 {/* Title & Description */}
                 <div className="flex-1">
-                  <h3 className="font-display text-lg md:text-xl text-foreground font-medium group-hover:text-foreground/80 transition-colors">
+                  <h3 className="font-sans text-xl text-foreground font-semibold leading-tight group-hover:text-foreground/80 transition-colors">
                     {post.title}
                   </h3>
                   

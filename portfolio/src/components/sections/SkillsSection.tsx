@@ -41,12 +41,12 @@ export default function SkillsSection() {
   }, []);
 
   return (
-    <section className="pb-32 pt-12 md:pt-20">
+    <section className="pb-32">
       {/* ── Header ───────────────────────────────────────────────────── */}
-      <div className="mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border/20 pb-8">
+      <div className="mb-8 md:mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border/20 pb-6">
         <div>
           <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4 tracking-tight">
-            Technical Arsenal
+            Technical Expertise
           </h1>
           <p className="text-muted-foreground text-sm max-w-xl leading-relaxed">
             A comprehensive overview of my technical capabilities, ranging from modern front-end frameworks to robust backend architectures and hardware infrastructure.

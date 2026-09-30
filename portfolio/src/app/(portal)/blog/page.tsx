@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   return (
-    <div className="w-full max-w-5xl mx-auto pt-24 pb-32 px-4 md:px-8">
+    <div className="w-full max-w-5xl mx-auto pb-32 px-4 md:px-8">
       <BlogContent posts={BLOG_POSTS} />
     </div>
   );

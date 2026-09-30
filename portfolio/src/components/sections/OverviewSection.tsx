@@ -132,7 +132,7 @@ export default function OverviewSection() {
             
             <div className="group p-5 md:p-6 md:border-r border-b md:border-b-0 border-border/40 cursor-default">
               <div className="text-lg md:text-xl font-display text-foreground/80 transition-colors group-hover:text-foreground flex items-center gap-1.5">
-                2+ yrs
+                3+ yrs
               </div>
               <div className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1 transition-colors group-hover:text-foreground/70">Experience</div>
             </div>

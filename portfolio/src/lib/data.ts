@@ -475,5 +475,47 @@ export const BLOG_POSTS: BlogPost[] = [
       "And honestly?",
       "That realization might be one of the biggest upgrades I've ever given myself."
     ]
+  },
+  {
+    id: "art-of-being-scared",
+    title: "The Art of Being Scared, and Doing It Anyway Will Take You Far.",
+    date: "Sep 30, 2026",
+    readTime: "4 min",
+    summary: "I used to think that being brave meant not being afraid. Now I think it means being afraid and moving forward anyway.",
+    imageUrl: "/POST6.jpg",
+    content: [
+      "I used to think that being brave meant not being afraid.",
+      "Now I think it means being afraid and moving forward anyway.",
+      "There are so many things in life that can scare us.",
+      "Starting over.",
+      "Leaving what feels familiar.",
+      "Taking a risk.",
+      "Moving somewhere new.",
+      "Pursuing a dream that nobody else understands.",
+      "Putting yourself out there and risking rejection.",
+      "Choosing a path without knowing exactly where it will lead.",
+      "Fear has a way of making the unknown look much bigger than it really is.",
+      "It tells you to wait until you're ready.",
+      "To wait until you have enough money.",
+      "Enough experience.",
+      "Enough confidence.",
+      "Enough certainty.",
+      "But the truth is, sometimes you will never feel completely ready.",
+      "There have been moments when I've been scared to make a decision, scared to fail, scared of what people might think, and scared of what might happen if things didn't work out.",
+      "But I've learned something:",
+      "You don't have to eliminate fear before you move.",
+      "You just have to stop letting it make your decisions for you.",
+      "Some of the biggest changes in my life started with uncertainty. I didn't always know what I was doing. I didn't always have a perfect plan. Sometimes, all I had was a small belief that there might be something better waiting on the other side of fear.",
+      "So I took the step.",
+      "And then another.",
+      "And another.",
+      "Maybe that's what courage really is—not the absence of fear, but the willingness to carry it with you while you keep moving.",
+      "Because every time you do something that scares you, you teach yourself that fear doesn't control you.",
+      "And little by little, your world gets bigger.",
+      "Be scared. Be uncertain. Be nervous.",
+      "Just don't let those feelings convince you to stay exactly where you are.",
+      "Sometimes, the life you're looking for is waiting on the other side of the thing you're afraid to do.",
+      "Do it scared. Do it anyway. You'll be surprised how far it can take you."
+    ]
   }
 ];

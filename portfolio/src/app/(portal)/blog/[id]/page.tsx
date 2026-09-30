@@ -38,12 +38,12 @@ export default function BlogPostPage({ params }: Props) {
   const paragraphs = post.content || [post.summary];
 
   return (
-    <div className="w-full max-w-2xl mx-auto pt-16 md:pt-24 pb-20 px-4 md:px-0">
+    <div className="w-full max-w-2xl mx-auto pb-20 px-4 md:px-0">
       
       {/* ── Top Navigation ────────────────────────────────────────────── */}
       <Link 
         href="/blog" 
-        className="inline-flex items-center gap-2 text-sm font-mono text-muted-foreground hover:text-foreground transition-colors mb-16"
+        className="inline-flex items-center gap-2 text-sm font-mono text-muted-foreground hover:text-foreground transition-colors mb-8"
       >
         <FiChevronLeft className="w-4 h-4" />
         all posts
